@@ -1,0 +1,32 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.item-rounded {
+    border-radius: 20px;
+}
+
+.bg-main {
+    background-color: rgb(232, 250, 236);
+    color: black;
+}
+
+.bg-primary {
+    background-color: #2f9f44;
+    color: black;
+}
+
+.bg-secondary {
+    background-color: #1a5e26;
+    color: rgb(232, 250, 236);
+}
+
+back
+}
+
+}
+
+}
+.bg-secondary {}

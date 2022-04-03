@@ -1,0 +1,47 @@
+{% extends 'layouts/base.html' %}{% block title%}Dashboard{% endblock %} {% block content %}
+
+<h2>Doctors</h2>
+
+<div class="card item-rounded">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Phone Number</th>
+                    <th>Speciality</th>
+                    <th>Status</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td>{{ doctor.user.first_name}} {{ doctor.user.last_name }}</td>
+                    <td>{{ doctor.user.id_number }}</td>
+                    <td>{{ doctor.user.phone_number }}</td>
+                    <td>{{ doctor.speciality }}</td>
+                    <td>
+                        {% if doctor.is_verified %}Verified{% else %}Unverified{% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-end">
+                            {% if doctor.is_verified %}
+                            <a href="#" class="btn btn-danger w-75"><i class="fa fa-times-circle" aria-hidden="true"></i>
+                Unverify</a
+              >
+              {% else %}
+              <a href="#" class="btn btn-success w-75"
+                ><i class="fa fa-check-circle" aria-hidden="true"></i> Verify</a
+              >{% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
