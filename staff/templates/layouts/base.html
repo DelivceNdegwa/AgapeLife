@@ -12,18 +12,217 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" /> {% block 'css' %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+         :root {
+            --primary: #2f9f44;
+            --primary-hover: #187328;
+            --secondary: #1a5e26;
+            --secondary-hover: #0d7c21;
+            --accent: #e6fff7;
+            --accent-hover: #d0f9ec;
+            --light-background: #7adabc0e;
+            --background-color-main: rgb(232, 250, 236);
+        }
+        
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        .item-rounded {
+            border-radius: 20px;
+        }
+        
+        .bg-main {
+            background-color: var(--background-color-main);
+            color: black;
+        }
+        
+        .bg-primary {
+            background-color: #2f9f44;
+            color: black;
+        }
+        
+        .bg-secondary {
+            background-color: #1a5e26;
+            color: var(--background-color-main);
+        }
+        
+        .wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+        }
+        
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            min-height: 100vh;
+            background: #2f9f44;
+            color: var(--accent);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            border-top-right-radius: 15px;
+        }
+        
+        #sidebar.active {
+            margin-left: -250px;
+        }
+        
+        a[data-toggle="collapse"] {
+            position: relative;
+        }
+        
+        .dropdown-toggle::after {
+            display: block;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+            }
+            #sidebar.active {
+                margin-left: 0;
+            }
+        }
+        
+        a,
+        a:hover,
+        a:focus {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        #sidebar .sidebar-header {
+            padding: 40px;
+            background: var(--primary);
+            border: 1px solid transparent;
+            border-top-right-radius: 15px;
+        }
+        
+        #sidebar ul.components {
+            padding: 0 0;
+            border-bottom: 1px solid var(--primary);
+        }
+        
+        #sidebar ul p {
+            color: black;
+            padding: 10px;
+        }
+        
+        #sidebar ul li a {
+            padding: 10px;
+            font-size: 24px;
+            display: block;
+        }
+        
+        #sidebar ul li a:hover {
+            color: var(--primary);
+            background: var(--accent-hover);
+        }
+        
+        #sidebar ul li.active>a,
+        a[aria-expanded="true"] {
+            color: var(--primary-hover);
+            background: var(--accent);
+        }
+        
+        ul ul a {
+            font-size: 20px !important;
+            padding-left: 30px !important;
+            background: var(--primary);
+        }
+        
+        .go-corner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            overflow: hidden;
+            top: 0;
+            right: 0;
+            background-color: var(--primary);
+            border-radius: 0 4px 0 32px;
+        }
+        
+        span {
+            color: white;
+        }
+        
+        .datcard {
+            height: 10em;
+            color: black;
+            display: block;
+            font-family: sans-serif;
+            position: relative;
+            background-color: #b2fce42f;
+            border-radius: 10px;
+            padding: 1em;
+            z-index: 0;
+            overflow: hidden;
+            text-decoration: none !important;
+        }
+        
+        .datcard:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: -16px;
+            right: -16px;
+            background: var(--primary);
+            height: 1em;
+            width: 1em;
+            border-radius: 100%;
+            transform: scale(1);
+            transform-origin: 50% 50%;
+            transition: transform 0.25s ease-out;
+        }
+        
+        .datcard:hover:before {
+            transform: scale(45);
+        }
+        
+        .datcard:hover p {
+            transition: all 0.3s ease-out;
+            color: var(--background-color-main);
+        }
+        
+        .badge-sec {
+            background-color: var(--secondary-hover);
+        }
+    </style>
+    {% block 'css' %}
     <!--Remains empty-->
     {% endblock %}
 </head>
 
 <body class="bg-main">
-    <div class="container-fluid">{% block content %}{% endblock %}</div>
+    {% load static %}
+    <div class="wrapper">
+        {% include 'layouts/sidebar.html' %}
+
+        <div id="content" class="container-fluid">
+            {% block content %} {% endblock %}
+        </div>
+    </div>
+    <!-- /#wrapper -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="sweetalert2.min.js"></script>
-    <link rel="stylesheet" href="sweetalert2.min.css" /> {% block 'scripts' %}{% endblock %}
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% block 'scripts' %}{% endblock %}
 </body>
 
 </html>

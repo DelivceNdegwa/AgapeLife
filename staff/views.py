@@ -9,15 +9,17 @@ from .forms import *
 
 categories = MedicalCategory.objects.all()
 tips = MedicalTips.objects.all()
-doctors = Doctor.objects.select_related('category user').all()
+doctors = Doctor.objects.select_related('user').all()
 feedbacks = UserFeedback.objects.all()
 
 
 ## navigation to all content i.e doctors section, tips section and feedbacks section
 def index(request): 
     context={
+        "number_of_doctors":doctors.count(),
         "doctors":doctors,
         "categories":categories,
+        "new_feedbacks":UserFeedback.objects.filter()
     }
     return render(request, "index.html", context)
 

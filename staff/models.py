@@ -1,6 +1,8 @@
 from distutils.command.upload import upload
 from pickletools import UP_TO_NEWLINE
+from random import choices
 from statistics import mode
+from xml.etree.ElementTree import QName
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -42,9 +44,43 @@ class Doctor(models.Model):
     def __str__(self):
         return str(self.user.id_number)
     
+    
+class Appointment(models.Model):
+    about = models.CharField(max_length=200)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    doctor = models.ForeignKey(Doctor, null=True,  on_delete=models.SET_NULL)
+    client = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return str(self.about)
+    
+    
+class PatientSymptoms(models.Model):
+    symptoms = models.TextField()
+    patient = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
+    viewed_by = models.ForeignKey(Doctor, null=True,  on_delete=models.SET_NULL)
+    
+    def __str__(self):
+        return str(self.patient.id_number)
+    
+    
+class DoctorPrescriptions(models.Model):
+    medicine = models.TextField(null=True, blank=True)
+    recommendation = models.TextField()
+    prescription_to = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
+    prescribed_by = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return str(self.prescription_to.id_number)
+    
 
 class MedicalTips(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    sourced_from = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=100)
     slide_image = models.ImageField(upload_to="media/")    
     description = models.TextField()
@@ -59,10 +95,26 @@ class MedicalTips(models.Model):
     
     
 class UserFeedback(models.Model):
-    FEEDBACK_CATEGORY = (())
+    DOCTOR_RELATED = 1
+    APP_RELATED = 2
+    
+    READ = 1
+    UNREAD = 1
+    
+    FEEDBACK_CATEGORY = (
+        (DOCTOR_RELATED, "Doctor Related"),
+        (APP_RELATED, "App Related")
+    )
+    
+    FEEDBACK_STATUS = (
+        (READ, "Read"),
+        (UNREAD, "Unread")
+    )
     
     author = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
     message = models.TextField()
+    status = models.CharField(choices=FEEDBACK_STATUS, default=UNREAD, max_length=30)
+    category = models.CharField(choices=FEEDBACK_CATEGORY, default=APP_RELATED, max_length=30)
     
     def __str__(self):
         return str(self.author.author.id_number)
@@ -93,3 +145,5 @@ class LoggedInDoctor(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+

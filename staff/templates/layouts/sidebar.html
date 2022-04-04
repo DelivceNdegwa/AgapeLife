@@ -1,0 +1,38 @@
+{% load static %}
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+
+                <h4>
+                    <a href="/staff/" class="font-weight-bold"><img src="{% static 'images/agape_life_logo_no_bg.png' %}" class="img-fluid" /></a>
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li class="{% if 'dashboard' in request.path %} active {% endif %}">
+            <a href="{% url 'index' %}">
+                <i class="fa fa-tachometer m-3"></i> Dashboard
+            </a>
+        </li>
+
+        <li class="{% if 'categories' in request.path %} active {% endif %}">
+            <a href="{% url 'medical-categories' %}"><i class="fa fa-list-alt m-3" aria-hidden="true"></i></i>Categories</a
+      >
+    </li>
+
+    <li class="{% if 'doctors' in request.path %} active {% endif %}">
+      <a href="{% url 'doctors-list' %}"
+        ><i class="fa fa-user-md m-3" aria-hidden="true"></i>Doctors</a
+      >
+    </li>
+
+    <li class="{% if 'tips' in request.path %}active{% endif %}">
+      <a href="{% url 'medical-tips' %}"
+        ><i class="fa fa-lightbulb-o m-3"></i>Medical Tips</a
+      >
+    </li>
+  </ul>
+</nav>
