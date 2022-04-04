@@ -1,1 +1,12 @@
-{% extends 'layouts/base.html' %}{% block title%}{{ doctor.name }} details{% endblock%}
+{% extends 'layouts/base.html' %}{% block title %}{{ doctor.name }} details{% endblock%}{% block content %}
+<div class="row">
+    <!-- {{ doctor }} -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <img src="doctor.profile_image.url" class="rounded-circle img-fluid" width="200px" height="200px" alt="{{ doctor.name }} profile image" />
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}

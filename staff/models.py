@@ -34,6 +34,7 @@ class AgapeUser(User):
 class Doctor(models.Model):
     is_verified = models.BooleanField(default=False)
     license_certificate = models.FileField(upload_to='license/')
+    profile_image = models.ImageField(null=True, blank=True)
     hospital = models.CharField(max_length=200)
     speciality = models.CharField(max_length=100)
     category = models.ForeignKey(MedicalCategory, null=True, blank=True, on_delete=models.SET_NULL)
@@ -46,11 +47,24 @@ class Doctor(models.Model):
     
     
 class Appointment(models.Model):
+    COMPLETE = 1
+    ONGOING = 2
+    CANCELLED = 3
+    PENDING = 4
+    
+    APPOINTMENT_STATUS=(
+        (PENDING, "Pending"),
+        (ONGOING, "Ongoing"),
+        (COMPLETE, "Complete"),
+        (CANCELLED, "Cancelled")
+    )
+    
     about = models.CharField(max_length=200)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     doctor = models.ForeignKey(Doctor, null=True,  on_delete=models.SET_NULL)
     client = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
+    status = models.CharField(choices=APPOINTMENT_STATUS, max_length=30, default=PENDING)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
