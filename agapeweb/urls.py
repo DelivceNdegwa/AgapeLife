@@ -27,7 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('staff/', include('staff.urls')),
     path('api/', include('agapeapi.urls')),
-    path('', include('agape_sockets.urls'))
+    path('auth/', include('auth.urls')),
+    path('', include('agape_sockets.urls')),
     
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

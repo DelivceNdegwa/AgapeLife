@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'staff.apps.StaffConfig',
     'rest_framework',
+    'django_filters',
     'agapeapi.apps.AgapeapiConfig',
     # 'channels',
     # 'rest_framework_simplejwt',
