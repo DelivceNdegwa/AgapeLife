@@ -19,7 +19,7 @@ class MedicalCategory(models.Model):
         verbose_name_plural = 'Medical Categories'
 
     def __str__(self):
-        self.name
+        return self.name
 
 
 
@@ -33,8 +33,8 @@ class AgapeUser(User):
 
 class Doctor(models.Model):
     is_verified = models.BooleanField(default=False)
-    license_certificate = models.FileField(upload_to='license/')
-    profile_image = models.ImageField(null=True, blank=True)
+    license_certificate = models.FileField(upload_to='license/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
     hospital = models.CharField(max_length=200)
     speciality = models.CharField(max_length=100)
     category = models.ForeignKey(MedicalCategory, null=True, blank=True, on_delete=models.SET_NULL)

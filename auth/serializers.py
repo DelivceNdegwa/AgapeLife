@@ -1,5 +1,6 @@
+from wsgiref import validate
 from rest_framework import serializers
-from staff.models import AgapeUser
+from staff.models import AgapeUser, Doctor, MedicalCategory
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
@@ -17,11 +18,26 @@ class AgapeUserTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
     
 
-class RegisterSerializer(serializers.ModelSerializer):
+class RegisterUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
             required=True,
             validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
             )
+    
+    id_number = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
+    )
+    
+    phone_number = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
+    )
+    
+    username = serializers.CharField(
+        required=False, 
+        validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
+    )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
@@ -32,8 +48,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
-            'phone_number': {'required':True},
-            'id_number': {'required':True},
         }
 
     def validate(self, attrs):
@@ -57,3 +71,30 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+    
+
+class RegisterDoctorSerializer(serializers.Serializer):
+    license_certificate = serializers.FileField(required=True)
+    profile_image = serializers.ImageField(required=True)
+    hospital = serializers.CharField(required=True)
+    speciality = serializers.CharField(required=True)
+    category = serializers.CharField(required=True)
+    user = serializers.CharField(required=True)
+
+    def create(self, validated_data):
+        id_user = validated_data['user']
+        id_category = validated_data['category']
+        
+        user_instance = AgapeUser.objects.filter(id_number=id_user).first()
+        category_instance = MedicalCategory.objects.filter(id=id_category).first()
+        
+        doctor = Doctor.objects.create(
+            license_certificate = validated_data['license_certificate'],
+            profile_image = validated_data['profile_image'],
+            hospital = validated_data['hospital'],
+            speciality = validated_data['speciality'],
+            category = category_instance,
+            user = user_instance
+        )
+        
+        return doctor

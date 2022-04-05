@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .serializers import AgapeUserTokenObtainPairSerializer, RegisterSerializer
-from staff.models import AgapeUser
+from .serializers import AgapeUserTokenObtainPairSerializer, RegisterUserSerializer, RegisterDoctorSerializer
+from staff.models import AgapeUser, Doctor
 
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
@@ -16,4 +16,14 @@ class AgapeUserObtainTokenPairView(TokenObtainPairView):
 class AgapeUserRegisterView(generics.CreateAPIView):
     queryset = AgapeUser.objects.all()
     permission_classes = (AllowAny,)
-    serializer_class = RegisterSerializer
+    serializer_class = RegisterUserSerializer
+    
+    
+class DoctorRegisterView(generics.CreateAPIView):
+    queryset=Doctor.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterDoctorSerializer
+    
+    
+     
+    
