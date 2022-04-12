@@ -27,23 +27,31 @@ class AgapeUser(User):
     phone_number = models.IntegerField()
     id_number = models.IntegerField()
     
+    class Meta:
+        verbose_name='Agape User'
+    
     def __str__(self):
         return str(self.id_number)+" "+self.email
     
 
-class Doctor(models.Model):
+class Doctor(User):
     is_verified = models.BooleanField(default=False)
     license_certificate = models.FileField(upload_to='license/', null=True, blank=True)
     profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
     hospital = models.CharField(max_length=200)
     speciality = models.CharField(max_length=100)
     category = models.ForeignKey(MedicalCategory, null=True, blank=True, on_delete=models.SET_NULL)
-    user = models.ForeignKey(AgapeUser, on_delete=models.CASCADE, null=False, blank=False)
+    phone_number = models.IntegerField(null=True)
+    id_number = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
+    
+    class Meta:
+        verbose_name = 'Agape Doctor'
+    
     def __str__(self):
-        return str(self.user.id_number)
+        return "Dr "+self.first_name+" "+self.last_name
     
     
 class Appointment(models.Model):
@@ -62,7 +70,7 @@ class Appointment(models.Model):
     about = models.CharField(max_length=200)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    doctor = models.ForeignKey(Doctor, null=True,  on_delete=models.SET_NULL)
+    doctor = models.ForeignKey(Doctor, null=True, blank=True, on_delete=models.SET_NULL)
     client = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
     status = models.CharField(choices=APPOINTMENT_STATUS, max_length=30, default=PENDING)
     created_at = models.DateTimeField(auto_now=True)
@@ -75,17 +83,17 @@ class Appointment(models.Model):
 class PatientSymptoms(models.Model):
     symptoms = models.TextField()
     patient = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
-    viewed_by = models.ForeignKey(Doctor, null=True,  on_delete=models.SET_NULL)
+    viewed_by = models.ForeignKey(Doctor, null=True, blank=True,  on_delete=models.SET_NULL)
     
     def __str__(self):
         return str(self.patient.id_number)
     
     
-class DoctorPrescriptions(models.Model):
+class DoctorPrescription(models.Model):
     medicine = models.TextField(null=True, blank=True)
     recommendation = models.TextField()
     prescription_to = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
-    prescribed_by = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    prescribed_by = models.ForeignKey(Doctor, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
@@ -136,7 +144,7 @@ class UserFeedback(models.Model):
    
     
 class DoctorCategoryPivot(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
     category = models.ForeignKey(MedicalCategory, on_delete=models.CASCADE)
     
     def __str__(self):
@@ -144,7 +152,7 @@ class DoctorCategoryPivot(models.Model):
     
     
 class EditorDoctorPivot(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
     editor = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=False)
@@ -155,7 +163,7 @@ class EditorDoctorPivot(models.Model):
     
 class LoggedInDoctor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='logged_in_doctor', on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return self.user.username

@@ -35,8 +35,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     )
     
     username = serializers.CharField(
-        required=False, 
-        validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
+        required=False
     )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -79,13 +78,48 @@ class RegisterDoctorSerializer(serializers.Serializer):
     hospital = serializers.CharField(required=True)
     speciality = serializers.CharField(required=True)
     category = serializers.CharField(required=True)
-    user = serializers.CharField(required=True)
+    # user = serializers.CharField(required=True)
+    
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    
+    email = serializers.EmailField(
+            required=True,
+            validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
+            )
+    
+    id_number = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
+    )
+    
+    phone_number = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
+    )
+    
+    username = serializers.CharField(
+        required=False
+    )
+
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+
+    
+    
+    class Meta:
+        model=Doctor
+        fields = ('license_certificate', 'profile_image', 'hospital', 'speciality', 'category', 'username', 'email', 'first_name', 'last_name', 'password', 'password2', 'id_number', 'phone_number')
+    
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+        return attrs
 
     def create(self, validated_data):
-        id_user = validated_data['user']
         id_category = validated_data['category']
-        
-        user_instance = AgapeUser.objects.filter(id_number=id_user).first()
+
         category_instance = MedicalCategory.objects.filter(id=id_category).first()
         
         doctor = Doctor.objects.create(
@@ -94,7 +128,15 @@ class RegisterDoctorSerializer(serializers.Serializer):
             hospital = validated_data['hospital'],
             speciality = validated_data['speciality'],
             category = category_instance,
-            user = user_instance
+            username=validated_data['username'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            phone_number=validated_data['phone_number'],
+            id_number=validated_data['id_number']
+            
         )
+        doctor.set_password(validated_data['password'])
+        doctor.save()
         
         return doctor

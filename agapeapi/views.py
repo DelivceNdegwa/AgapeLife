@@ -5,7 +5,7 @@ from .serializers import *
 from django.http import Http404
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -55,13 +55,14 @@ class AgapeUserDetailView(RetrieveUpdateAPIView):
     queryset = AgapeUser.objects.all()
     serializer_class = AgapeUserSerializer
 
-class DoctorListView(ListCreateAPIView):
-    queryset = Doctor.objects.all()
+class DoctorListView(ListAPIView):
+    # permission_classes = (IsAuthenticated, )
+    queryset = Doctor.objects.filter(is_verified=True)
     serializer_class = DoctorSerializer
     
     
 class DoctorDetailsView(RetrieveUpdateAPIView):
-    queryset = Doctor.objects.all()
+    queryset = Doctor.objects.filter(is_verified=True)
     serializer_class = DoctorSerializer
 
 
@@ -73,6 +74,7 @@ class UserFeedBackListView(ListCreateAPIView):
 class UserFeedBackDetailView(RetrieveUpdateAPIView):
     queryset = UserFeedback.objects.all()
     serializer_class = UserFeedbackSerializer
+    
     
     
 class MedicalTipsListView(ListCreateAPIView):
