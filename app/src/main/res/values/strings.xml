@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AgapeLife</string>
+    <string name="agape_brand_title">Hospitali ya simu</string>
+    <string name="login_title">Login</string>
+    <string name="sign_up_title">Sign Up</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="agape_user">Agape User</string>
+    <string name="agape_doctor">Agape Doctor</string>
+    <string name="appointments">Appointments</string>
+    <string name="title_activity_doctor_main">DoctorMainActivity</string>
+    <string name="doctor_name">Doctor Name</string>
+    <string name="current_hospital">Hospital</string>
+    <string name="our_doctors">Find Doctors</string>
+</resources>

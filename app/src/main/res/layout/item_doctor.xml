@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="180dp"
+    android:layout_height="200dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="5dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/img_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/docor_img" />
+
+        <TextView
+            android:id="@+id/tv_doc_name"
+            style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:elevation="1dp"
+            android:text="@string/doctor_name"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_speciality"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_speciality"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:text="Specialization"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/tv_hospital"
+            android:layout_marginStart="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/tv_hospital"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="8dp"
+                android:elevation="1dp"
+                android:text="@string/current_hospital"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#52090909"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
