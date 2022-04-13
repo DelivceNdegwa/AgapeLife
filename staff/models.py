@@ -39,10 +39,13 @@ class Doctor(User):
     license_certificate = models.FileField(upload_to='license/', null=True, blank=True)
     profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
     hospital = models.CharField(max_length=200)
+    experience_years = models.IntegerField(null=True, blank=True)
     speciality = models.CharField(max_length=100)
     category = models.ForeignKey(MedicalCategory, null=True, blank=True, on_delete=models.SET_NULL)
     phone_number = models.IntegerField(null=True)
     id_number = models.IntegerField(null=True)
+    self_description = models.TextField(null=True, blank=True)
+    is_available = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     

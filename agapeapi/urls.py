@@ -7,7 +7,7 @@ urlpatterns = [
     path("doctors/", DoctorListView.as_view()),
     path("doctors/<int:pk>", DoctorDetailsView.as_view()),
     path("users/", AgapeUserListView.as_view()),
-    path("users/<int:pk>", AgapeUserDetailView.as_view()),
+    path("users/<id_number>", AgapeUserDetailView.as_view()),
     path("feedbacks/", UserFeedBackListView.as_view()),
     path("feedbacks/<int:pk>", UserFeedBackDetailView.as_view()),
     path("health-tips/", MedicalTipsListView.as_view()),

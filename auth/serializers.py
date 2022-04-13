@@ -83,6 +83,9 @@ class RegisterDoctorSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     
+    self_description = serializers.CharField(required=True)
+    experience_years = serializers.CharField(required=True)
+    
     email = serializers.EmailField(
             required=True,
             validators=[UniqueValidator(queryset=AgapeUser.objects.all())]
@@ -109,7 +112,7 @@ class RegisterDoctorSerializer(serializers.Serializer):
     
     class Meta:
         model=Doctor
-        fields = ('license_certificate', 'profile_image', 'hospital', 'speciality', 'category', 'username', 'email', 'first_name', 'last_name', 'password', 'password2', 'id_number', 'phone_number')
+        fields = ('license_certificate', 'profile_image', 'hospital', 'speciality',  'category', 'username', 'email', 'first_name', 'last_name', 'password', 'password2', 'id_number', 'phone_number')
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:

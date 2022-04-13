@@ -52,12 +52,16 @@ class AgapeUserListView(ListCreateAPIView):
     
 
 class AgapeUserDetailView(RetrieveUpdateAPIView):
-    queryset = AgapeUser.objects.all()
     serializer_class = AgapeUserSerializer
 
+    def get_queryset(self):
+        user = AgapeUser.objects.filter(id=self.request.user.id).first()
+        return super().get_queryset()
+
+    
 class DoctorListView(ListAPIView):
     # permission_classes = (IsAuthenticated, )
-    queryset = Doctor.objects.filter(is_verified=True)
+    queryset = Doctor.objects.filter(is_verified=True, is_available=True)
     serializer_class = DoctorSerializer
     
     
@@ -85,3 +89,6 @@ class MedicalTipsListView(ListCreateAPIView):
 class MedicalTipsDetailView(RetrieveAPIView):
     queryset = MedicalTips.objects.all()
     serializer_class = MedicalTipsSerializer
+
+
+
