@@ -7,7 +7,8 @@ urlpatterns = [
     ## doctors
     path("doctors", doctorsList, name="doctors-list"),
     path("doctors/<id>", doctorDetails, name="doctor-details"),
-    path("doctors/verification/<id>", editVerification, name="edit-verification"),
+    path("verify-doctor/<id>", verifyDoctor, name="verify-doctor"),
+    path("unverify-doctor/<id>", deverifyDoctor, name="unverify-doctor"),
     
     ## categories
     path("categories", medicalCategorylist, name="medical-categories"),

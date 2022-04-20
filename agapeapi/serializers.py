@@ -37,3 +37,9 @@ class DoctorCategoryPivotSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorCategoryPivot
         fields = '__all__'
+        
+        
+class AppointmentSerializer(serializers.Serializer):
+    class Meta:
+        model = Appointment
+        fields = '__all__'

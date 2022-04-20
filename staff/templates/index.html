@@ -1,9 +1,8 @@
 {% extends 'layouts/base.html' %}{% block title%}Dashboard{% endblock %} {% block content %}
 
-<h2>Doctors</h2>
-
-<div class="card item-rounded">
+<div class="card item-rounded mt-3">
     <div class="card-body">
+        <h3 class="m-2">Doctors</h3>
         <table class="table">
             <thead>
                 <tr>
@@ -11,31 +10,32 @@
                     <th>ID</th>
                     <th>Phone Number</th>
                     <th>Speciality</th>
-                    <th>Status</th>
-                    <th>Operation</th>
+                    <th>Hospital</th>
+                    <th class="text-center">Operation</th>
                 </tr>
             </thead>
             <tbody>
                 {% for doctor in doctors %}
                 <tr>
-                    <td>{{ doctor.user.first_name}} {{ doctor.user.last_name }}</td>
-                    <td>{{ doctor.user.id_number }}</td>
-                    <td>{{ doctor.user.phone_number }}</td>
+                    <td>{{ doctor.first_name}} {{ doctor.last_name }}</td>
+                    <td>{{ doctor.id_number }}</td>
+                    <td>{{ doctor.phone_number }}</td>
                     <td>{{ doctor.speciality }}</td>
-                    <td>
-                        {% if doctor.is_verified %}Verified{% else %}Unverified{% endif %}
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-end">
-                            {% if doctor.is_verified %}
-                            <a href="#" class="btn btn-danger w-75"><i class="fa fa-times-circle" aria-hidden="true"></i>
-                Unverify</a
-              >
-              {% else %}
-              <a href="#" class="btn btn-success w-75"
-                ><i class="fa fa-check-circle" aria-hidden="true"></i> Verify</a
-              >{% endif %}
-            </div>
+                    <td>{{ doctor.hospital }}</td>
+                    <td class="text-center">
+                        {% if doctor.is_verified %}
+
+                        <a href="#unverify" data-verified="{{ doctor.is_verified }}" data-url="{% url 'unverify-doctor' doctor.id %}" class="unverify-doc btn btn-sm btn-danger w-100"><i class="m-2 fa fa-times-circle"></i> Unverify</a
+            >{% else %}
+
+            <a
+              href="#verify"
+              data-verified="{{ doctor.is_verified }}"
+              class="verify-doc btn btn-sm btn-success w-100"
+              data-url="{% url 'verify-doctor' doctor.id %}"
+              ><i class="m-2 fa fa-check-circle"></i> Verify</a
+            >
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -44,4 +44,100 @@
   </div>
 </div>
 
+{% endblock %} {% block 'scripts' %}
+<script>
+  $(document).ready(function () {
+    $(".verify-doc").each(function () {
+      let url = $(this).data("url");
+      let verifiedStatus = $(this).data("verified");
+
+      $(this).on("click", function (e) {
+        $.ajax({
+          data: {
+            verified: verifiedStatus,
+          },
+          type: "POST",
+          dataType: "json",
+          url: url,
+          success: function (data) {
+            if (data.success) {
+              setTimeout(function () {
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: data.message,
+                  showConfirmButton: false,
+                });
+              }, 2000);
+              window.location.reload();
+            } else {
+              Swal.fire({
+                position: "top-end",
+                icon: "danger",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          },
+          error: function (error) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: "Server error",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+        });
+      });
+    });
+
+    $(".unverify-doc").each(function () {
+      let url = $(this).data("url");
+      let verifiedStatus = $(this).data("verified");
+
+      $(this).on("click", function (e) {
+        e.preventDefault();
+        $.ajax({
+          data: { verified: verifiedStatus },
+          type: "POST",
+          dataType: "json",
+          url: url,
+          success: function (data) {
+            if (data.success) {
+              setTimeout(function () {
+                Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: data.message,
+                  showConfirmButton: false,
+                });
+              }, 2000);
+
+              window.location.reload();
+            } else {
+              Swal.fire({
+                position: "top-end",
+                icon: "danger",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          },
+          error: function (error) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: "Server error",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+        });
+      });
+    });
+  });
+</script>
 {% endblock %}

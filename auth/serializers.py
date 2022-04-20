@@ -72,9 +72,9 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         return user
     
 
-class RegisterDoctorSerializer(serializers.Serializer):
+class RegisterDoctorSerializer(serializers.ModelSerializer):
     license_certificate = serializers.FileField(required=True)
-    profile_image = serializers.ImageField(required=True)
+    # profile_image = serializers.ImageField(required=False)
     hospital = serializers.CharField(required=True)
     speciality = serializers.CharField(required=True)
     category = serializers.CharField(required=True)
@@ -83,8 +83,8 @@ class RegisterDoctorSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     
-    self_description = serializers.CharField(required=True)
-    experience_years = serializers.CharField(required=True)
+    # self_description = serializers.CharField(required=False)
+    # experience_years = serializers.CharField(required=True)
     
     email = serializers.EmailField(
             required=True,
@@ -102,7 +102,7 @@ class RegisterDoctorSerializer(serializers.Serializer):
     )
     
     username = serializers.CharField(
-        required=False
+        required=True
     )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -112,7 +112,7 @@ class RegisterDoctorSerializer(serializers.Serializer):
     
     class Meta:
         model=Doctor
-        fields = ('license_certificate', 'profile_image', 'hospital', 'speciality',  'category', 'username', 'email', 'first_name', 'last_name', 'password', 'password2', 'id_number', 'phone_number')
+        fields = ('hospital', 'speciality',  'category', 'username', 'email', 'first_name', 'last_name', 'password', 'password2', 'id_number', 'phone_number', 'license_certificate')
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -126,8 +126,8 @@ class RegisterDoctorSerializer(serializers.Serializer):
         category_instance = MedicalCategory.objects.filter(id=id_category).first()
         
         doctor = Doctor.objects.create(
-            license_certificate = validated_data['license_certificate'],
-            profile_image = validated_data['profile_image'],
+            # license_certificate = validated_data['license_certificate'],
+            # profile_image = validated_data['profile_image'],
             hospital = validated_data['hospital'],
             speciality = validated_data['speciality'],
             category = category_instance,

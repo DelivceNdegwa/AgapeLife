@@ -12,4 +12,6 @@ urlpatterns = [
     path("feedbacks/<int:pk>", UserFeedBackDetailView.as_view()),
     path("health-tips/", MedicalTipsListView.as_view()),
     path("health-tips/<int:pk>", MedicalTipsDetailView.as_view()),
+    path("appointments/", AppointmentListView.as_view()),
+    path("appointments/<id>", AppointmentDetailView.as_view()),
 ]

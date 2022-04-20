@@ -7,26 +7,26 @@ from django.db.models import ProtectedError
 from .models import *
 from .forms import *
 
-categories = MedicalCategory.objects.all()
-tips = MedicalTips.objects.all()
-doctors = Doctor.objects.select_related('user').all()
-feedbacks = UserFeedback.objects.all()
-
 
 ## navigation to all content i.e doctors section, tips section and feedbacks section
 def index(request): 
+    categories = MedicalCategory.objects.all()
+    doctors = Doctor.objects.all()
+    
     context={
         "number_of_doctors":doctors.count(),
         "doctors":doctors,
         "categories":categories,
         "new_feedbacks":UserFeedback.objects.filter()
+        
     }
     return render(request, "index.html", context)
 
 ## Doctor views
 def doctorsList(request):
+    doctors = Doctor.objects.all()
     context = {
-        "doctors":Doctor.objects.all()
+        "doctors":doctors
     }
     
     return render(request, "doctors/doctors-list.html", context)
@@ -38,30 +38,48 @@ def doctorDetails(request,id):
     }
     return render(request, "doctors/doctor-details.html", context)
 
-def editVerification(request, id):
-    doctor = Doctor.objects.filter(id=id).first()
+def verifyDoctor(request, id):
     
-    if request.method == 'POST':
-        status = request.POST.get('is-validated')
+    success = False
+    message = "Something went wrong"
+    
+    if request.method == "POST":
+        doctor = Doctor.objects.filter(id=id).first()
         
-        if status == False:
-            doctor.is_verified = True
-            message = 'verified'
-            
-        else:
-            doctor.is_verified = False
-            message = 'unverified'
-                 
-        doctor.save()
-        message_string = 'You have '+message+'Dr.'+doctor.user.first_name+' '+doctor.user.last_name
+        doctor.is_verified = True 
+        doctor.save()   
         
-        data = {
-            'success':True,
-            'message':message_string,
-        }
-                
-        return JsonResponse(data)    
+        success = True
+        message = "You have verified Dr "+doctor.first_name
+        
+    data = {
+        "success":success,
+        "message":message,
+    }
+    
+    return JsonResponse(data)
 
+def deverifyDoctor(request, id):
+    
+    success = False
+    message = "Something went wrong"
+    
+    if request.method == "POST":
+        doctor = Doctor.objects.filter(id=id).first()
+        
+        print(":::"+str(doctor.id)+":::")
+        
+        doctor.is_verified = False
+        doctor.save()
+        success = True
+        message = "You have deverified Dr "+doctor.first_name
+        
+    data = {
+        "success":success,
+        "message":message,
+    }
+    
+    return JsonResponse(data)
 
 ## Medical categories
 def medicalCategorylist(request):
@@ -176,5 +194,5 @@ def deleteMedicalTip(request, id):
     return JsonResponse(data)
         
 
-        
+       
         

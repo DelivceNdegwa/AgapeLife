@@ -18,24 +18,27 @@
             <tbody>
                 {% for doctor in doctors %}
                 <tr>
-                    <td>{{ doctor.user.first_name}} {{ doctor.user.last_name }}</td>
-                    <td>{{ doctor.user.id_number }}</td>
-                    <td>{{ doctor.user.phone_number }}</td>
+                    <td>{{ doctor.first_name}} {{ doctor.last_name }}</td>
+                    <td>{{ doctor.id_number }}</td>
+                    <td>{{ doctor.phone_number }}</td>
                     <td>{{ doctor.speciality }}</td>
                     <td>
                         {% if doctor.is_verified %}Verified{% else %}Unverified{% endif %}
                     </td>
-                    <td>
-                        <div class="d-flex justify-content-end">
-                            {% if doctor.is_verified %}
-                            <a href="#" class="btn btn-danger w-75"><i class="fa fa-times-circle" aria-hidden="true"></i>
-                Unverify</a
-              >
-              {% else %}
-              <a href="#" class="btn btn-success w-75"
-                ><i class="fa fa-check-circle" aria-hidden="true"></i> Verify</a
-              >{% endif %}
-            </div>
+                    <td class="text-center">
+                        {% if doctor.is_verified %}
+
+                        <a href="#unverify" data-verified="{{ doctor.is_verified }}" data-url="{% url 'unverify-doctor' doctor.id %}" class="unverify-doc btn btn-sm btn-danger w-100"><i class="m-2 fa fa-times-circle"></i> Unverify</a
+            >{% else %}
+
+            <a
+              href="#verify"
+              data-verified="{{ doctor.is_verified }}"
+              class="verify-doc btn btn-sm btn-success w-100"
+              data-url="{% url 'verify-doctor' doctor.id %}"
+              ><i class="m-2 fa fa-check-circle"></i> Verify</a
+            >
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
