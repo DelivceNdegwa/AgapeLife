@@ -49,14 +49,6 @@ class MedicalCategoryDetailsView(APIView):
 class AgapeUserListView(ListCreateAPIView):
     queryset = AgapeUser.objects.all()
     serializer_class = AgapeUserSerializer
-    
-
-class AgapeUserDetailView(RetrieveUpdateAPIView):
-    serializer_class = AgapeUserSerializer
-
-    def get_queryset(self):
-        user = AgapeUser.objects.filter(id=self.request.user.id).first()
-        return super().get_queryset()
 
     
 class DoctorListView(ListAPIView):
@@ -96,8 +88,43 @@ class AppointmentListView(ListCreateAPIView):
     serializer_class = AppointmentSerializer
     
     
+class UserAppointmentsListView(RetrieveAPIView):
+    serializer_class = AppointmentSerializer
+    
+    def get_queryset(self):
+        client = AgapeUser.objects.filter(id=id).first()
+        appointments = Appointment.objects.select_related('client').filter(client=client)
+        return appointments
+    
 
-class AppointmentDetailView(RetrieveAPIView):
+class DoctorAppointmentsListView(ListAPIView):
+    serializer_class = AppointmentSerializer
+    
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        doctor = Doctor.objects.filter(id=pk).first()
+        appointments = Appointment.objects.select_related('doctor').filter(doctor=doctor)
+        return appointments
+    
+class DoctorDetailsView(RetrieveUpdateAPIView):
+    serializer_class = DoctorSerializer
+    
+    def get_object(self):
+        id_number = self.kwargs.get('id_number', None)
+        doctor = Doctor.objects.filter(id_number=id_number).first()
+        return doctor
+    
+    
+class AgapeUserDetailView(RetrieveUpdateAPIView):
+    serializer_class = AgapeUserSerializer
+    
+    def get_object(self):
+        id_number = self.kwargs.get('id_number', None)
+        user = AgapeUser.objects.filter(id_number=id_number).first()
+        return user
+    
+    
+class AppointmentDetailView(RetrieveUpdateAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
 

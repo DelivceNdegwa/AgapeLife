@@ -1,5 +1,5 @@
 from django.urls import path
-from auth.views import AgapeUserObtainTokenPairView, AgapeUserRegisterView, DoctorRegisterView
+from auth.views import AgapeUserObtainTokenPairView, AgapeUserRegisterView, doctorRegister
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
@@ -7,5 +7,5 @@ urlpatterns = [
     path('login', AgapeUserObtainTokenPairView.as_view(), name='token_obtain_pair'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register', AgapeUserRegisterView.as_view(), name='auth_register'),
-    path('doctor-register', DoctorRegisterView.as_view(), name='register_doctor'),
+    path('doctor-register', doctorRegister, name='register_doctor'),
 ]
