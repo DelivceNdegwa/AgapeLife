@@ -12,4 +12,5 @@
     <color name="agape_variant">#CC0D953A</color>
     <color name="agape_layout_background">#192F9F44</color>
     <color name="agape_layout_text">#CEFFD7</color>
+    <color name="chip_color">#8193E9A3</color>
 </resources>

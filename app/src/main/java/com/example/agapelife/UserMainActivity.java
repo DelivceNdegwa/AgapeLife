@@ -1,12 +1,8 @@
 package com.example.agapelife;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.example.agapelife.databinding.ActivityUserMainBinding;
-import com.example.agapelife.utils.PreferenceStorage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +10,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import tech.gusavila92.websocketclient.WebSocketClient;
 
@@ -33,14 +24,16 @@ public class UserMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         binding = ActivityUserMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         BottomNavigationView navView = findViewById(R.id.nav_view_user);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
+                R.id.navigation_user_home, R.id.navigation_user_appointments, R.id.navigation_user_records)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);

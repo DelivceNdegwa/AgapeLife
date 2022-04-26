@@ -7,38 +7,40 @@ public class AgapeUserResponse {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("password")
+    @Expose
+    private String password;
     @SerializedName("username")
     @Expose
     private String username;
-    @SerializedName("phone_number")
-    @Expose
-    private String phoneNumber;
-    @SerializedName("id_number")
-    @Expose
-    private String idNumber;
-    @SerializedName("email")
-    @Expose
-    private String email;
     @SerializedName("first_name")
     @Expose
     private String firstName;
     @SerializedName("last_name")
     @Expose
     private String lastName;
-
-    @SerializedName("password")
+    @SerializedName("email")
     @Expose
-    private String password;
+    private String email;
+    @SerializedName("phone_number")
+    @Expose
+    private Integer phoneNumber;
+    @SerializedName("id_number")
+    @Expose
+    private Integer idNumber;
 
-    public AgapeUserResponse(Integer id, String username, String password) {
-        this.id = id;
-        this.username = username;
+//    @SerializedName("profile_photo")
+//    @Expose
+    private String profilePhoto ="profile_link";
+
+
+
+    public AgapeUserResponse(String password, String username) {
         this.password = password;
+        this.username = username;
     }
 
-    public AgapeUserResponse(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public AgapeUserResponse() {
     }
 
     public Integer getId() {
@@ -49,36 +51,20 @@ public class AgapeUserResponse {
         this.id = id;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getIdNumber() {
-        return idNumber;
-    }
-
-    public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstName() {
@@ -95,5 +81,37 @@ public class AgapeUserResponse {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Integer phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Integer getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(Integer idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 }

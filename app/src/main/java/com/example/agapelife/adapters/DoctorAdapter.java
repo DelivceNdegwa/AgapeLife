@@ -2,7 +2,6 @@ package com.example.agapelife.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.method.CharacterPickerDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,60 +14,65 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.agapelife.DoctorDetails;
 import com.example.agapelife.R;
-import com.example.agapelife.models.Doctor;
-import com.example.agapelife.networking.pojos.DoctorRequest;
 import com.example.agapelife.networking.pojos.DoctorResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder> {
+public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder>{
 
     Context context;
-    List<Doctor> doctorRequestList = new ArrayList<>();
+    List<DoctorResponse> doctors;
 
-    public DoctorAdapter(Context context, List<Doctor> doctorRequestList) {
+    public DoctorAdapter(Context context, List<DoctorResponse> doctors) {
         this.context = context;
-        this.doctorRequestList = doctorRequestList;
+        this.doctors = doctors;
     }
 
     @NonNull
     @Override
-    public DoctorAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_doctor, parent,false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_doctor, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DoctorAdapter.ViewHolder holder, int position) {
-        Doctor doctor = doctorRequestList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        DoctorResponse doctor = doctors.get(position);
+
+        holder.tvDoctorName.setText("Dr "+doctor.getFirstName());
+        holder.tvHospital.setText(doctor.getHospital());
+        holder.tvDoctorSpecialization.setText(doctor.getSpeciality());
+
+        Glide.with(context).
+                load(doctor.getProfileImage())
+                .placeholder(R.drawable.agape_life_logo_no_bg)
+                .into(holder.profileImage);
+
         holder.id = doctor.getId();
-        holder.hospitalName.setText(doctor.getHospital());
-        holder.docSpecialization.setText(doctor.getSpeciality());
-        holder.docName.setText(String.format("Dr %s", doctor.getFirstName()));
-        Glide.with(context).load(doctor.getProfileImage()).placeholder(R.drawable.docor_img).into(holder.profileImage);
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return doctors.size();
     }
 
-    public void updateDoctorsAdapter(List<Doctor> doctorRequestList){
-        this.doctorRequestList = doctorRequestList;
-        notifyDataSetChanged();
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        Integer id;
+
         ImageView profileImage;
-        TextView docName, docSpecialization, hospitalName;
+        TextView tvDoctorName, tvDoctorSpecialization, tvHospital;
+
+        long id;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            docName = itemView.findViewById(R.id.tv_doc_name);
-            docSpecialization = itemView.findViewById(R.id.tv_speciality);
-            hospitalName = itemView.findViewById(R.id.tv_hospital);
+
             profileImage = itemView.findViewById(R.id.img_profile);
+            tvDoctorName = itemView.findViewById(R.id.tv_doc_name);
+            tvDoctorSpecialization = itemView.findViewById(R.id.tv_speciality);
+            tvHospital = itemView.findViewById(R.id.tv_hospital);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

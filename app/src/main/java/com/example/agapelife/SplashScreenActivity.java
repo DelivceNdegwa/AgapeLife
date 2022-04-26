@@ -3,7 +3,6 @@ package com.example.agapelife;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +39,12 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 Intent intent;
                 if(preferenceStorage.isLoggedIn() == true){
-                    intent = new Intent(SplashScreenActivity.this, UserMainActivity.class);
+                    if(preferenceStorage.isDoctor() == true){
+                        intent = new Intent(SplashScreenActivity.this, DoctorsSection.class);
+                    }
+                    else{
+                        intent = new Intent(SplashScreenActivity.this, UserMainActivity.class);
+                    }
                 }
                 else{
                     intent = new Intent(SplashScreenActivity.this, LoginSignUpActivity.class);

@@ -1,4 +1,4 @@
-package com.example.agapelife.ui.dashboard;
+package com.example.agapelife.user_ui.user_appointments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,21 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.agapelife.databinding.FragmentDashboardBinding;
+import com.example.agapelife.databinding.FragmentUserAppointmentsBinding;
 
-public class DashboardFragment extends Fragment {
+public class UserAppointmentsFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
-    private FragmentDashboardBinding binding;
+    private UserAppointmentsViewModel userAppointmentsViewModel;
+    private FragmentUserAppointmentsBinding binding;
 
     Button signOut;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        userAppointmentsViewModel =
+                new ViewModelProvider(this).get(UserAppointmentsViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentUserAppointmentsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         //signOut = binding.signOut;

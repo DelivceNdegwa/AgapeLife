@@ -1,4 +1,4 @@
-package com.example.agapelife.ui.notifications;
+package com.example.agapelife.user_ui.user_records;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,24 +12,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.agapelife.R;
-import com.example.agapelife.databinding.FragmentNotificationsBinding;
+import com.example.agapelife.databinding.FragmentUserHealthRecordsBinding;
 
-public class NotificationsFragment extends Fragment {
+public class UserHealthRecordsFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
-    private FragmentNotificationsBinding binding;
+    private UserHealthRecordsViewModel userHealthRecordsViewModel;
+    private FragmentUserHealthRecordsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+        userHealthRecordsViewModel =
+                new ViewModelProvider(this).get(UserHealthRecordsViewModel.class);
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentUserHealthRecordsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        userHealthRecordsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

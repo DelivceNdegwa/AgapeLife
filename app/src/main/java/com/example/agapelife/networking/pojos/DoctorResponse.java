@@ -24,6 +24,15 @@ public class DoctorResponse {
     @SerializedName("category")
     @Expose
     private Integer category;
+    @SerializedName("is_available")
+    @Expose
+    private Boolean isAvailable;
+    @SerializedName("self_description")
+    @Expose
+    private Object selfDescription;
+    @SerializedName("experience_years")
+    @Expose
+    private Object experienceYears;
     @SerializedName("first_name")
     @Expose
     private String firstName;
@@ -85,6 +94,22 @@ public class DoctorResponse {
         this.category = category;
     }
 
+    public Object getSelfDescription() {
+        return selfDescription;
+    }
+
+    public void setSelfDescription(Object selfDescription) {
+        this.selfDescription = selfDescription;
+    }
+
+    public Object getExperienceYears() {
+        return experienceYears;
+    }
+
+    public void setExperienceYears(Object experienceYears) {
+        this.experienceYears = experienceYears;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -117,4 +142,15 @@ public class DoctorResponse {
         this.password = password;
     }
 
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public Boolean getAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(Boolean available) {
+        isAvailable = available;
+    }
 }
