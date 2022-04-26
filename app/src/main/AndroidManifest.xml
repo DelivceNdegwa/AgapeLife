@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.agapelife">
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -26,6 +32,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
+        <activity
+            android:name=".VideoCallActivity"
+            android:exported="false" />
         <activity
             android:name=".DoctorsSection"
             android:exported="false" />

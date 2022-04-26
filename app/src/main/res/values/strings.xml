@@ -113,4 +113,6 @@
     <string name="your_patients">Your recent patients</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="agora_app_id">0ceac686d87c4ba9811edbc7ee666356</string>
 </resources>
