@@ -3,6 +3,11 @@ from staff.models import *
 from .serializers import *
 
 from django.http import Http404
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -60,8 +65,34 @@ class DoctorListView(ListAPIView):
 class DoctorDetailsView(RetrieveUpdateAPIView):
     queryset = Doctor.objects.filter(is_verified=True)
     serializer_class = DoctorSerializer
+    
+    
+@csrf_exempt
+@api_view(["PUT"])
+@permission_classes((AllowAny,))
+def editOnlineStatus(request, id_number):
+    try:
+        doctor = Doctor.objects.filter(id_number=id_number).first()
+        
+        fetched_status = request.POST.get('is_available')
+        
+        if fetched_status == 'true':
+            online_status = True
+        else:
+            online_status = False
 
+        doctor.is_available = online_status
+        doctor.save()
+        
+        message = "Status changed successfully"
+        
+        return Response({'message':message}, status=status.HTTP_200_OK)
+            
+    except ObjectDoesNotExist as e:
+        message = str(e)
+        return Response({'message':message}, status=status.HTTP_400_BAD_REQUEST)
 
+    
 class UserFeedBackListView(ListCreateAPIView):
     queryset = UserFeedback.objects.all()
     serializer_class = UserFeedbackSerializer
@@ -103,7 +134,7 @@ class DoctorAppointmentsListView(ListAPIView):
     def get_queryset(self):
         pk = self.kwargs.get('pk')
         doctor = Doctor.objects.filter(id=pk).first()
-        appointments = Appointment.objects.select_related('doctor').filter(doctor=doctor)
+        appointments = Appointment.objects.select_related('doctor').filter(doctor=doctor, status=Appointment.PENDING)
         return appointments
     
 class DoctorDetailsView(RetrieveUpdateAPIView):
@@ -113,6 +144,19 @@ class DoctorDetailsView(RetrieveUpdateAPIView):
         id_number = self.kwargs.get('id_number', None)
         doctor = Doctor.objects.filter(id_number=id_number).first()
         return doctor
+    
+
+class DoctorPatientsView(ListAPIView):
+    serializer_class = AgapeUserSerializer
+    
+    def get_queryset(self):
+        id_number = self.kwargs.get('id_number', None)
+        doctor = Doctor.objects.filter(id_number=id_number).first()
+        appointment = Appointment.objects.select_related('doctor').filter(doctor=doctor)
+    
+        patients = doctor.appointment_set.all()
+        return patients
+        
     
     
 class AgapeUserDetailView(RetrieveUpdateAPIView):
@@ -127,4 +171,6 @@ class AgapeUserDetailView(RetrieveUpdateAPIView):
 class AppointmentDetailView(RetrieveUpdateAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
+
+
 

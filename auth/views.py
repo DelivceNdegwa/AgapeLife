@@ -6,6 +6,8 @@ from staff.models import AgapeUser, Doctor, MedicalCategory
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework.decorators import api_view, permission_classes
 
 
@@ -55,6 +57,7 @@ def doctorRegister(request):
     hospital = request.POST.get('hospital')
     speciality = request.POST.get('speciality')
     category_id = int(request.POST.get('category'))
+    profile_image = request.FILES['profile_image']
     
     errors = validate_fields(username, email, id_number, phone_number)
     
@@ -67,6 +70,7 @@ def doctorRegister(request):
         doctor.license_certificate = license_certificate
         doctor.email = email
         doctor.username = username
+        doctor.profile_image = profile_image
         doctor.set_password(password)
         doctor.id_number = id_number
         doctor.phone_number = phone_number

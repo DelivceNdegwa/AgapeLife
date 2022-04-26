@@ -17,7 +17,7 @@ class AgapeUserSerializer(serializers.ModelSerializer):
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ('id', 'is_verified', 'profile_image', 'hospital', 'speciality', 'category', 'self_description', 'experience_years', 'first_name', 'last_name', 'id_number','phone_number', 'phone_number', 'password')
+        fields = ('id', 'is_verified', 'profile_image', 'hospital', 'speciality', 'category', 'self_description', 'experience_years', 'is_available', 'first_name', 'last_name', 'id_number','phone_number', 'phone_number', 'password')
         
         
 class MedicalTipsSerializer(serializers.ModelSerializer):

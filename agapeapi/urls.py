@@ -7,6 +7,8 @@ urlpatterns = [
     
     path("doctors/", DoctorListView.as_view()),
     path("doctors/<int:id_number>", DoctorDetailsView.as_view()),
+    path("doctors/edit-status/<int:id_number>", editOnlineStatus),
+    
     
     path("users/", AgapeUserListView.as_view()),
     path("users/<int:id_number>", AgapeUserDetailView.as_view()),
@@ -22,4 +24,6 @@ urlpatterns = [
     
     path("appointments/", AppointmentListView.as_view()),
     path("appointments/<int:pk>", AppointmentDetailView.as_view()),
+    
+    path("get-patients/<int:id_number>", DoctorPatientsView.as_view()),
 ]

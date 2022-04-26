@@ -4,6 +4,15 @@ from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import ProtectedError
 
+# from django.core.servers.basehttp import FileWrapper #django <=1.8
+from wsgiref.util import FileWrapper 
+import mimetypes
+import os
+
+from pathlib import Path
+
+from django.utils.encoding import  smart_str
+
 from .models import *
 from .forms import *
 

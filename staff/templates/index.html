@@ -10,7 +10,7 @@
                     <th>ID</th>
                     <th>Phone Number</th>
                     <th>Speciality</th>
-                    <th>Hospital</th>
+                    <th>Status</th>
                     <th class="text-center">Operation</th>
                 </tr>
             </thead>
@@ -21,123 +21,121 @@
                     <td>{{ doctor.id_number }}</td>
                     <td>{{ doctor.phone_number }}</td>
                     <td>{{ doctor.speciality }}</td>
-                    <td>{{ doctor.hospital }}</td>
-                    <td class="text-center">
+                    <td>
                         {% if doctor.is_verified %}
-
-                        <a href="#unverify" data-verified="{{ doctor.is_verified }}" data-url="{% url 'unverify-doctor' doctor.id %}" class="unverify-doc btn btn-sm btn-danger w-100"><i class="m-2 fa fa-times-circle"></i> Unverify</a
-            >{% else %}
-
-            <a
-              href="#verify"
-              data-verified="{{ doctor.is_verified }}"
-              class="verify-doc btn btn-sm btn-success w-100"
-              data-url="{% url 'verify-doctor' doctor.id %}"
-              ><i class="m-2 fa fa-check-circle"></i> Verify</a
-            >
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+                        <p>Verified <i class="fa fa-check"></i></p>
+                        {% else %}
+                        <p>Not verified <i class="fa fa-times"></i></p>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'doctor-details' doctor.id %}" class="btn btn-sm btn-success">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %} {% block 'scripts' %}
 <script>
-  $(document).ready(function () {
-    $(".verify-doc").each(function () {
-      let url = $(this).data("url");
-      let verifiedStatus = $(this).data("verified");
+    $(document).ready(function() {
+        $(".verify-doc").each(function() {
+            let url = $(this).data("url");
+            let verifiedStatus = $(this).data("verified");
 
-      $(this).on("click", function (e) {
-        $.ajax({
-          data: {
-            verified: verifiedStatus,
-          },
-          type: "POST",
-          dataType: "json",
-          url: url,
-          success: function (data) {
-            if (data.success) {
-              setTimeout(function () {
-                Swal.fire({
-                  position: "top-end",
-                  icon: "success",
-                  title: data.message,
-                  showConfirmButton: false,
+            $(this).on("click", function(e) {
+                $.ajax({
+                    data: {
+                        verified: verifiedStatus,
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    success: function(data) {
+                        if (data.success) {
+                            setTimeout(function() {
+                                Swal.fire({
+                                    position: "top-end",
+                                    icon: "success",
+                                    title: data.message,
+                                    showConfirmButton: false,
+                                });
+                            }, 2000);
+                            window.location.reload();
+                        } else {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "danger",
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "warning",
+                            title: "Server error",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    },
                 });
-              }, 2000);
-              window.location.reload();
-            } else {
-              Swal.fire({
-                position: "top-end",
-                icon: "danger",
-                title: data.message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-            }
-          },
-          error: function (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "warning",
-              title: "Server error",
-              showConfirmButton: false,
-              timer: 1500,
             });
-          },
         });
-      });
-    });
 
-    $(".unverify-doc").each(function () {
-      let url = $(this).data("url");
-      let verifiedStatus = $(this).data("verified");
+        $(".unverify-doc").each(function() {
+            let url = $(this).data("url");
+            let verifiedStatus = $(this).data("verified");
 
-      $(this).on("click", function (e) {
-        e.preventDefault();
-        $.ajax({
-          data: { verified: verifiedStatus },
-          type: "POST",
-          dataType: "json",
-          url: url,
-          success: function (data) {
-            if (data.success) {
-              setTimeout(function () {
-                Swal.fire({
-                  position: "top-end",
-                  icon: "success",
-                  title: data.message,
-                  showConfirmButton: false,
+            $(this).on("click", function(e) {
+                e.preventDefault();
+                $.ajax({
+                    data: {
+                        verified: verifiedStatus,
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    url: url,
+                    success: function(data) {
+                        if (data.success) {
+                            setTimeout(function() {
+                                Swal.fire({
+                                    position: "top-end",
+                                    icon: "success",
+                                    title: data.message,
+                                    showConfirmButton: false,
+                                });
+                            }, 2000);
+
+                            window.location.reload();
+                        } else {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "danger",
+                                title: data.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "warning",
+                            title: "Server error",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    },
                 });
-              }, 2000);
-
-              window.location.reload();
-            } else {
-              Swal.fire({
-                position: "top-end",
-                icon: "danger",
-                title: data.message,
-                showConfirmButton: false,
-                timer: 1500,
-              });
-            }
-          },
-          error: function (error) {
-            Swal.fire({
-              position: "top-end",
-              icon: "warning",
-              title: "Server error",
-              showConfirmButton: false,
-              timer: 1500,
             });
-          },
         });
-      });
     });
-  });
 </script>
 {% endblock %}
