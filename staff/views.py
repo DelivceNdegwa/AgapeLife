@@ -42,8 +42,11 @@ def doctorsList(request):
 
 def doctorDetails(request,id):
     doctor = Doctor.objects.filter(id=id).first()
+    appointments = Appointment.objects.select_related('doctor').filter(doctor=doctor)
+    
     context = {
         "doctor":doctor,
+        "appointments":appointments,
     }
     return render(request, "doctors/doctor-details.html", context)
 

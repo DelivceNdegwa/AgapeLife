@@ -49,6 +49,11 @@ class Doctor(User):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
+    @property
+    def get_status(self):
+        if self.is_verified:
+            return "Verified"
+        return "Pending"
     
     class Meta:
         verbose_name = 'Agape Doctor'

@@ -1,9 +1,0 @@
-{% if doctor.is_verified %}
-
-<a href="#unverify" data-verified="{{ doctor.is_verified }}" data-url="{% url 'unverify-doctor' doctor.id %}" class="unverify-doc btn btn-sm btn-danger w-100"><i class="m-2 fa fa-times-circle"></i> Unverify</a
->{% else %}
-
-<a href="#verify" data-verified="{{ doctor.is_verified }}" class="verify-doc btn btn-sm btn-success w-100" data-url="{% url 'verify-doctor' doctor.id %}"><i class="m-2 fa fa-check-circle"></i> Verify</a
-> {% endif %} {% if doctor.license_certificate %}
-<a href="{{ doctor.license_certificate.url }}" download="{{ doctor.license_certificate.url }}">Download License</a
-> {% endif %}
