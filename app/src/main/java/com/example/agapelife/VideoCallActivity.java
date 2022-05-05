@@ -11,25 +11,134 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
+import io.agora.rtc.video.VideoCanvas;
 import io.agora.rtc.video.VideoEncoderConfiguration;
 
 
 public class VideoCallActivity extends AppCompatActivity {
     // Permissions
     private static final int PERMISSION_REQ_ID = 22;
-    private static final String[] REQUESTED_PERMISSIONS = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+
+    private static final String[] REQUESTED_PERMISSIONS = {
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.CAMERA
+    };
+
     private RtcEngine mRtcEngine;
 
-    private IRtcEngineEventHandler mRtcEventHandler;
+    public String channelName = "AgapeTest";
+    public String TOKEN = "0060ceac686d87c4ba9811edbc7ee666356IAB6sUreQupW2H8KpxFoV5tWXQwwdyJoYbGXJSYyavICwcsW9tsAAAAAEACf/BrpneFyYgEAAQCd4XJi";
+    public String APP_ID = "0ceac686d87c4ba9811edbc7ee666356";
+
+    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
+
+        @Override
+        public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+            super.onJoinChannelSuccess(channel, uid, elapsed);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(VideoCallActivity.this, "Access ID="+uid, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onUserJoined(int uid, int elapsed) {
+            super.onUserJoined(uid, elapsed);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setUpRemoteVideo(uid);
+                }
+            });
+        }
+
+        @Override
+        public void onUserOffline(int uid, int reason) {
+            super.onUserOffline(uid, reason);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onRemoteUserLeft();
+                }
+            });
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
+
+        if(checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) && checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)){
+            initAgoraEngineAndJoinChannel();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRtcEngine.leaveChannel();
+        RtcEngine.destroy();
+    }
+
+    public void initAgoraEngineAndJoinChannel(){
+        initializeAgoraEngine();
+
+        setUpLocalVideo();
+        // Join the channel with a token.
+        joinChannel();
+    }
+
+    private void joinChannel() {
+        mRtcEngine.joinChannel(TOKEN, channelName, null, 0);
+    }
+
+    private void initializeAgoraEngine() {
+        try{
+            mRtcEngine = RtcEngine.create(getBaseContext(), APP_ID, mRtcEventHandler);
+        }
+        catch(Exception e){
+            Log.d("initEngineError", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+        mRtcEngine.enableVideo();
+    }
+
+    private void setUpLocalVideo() {
+        Toast.makeText(this, "called", Toast.LENGTH_SHORT).show();
+        FrameLayout localVideoContainer = findViewById(R.id.local_video_view_container);
+        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+        localVideoContainer.addView(surfaceView);
+        // Pass the SurfaceView object to Agora so that it renders the local video.
+        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
+    }
+
+    private void setUpRemoteVideo(int uid) {
+        FrameLayout container = findViewById(R.id.remote_video_view_container);
+        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+        surfaceView.setZOrderMediaOverlay(true);
+        container.addView(surfaceView);
+        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
+    }
+
+    private void onRemoteUserLeft() {
+        FrameLayout container = findViewById(R.id.remote_video_view_container);
+        container.removeAllViews();
     }
 
     public boolean checkSelfPermission(String permission, int requestCode){
@@ -50,30 +159,9 @@ public class VideoCallActivity extends AppCompatActivity {
                     break;
                 }
                 // if permission granted, initialize the engine
-                initAgoraEngine();
                 break;
             }
         }
     }
 
-    private void initAgoraEngine() {
-        try {
-            mRtcEngine = RtcEngine.create(getBaseContext(), getString(R.string.agora_app_id), mRtcEventHandler);
-        } catch (Exception e) {
-            Log.e("initAgoraxception", Log.getStackTraceString(e));
-
-            throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
-        }
-        setupSession();
-    }
-
-    private void setupSession() {
-        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION);
-
-        mRtcEngine.enableVideo();
-
-        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(VideoEncoderConfiguration.VD_1280x720, VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
-                VideoEncoderConfiguration.STANDARD_BITRATE,
-                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT));
-    }
 }

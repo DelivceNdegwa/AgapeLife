@@ -34,6 +34,7 @@
         <entry key="app/src/main/res/drawable/ic_success_doc.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/mobile_login_pana.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/navigation_bg.xml" value="0.1205" />
+        <entry key="app/src/main/res/drawable/no_connection_layout.xml" value="0.2435" />
         <entry key="app/src/main/res/drawable/online_doctor_bro__1_.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/shape_circle.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/usability_testing_pana.xml" value="0.258" />
@@ -75,6 +76,8 @@
         <entry key="app/src/main/res/layout/item_consultation.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_doctor.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_patient.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/no_connection_layout.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/no_patient.xml" value="0.22" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.253125" />
         <entry key="app/src/main/res/menu/doctor_nav_menu.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_doctor_details.xml" value="0.10989583333333333" />

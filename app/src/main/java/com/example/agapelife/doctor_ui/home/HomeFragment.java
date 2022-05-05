@@ -1,5 +1,6 @@
 package com.example.agapelife.doctor_ui.home;
 
+import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,14 +50,20 @@ public class HomeFragment extends Fragment {
     PatientsAdapter patientsAdapter;
 
     RecyclerView rvConsultations, rvRecentPatients;
-    ConstraintLayout notVerifiedLayout, verifiedLayout;
+    ConstraintLayout notVerifiedLayout, verifiedLayout, recentPatientsLayout, consultationLayout;
+
+    View noConnectionLayout, noPatientsLayout;
+
     Switch onlineStatus;
-    TextView doctorGreeting, cardTvFname, tvFirstName, tvOnlineStatus;
+    TextView doctorGreeting, cardTvFname, tvFirstName, tvOnlineStatus, tvNoConnectionTitle;
+
 
     List<MedicalCategoryResponse> medicalCategoryResponses = new ArrayList<>();
     List<AppointmentResponse> consultations = new ArrayList<>();
     List<AgapeUserResponse> patients = new ArrayList<>();
     DoctorResponse doctorDetails = new DoctorResponse();
+
+    boolean noPatients=false, noConsultations=false;
 
     boolean isOnline = false;
     String status;
@@ -78,11 +85,18 @@ public class HomeFragment extends Fragment {
 //        binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        doctorGreeting = root.findViewById(R.id.doctor_greeting);
-        cardTvFname = root.findViewById(R.id.txt_first_letter_name);
         verifiedLayout = root.findViewById(R.id.verified_layout);
         notVerifiedLayout = root.findViewById(R.id.not_verified_layout);
+        recentPatientsLayout = root.findViewById(R.id.recent_patients_layout);
+        consultationLayout = root.findViewById(R.id.consultation_layout);
+
+        noConnectionLayout = root.findViewById(R.id.inc_no_connection);
+        noPatientsLayout = root.findViewById(R.id.view_no_patient);
+
+        doctorGreeting = root.findViewById(R.id.doctor_greeting);
+        cardTvFname = root.findViewById(R.id.txt_first_letter_name);
         tvFirstName = root.findViewById(R.id.f_name);
+        tvNoConnectionTitle = noConnectionLayout.findViewById(R.id.tv_no_connection_heading);
 
         onlineStatus = root.findViewById(R.id.switch_status);
         tvOnlineStatus = root.findViewById(R.id.tv_online_status);
@@ -120,21 +134,37 @@ public class HomeFragment extends Fragment {
         String firstNameInitial = Character.toString(firstName.charAt(0));
         String lastNameInitial = Character.toString(lastName.charAt(0));
 
-        Toast.makeText(getActivity(), firstNameInitial, Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(), lastNameInitial, Toast.LENGTH_SHORT).show();
-
         doctorGreeting.setText("Hi "+preferenceStorage.getFirstName());
 
         tvFirstName.setText(firstName);
+        tvNoConnectionTitle.setText("Hey "+firstName);
 
         if(!firstName.isEmpty()){
             String nameInitials = firstNameInitial + lastNameInitial;
             cardTvFname.setText(nameInitials);
-
         }
         else{
             cardTvFname.setVisibility(View.GONE);
         }
+
+        getConsultations();
+        rvConsultations.setAdapter(consultationsAdapter);
+
+        loadPatients();
+
+        if(checkIfEmpty()){
+            recentPatientsLayout.setVisibility(View.GONE);
+            consultationLayout.setVisibility(View.GONE);
+            noPatientsLayout.setVisibility(View.VISIBLE);
+        }
+        else{
+            recentPatientsLayout.setVisibility(View.VISIBLE);
+            consultationLayout.setVisibility(View.VISIBLE);
+            noPatientsLayout.setVisibility(View.GONE);
+        }
+        getDoctorDetails();
+
+
 
         onlineStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -153,12 +183,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        getConsultations();
-        rvConsultations.setAdapter(consultationsAdapter);
 
-        loadPatients();
-        getDoctorDetails();
+    }
 
+    private boolean checkIfEmpty() {
+        if(noConsultations && noPatients){
+            return true;
+        }
+        return false;
     }
 
     private void changeOnlineStatus() {
@@ -169,16 +201,21 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<DoctorResponse>() {
             @Override
             public void onResponse(Call<DoctorResponse> call, Response<DoctorResponse> response) {
-                String message;
-                if(!(response.code() == 200)){
-                    message = "Something went wrong";
-                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                noConnectionLayout.setVisibility(View.GONE);
+                if(response.code() == 200){
+                    noConnectionLayout.setVisibility(View.GONE);
+                    verifiedLayout.setVisibility(View.VISIBLE);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<DoctorResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Check your connection", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Check your connection", Toast.LENGTH_SHORT).show();
+                verifiedLayout.setVisibility(View.GONE);
+                noConnectionLayout.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -189,12 +226,21 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<List<AgapeUserResponse>>() {
             @Override
             public void onResponse(Call<List<AgapeUserResponse>> call, Response<List<AgapeUserResponse>> response) {
-                if(response.code() == 200 && response.body() != null){
+                noConnectionLayout.setVisibility(View.GONE);
+                if((response.code() == 500)){
+                    verifiedLayout.setVisibility(View.GONE);
+                    noConnectionLayout.setVisibility(View.VISIBLE);
+                }
+                else if(response.code() == 200 && response.body() != null){
                     patients.addAll(response.body());
                     patientsAdapter.notifyDataSetChanged();
+                    noConnectionLayout.setVisibility(View.GONE);
+                    verifiedLayout.setVisibility(View.VISIBLE);
+                    noPatients = false;
                 }
-                else if(response.body() == null){
-                    Toast.makeText(getContext(), "You have no patients currently", Toast.LENGTH_SHORT).show();
+                else if(response.body() == null && response.code() == 200){
+                    noPatients = true;
+//                    Toast.makeText(getContext(), "You have no patients currently", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Log.d("onResponseErrorCode", String.valueOf(response.code()));
@@ -205,7 +251,8 @@ public class HomeFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onFailure(Call<List<AgapeUserResponse>> call, Throwable t) {
-                Toast.makeText(getActivity(), "Check your connection", Toast.LENGTH_SHORT).show();
+                verifiedLayout.setVisibility(View.GONE);
+                noConnectionLayout.setVisibility(View.VISIBLE);
                 Log.d("onFailureMessage", t.getMessage());
                 Log.d("onFailureStackTrace", String.valueOf(Arrays.stream(t.getStackTrace()).toArray()));
             }
@@ -217,9 +264,14 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<List<AppointmentResponse>>() {
             @Override
             public void onResponse(Call<List<AppointmentResponse>> call, Response<List<AppointmentResponse>> response) {
+                noConnectionLayout.setVisibility(View.GONE);
                 if(response.body() != null && response.code() == 200){
                     consultations.addAll(response.body());
                     consultationsAdapter.notifyDataSetChanged();
+                    noConsultations = false;
+                }
+                else if(response.body() == null && response.code() == 200){
+                    noConsultations = true;
                 }
                 else{
                     Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -230,7 +282,8 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<AppointmentResponse>> call, Throwable t) {
-                Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                verifiedLayout.setVisibility(View.GONE);
+                noConnectionLayout.setVisibility(View.VISIBLE);
                 Log.d("onFailureThrowable", t.getMessage());
                 Log.d("onFailureStackTrace", Arrays.toString(t.getStackTrace()));
             }
@@ -242,6 +295,7 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<DoctorResponse>() {
             @Override
             public void onResponse(Call<DoctorResponse> call, Response<DoctorResponse> response) {
+                noConnectionLayout.setVisibility(View.GONE);
                 if(response.code() == 200 && response.body() !=null){
                     doctorDetails = response.body();
                     if(!doctorDetails.getIsVerified()){
@@ -260,7 +314,7 @@ public class HomeFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onFailure(Call<DoctorResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Check your connection", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Check your connection", Toast.LENGTH_SHORT).show();
                 Log.d("onFailureMessage", t.getMessage());
                 Log.d("onFailureStackTrace", String.valueOf(Arrays.stream(t.getStackTrace()).toArray()));
             }
