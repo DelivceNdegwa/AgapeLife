@@ -206,5 +206,6 @@ def deleteMedicalTip(request, id):
     return JsonResponse(data)
         
 
+
        
         

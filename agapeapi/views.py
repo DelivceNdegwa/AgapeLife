@@ -16,6 +16,11 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, UpdateAPIView, CreateAPIView
 
+from agora_tokens.RtcGenerateToken import TokenGenerator
+
+import datetime
+from datetime import timedelta
+
 '''' 
 Data the application should have
     MedicalCategory Data: READ(App can only read the data)
@@ -172,5 +177,25 @@ class AppointmentDetailView(RetrieveUpdateAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
 
+
+@csrf_exempt
+@api_view(["GET"])
+def generateTokens(request, pk):
+    # this is the id for the meeting 
+    appointment = Appointment.objects.filter(id=pk).first()
+    
+    channel_name = appointment.title
+    start_time = appointment.start_time
+    end_time = appointment.end_time
+    uid = appointment.client.username+"_"+str(appointment.client.id)
+    
+    time_delta = end_time - start_time
+    
+    try:
+        token_generator = TokenGenerator(uid, channel_name, start_time, int(time_delta.total_seconds()))
+        token = token_generator.generate()
+        return Response({'token': token}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error':str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 

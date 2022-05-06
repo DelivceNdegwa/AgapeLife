@@ -1,7 +1,7 @@
 import os
 import sys
 from collections import OrderedDict
-from AccessToken import *
+from .AccessToken import *
 
 # The RTC channel transmits audio or video data
 

@@ -74,13 +74,13 @@ class Appointment(models.Model):
         (COMPLETE, "Complete"),
         (CANCELLED, "Cancelled")
     )
-    
+    title = models.CharField(max_length=50, default="My appointment")
     about = models.CharField(max_length=200)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     doctor = models.ForeignKey(Doctor, null=True, blank=True, on_delete=models.SET_NULL)
     client = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
-    status = models.CharField(choices=APPOINTMENT_STATUS, max_length=30, default=PENDING)
+    status = models.IntegerField(choices=APPOINTMENT_STATUS, default=PENDING)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
@@ -143,8 +143,8 @@ class UserFeedback(models.Model):
     
     author = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
     message = models.TextField()
-    status = models.CharField(choices=FEEDBACK_STATUS, default=UNREAD, max_length=30)
-    category = models.CharField(choices=FEEDBACK_CATEGORY, default=APP_RELATED, max_length=30)
+    status = models.IntegerField(choices=FEEDBACK_STATUS, default=UNREAD)
+    category = models.IntegerField(choices=FEEDBACK_CATEGORY, default=APP_RELATED)
     
     def __str__(self):
         return str(self.author.author.id_number)
