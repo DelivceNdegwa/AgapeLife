@@ -27,6 +27,7 @@
         <entry key="app/src/main/res/drawable/bg_gradient_one.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/bg_gradient_three.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/circle_button.xml" value="0.2435" />
+        <entry key="app/src/main/res/drawable/circle_button_red.xml" value="0.2435" />
         <entry key="app/src/main/res/drawable/file_searching_rafiki.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/file_searching_rafiki__1_.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_alert_24.xml" value="0.258" />
@@ -48,6 +49,8 @@
         <entry key="app/src/main/res/layout-small/fragment_user_home.xml" value="0.6875" />
         <entry key="app/src/main/res/layout-xlarge/fragment_home.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout-xlarge/fragment_user_home.xml" value="0.14275956284153005" />
+        <entry key="app/src/main/res/layout/activity_create_appointment.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_doctor_appointments.xml" value="0.12590579710144928" />
         <entry key="app/src/main/res/layout/activity_doctor_details.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_doctor_main.xml" value="0.23385416666666667" />
         <entry key="app/src/main/res/layout/activity_doctor_sign_up.xml" value="0.1078125" />
@@ -55,13 +58,14 @@
         <entry key="app/src/main/res/layout/activity_doctors_section.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login_sign_up.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1078125" />
-        <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.103125" />
+        <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_sign_up_choice.xml" value="0.2246376811594203" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/activity_test_bottom.xml" value="0.2115036231884058" />
         <entry key="app/src/main/res/layout/activity_user_main.xml" value="0.1078125" />
         <entry key="app/src/main/res/layout/activity_video_call.xml" value="0.25" />
         <entry key="app/src/main/res/layout/content_scrolling.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/custom_toolbar.xml" value="0.12310030395136778" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/fragment_doctor_home.xml" value="0.2115036231884058" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />

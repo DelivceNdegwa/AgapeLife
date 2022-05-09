@@ -19,9 +19,46 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Custom imported Themes Beginning -->
+        <style name="Theme.Custom" parent="Theme.AgapeLife">
+            <item name="windowActionBar">false</item>
+            <item name="windowActionBarOverlay">true</item>
+            <item name="android:windowActionBarOverlay">true</item>
+        </style>
+
+        <style name="CustomActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            <item name="android:windowActionBarOverlay">true</item>
+            <!-- Support library compatibility -->
+            <item name="windowActionBarOverlay">true</item>
+        </style>
+    <!-- CUstom imported Themes ending -->
+
     <style name="Theme.AgapeLife.NoActionBar.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="CustomHeadlineTitle" parent="@style/TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">#333633</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+
+    <style name="EditTextThemeOverlay" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">#B233AA49</item>
+    </style>
+
+    <style name="ErrorTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/holo_orange_dark</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
+    <style name="HelperTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/purple_500</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold|italic</item>
     </style>
 
     <style name="Theme.AgapeLife.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

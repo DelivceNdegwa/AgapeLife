@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,9 +38,10 @@ public class VideoCallActivity extends AppCompatActivity {
     private RtcEngine mRtcEngine;
 
     public String channelName = "AgapeTest";
-    public String TOKEN = "0060ceac686d87c4ba9811edbc7ee666356IAB6sUreQupW2H8KpxFoV5tWXQwwdyJoYbGXJSYyavICwcsW9tsAAAAAEACf/BrpneFyYgEAAQCd4XJi";
+    public String TOKEN = "0060ceac686d87c4ba9811edbc7ee666356IABQ2+P/do9meS4NfGlR9dzM54WVMEwFyuaZLu4s2J+0E8sW9ttNBiG1IgCaGCUDEip2YgQAAQAqJnZiAgAqJnZiAwAqJnZiBAAqJnZi";
     public String APP_ID = "0ceac686d87c4ba9811edbc7ee666356";
 
+    // Responsible for handling events such as joining the group and leaving the group
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
 
         @Override
@@ -84,6 +86,39 @@ public class VideoCallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
 
+        ImageView micToggler = findViewById(R.id.btn_audio);
+        ImageView videoToggler = findViewById(R.id.btn_video);
+        ImageView leaveCall = findViewById(R.id.leave_call);
+
+        micToggler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAudioMuteClicked(micToggler);
+            }
+        });
+
+        videoToggler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onVideoMuteClicked(videoToggler);
+            }
+        });
+
+        leaveCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    leaveChannel();
+                    removeVideo(R.id.local_video_view_container);
+                    removeVideo(R.id.remote_video_view_container);
+
+                    Intent intent = new Intent(VideoCallActivity.this, SplashScreenActivity.class);
+                    startActivity(intent);
+                    finish();
+            }
+        });
+
+        // Checking for permissions
         if(checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) && checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)){
             initAgoraEngineAndJoinChannel();
         }
@@ -101,20 +136,23 @@ public class VideoCallActivity extends AppCompatActivity {
 
         setUpLocalVideo();
         // Join the channel with a token.
-        joinChannel();
+        joinChannelWithUserAccount();
     }
 
-    private void joinChannel() {
-        mRtcEngine.joinChannel(TOKEN, channelName, null, 0);
+    private void joinChannelWithUserAccount() {
+        mRtcEngine.joinChannelWithUserAccount(TOKEN, channelName, "brian_12");
     }
 
     private void initializeAgoraEngine() {
+        //Initializing agora involves initializing the RTCEngine
         try{
             mRtcEngine = RtcEngine.create(getBaseContext(), APP_ID, mRtcEventHandler);
+            mRtcEngine.registerLocalUserAccount(APP_ID, "brian_12");
         }
         catch(Exception e){
-            Log.d("initEngineError", e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            Log.e("initializeAgoraError", Log.getStackTraceString(e));
+
+            throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
         }
         mRtcEngine.enableVideo();
     }
@@ -123,6 +161,7 @@ public class VideoCallActivity extends AppCompatActivity {
         Toast.makeText(this, "called", Toast.LENGTH_SHORT).show();
         FrameLayout localVideoContainer = findViewById(R.id.local_video_view_container);
         SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+        surfaceView.setZOrderMediaOverlay(true);
         localVideoContainer.addView(surfaceView);
         // Pass the SurfaceView object to Agora so that it renders the local video.
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
@@ -131,14 +170,60 @@ public class VideoCallActivity extends AppCompatActivity {
     private void setUpRemoteVideo(int uid) {
         FrameLayout container = findViewById(R.id.remote_video_view_container);
         SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
-        surfaceView.setZOrderMediaOverlay(true);
         container.addView(surfaceView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
+        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FILL, uid));
+        surfaceView.setTag(uid);
     }
 
     private void onRemoteUserLeft() {
         FrameLayout container = findViewById(R.id.remote_video_view_container);
         container.removeAllViews();
+    }
+
+    public void onAudioMuteClicked(View view) {
+        ImageView btn = (ImageView) view;
+        if (btn.isSelected()) {
+            btn.setSelected(false);
+            btn.setImageResource(R.drawable.ic_baseline_mic_24);
+        } else {
+            btn.setSelected(true);
+            btn.setImageResource(R.drawable.ic_baseline_mic_off_24);
+        }
+
+        mRtcEngine.muteLocalAudioStream(btn.isSelected());
+    }
+
+    public void onVideoMuteClicked(View view) {
+        ImageView btn = (ImageView) view;
+        if (btn.isSelected()) {
+            btn.setSelected(false);
+            btn.setImageResource(R.drawable.ic_baseline_videocam_24);
+        } else {
+            btn.setSelected(true);
+            btn.setImageResource(R.drawable.ic_baseline_videocam_off_24);
+        }
+
+        mRtcEngine.muteLocalVideoStream(btn.isSelected());
+
+        FrameLayout container = findViewById(R.id.local_video_view_container);
+        container.setVisibility(btn.isSelected() ? View.GONE : View.VISIBLE);
+        SurfaceView videoSurface = (SurfaceView) container.getChildAt(0);
+        videoSurface.setZOrderMediaOverlay(!btn.isSelected());
+        videoSurface.setVisibility(btn.isSelected() ? View.GONE : View.VISIBLE);
+    }
+
+    public void setUpVideoProfile(){
+        mRtcEngine.enableAudio();
+
+    }
+
+    private void leaveChannel() {
+        mRtcEngine.leaveChannel();
+    }
+
+    private void removeVideo(int containerID) {
+        FrameLayout videoContainer = findViewById(containerID);
+        videoContainer.removeAllViews();
     }
 
     public boolean checkSelfPermission(String permission, int requestCode){

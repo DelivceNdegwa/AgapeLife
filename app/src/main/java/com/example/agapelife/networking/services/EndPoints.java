@@ -5,6 +5,7 @@ import com.example.agapelife.networking.pojos.AgapeUserResponse;
 import com.example.agapelife.networking.pojos.AppointmentResponse;
 import com.example.agapelife.networking.pojos.DoctorRequest;
 import com.example.agapelife.networking.pojos.DoctorResponse;
+import com.example.agapelife.networking.pojos.GenerateAgoraToken;
 import com.example.agapelife.networking.pojos.MedicalCategoryResponse;
 import com.example.agapelife.networking.pojos.MedicalTipResponse;
 
@@ -62,6 +63,9 @@ public interface EndPoints {
 
     @GET("api/client-appointments/{pk}")
     Call<List<AppointmentResponse>> getClientAppointments(@Path("pk") long idNumber);
+
+    @GET("api/generate-meeting-tokens/{pk}")
+    Call<GenerateAgoraToken> getGeneratedToken(@Path("pk") long id);
 
     @GET("api/user-appointments/{pk}")
     Call<List<AppointmentResponse>> getUserAppointments(@Path("pk") long idNumber);

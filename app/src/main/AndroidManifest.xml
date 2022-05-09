@@ -33,6 +33,18 @@
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
         <activity
+            android:name=".DoctorAppointmentsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateAppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PostAppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PreAppointmentActivity"
+            android:exported="false" />
+        <activity
             android:name=".VideoCallActivity"
             android:exported="false" />
         <activity
