@@ -51,7 +51,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                    intent = new Intent(SplashScreenActivity.this, LoginSignUpActivity.class);
 //
 //                }
-                intent = new Intent(SplashScreenActivity.this, VideoCallActivity.class);
+                intent = new Intent(SplashScreenActivity.this, CreateAppointmentActivity.class);
                 startActivity(intent);
                 finish();
             }
