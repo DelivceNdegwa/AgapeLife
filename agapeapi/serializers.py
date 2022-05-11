@@ -48,7 +48,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class AppointmentRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppointmentRequest
-        field = '__all__'
+        fields = '__all__'
         
 
 class DoctorPrescriptionSerializer(serializers.ModelSerializer):

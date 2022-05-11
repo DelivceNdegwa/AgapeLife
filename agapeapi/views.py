@@ -184,7 +184,8 @@ class AppointmentRequestListView(ListAPIView):
     def get_queryset(self):
         id_number = self.kwargs.get('id_number', None)
         doctor = Doctor.objects.filter(id_number=id_number).first()
-        appointment_requests = AppointmentRequest.objects.filter(doctor__in=doctor)
+        print(str(doctor.id))
+        appointment_requests = AppointmentRequest.objects.filter(doctor=doctor)
         
         return appointment_requests
     

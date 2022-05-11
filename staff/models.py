@@ -58,9 +58,10 @@ class Doctor(User):
     class Meta:
         verbose_name = 'Agape Doctor'
     
+    # def __str__(self):
+    #     return "Dr "+self.first_name+" "+self.last_name
     def __str__(self):
-        return "Dr "+self.first_name+" "+self.last_name
-
+        return str(self.id)
 
 class PatientSymptoms(models.Model):
     symptoms = models.TextField()
