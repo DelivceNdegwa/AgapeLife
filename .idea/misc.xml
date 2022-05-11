@@ -49,7 +49,7 @@
         <entry key="app/src/main/res/layout-small/fragment_user_home.xml" value="0.6875" />
         <entry key="app/src/main/res/layout-xlarge/fragment_home.xml" value="0.18984375" />
         <entry key="app/src/main/res/layout-xlarge/fragment_user_home.xml" value="0.14275956284153005" />
-        <entry key="app/src/main/res/layout/activity_create_appointment.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_create_appointment.xml" value="0.30998248686514884" />
         <entry key="app/src/main/res/layout/activity_doctor_appointments.xml" value="0.12590579710144928" />
         <entry key="app/src/main/res/layout/activity_doctor_details.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_doctor_main.xml" value="0.23385416666666667" />
@@ -58,6 +58,7 @@
         <entry key="app/src/main/res/layout/activity_doctors_section.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login_sign_up.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1078125" />
+        <entry key="app/src/main/res/layout/activity_post_appointment.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_sign_up_choice.xml" value="0.2246376811594203" />
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.24592391304347827" />

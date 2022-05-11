@@ -1,5 +1,6 @@
 package com.example.agapelife.networking.services;
 
+import com.example.agapelife.models.Appointment;
 import com.example.agapelife.networking.pojos.AgapeUserRequest;
 import com.example.agapelife.networking.pojos.AgapeUserResponse;
 import com.example.agapelife.networking.pojos.AppointmentResponse;
@@ -9,6 +10,7 @@ import com.example.agapelife.networking.pojos.GenerateAgoraToken;
 import com.example.agapelife.networking.pojos.MedicalCategoryResponse;
 import com.example.agapelife.networking.pojos.MedicalTipResponse;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +75,19 @@ public interface EndPoints {
 //    Get all patients with a certain doctor ID
     @GET("api/get-patients/{id}")
     Call<List<AgapeUserResponse>> getDoctorPatients(@Path("id") long id);
+//
+//    @GET("api/appointment-requests{id}")
+//    Call<List<>>
 
+    @FormUrlEncoded
+    @POST("api/create-appointment/")
+    Call<Appointment> createAppointment(
+            @Field("appointment_title") String appointmentTitle,
+            @Field("start_time") String startTime,
+            @Field("end_time") String endTime,
+            @Field("doctor_id") long clientId,
+            @Field("patient_id") long patientId
+    );
 
     @FormUrlEncoded
     @POST("auth/register")

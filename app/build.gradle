@@ -85,4 +85,7 @@ dependencies {
 
     // To fetch agora setup library files from the libs folder
     implementation 'io.agora.rtc:full-rtc-basic:3.6.2'
+
+    // Datetime range picker
+    implementation 'nl.joery.timerangepicker:timerangepicker:1.0.0'
 }
