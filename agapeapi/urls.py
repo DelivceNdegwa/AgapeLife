@@ -25,6 +25,8 @@ urlpatterns = [
     path("appointments/", AppointmentListView.as_view()),
     path("appointments/<int:pk>", AppointmentDetailView.as_view()),
     
+    path("create-appointment/", createAppointment),
+    
     path("get-patients/<int:id_number>", DoctorPatientsView.as_view()),
     
     path("generate-meeting-tokens/<int:pk>", generateTokens)

@@ -75,7 +75,7 @@ class Appointment(models.Model):
         (CANCELLED, "Cancelled")
     )
     title = models.CharField(max_length=50, default="My appointment")
-    about = models.CharField(max_length=200)
+    about = models.CharField(max_length=200, null=True, blank=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     doctor = models.ForeignKey(Doctor, null=True, blank=True, on_delete=models.SET_NULL)
