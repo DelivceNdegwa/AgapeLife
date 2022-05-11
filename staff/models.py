@@ -61,7 +61,30 @@ class Doctor(User):
     def __str__(self):
         return "Dr "+self.first_name+" "+self.last_name
     
+
+class AppointmentRequest(models.Model):
+    APPROVED = 1
+    DISAPPROVED = 2
+    PENDING = 3
     
+    STATUS = (
+        (PENDING, "Pending"),
+        (APPROVED, "Approved"),
+        (DISAPPROVED, "Disapproved")
+    )
+    client = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, models.CASCADE)
+    about = models.CharField(max_length=50)
+    symptoms = models.TextField()
+    status = models.IntegerField(choices=STATUS, default=PENDING)
+    read = models.BooleanField(default=False)
+    
+    def __str__(self):
+        if self.read == True:
+            return 'Read'
+        else:
+            return 'Unread'
+
 class Appointment(models.Model):
     COMPLETE = 1
     ONGOING = 2

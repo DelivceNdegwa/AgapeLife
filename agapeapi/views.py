@@ -212,16 +212,27 @@ def createAppointment(request):
     doctor_id = request.POST.get("doctor_id")
     client_id = request.POST.get("patient_id")
     
-    try:
-        appointment = Appointment(
+    appointment = Appointment(
             title = appointment_title,
             start_time = start_time,
             end_time = end_time,
             client = AgapeUser.objects.filter(id=client_id).first(),
             doctor = Doctor.objects.filter(id=doctor_id).first()
         )
-        appointment.save()
+    appointment.save()
         
-        return Response({"success":True, "message":"Appointment created successfully", "error":None}, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({"success":False, "message":"Something went wrong", "error":e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return Response({"success":True, "message":"Appointment created successfully", "error":None}, status=status.HTTP_201_CREATED)
+    
+    # try:
+    #     appointment = Appointment(
+    #         title = appointment_title,
+    #         start_time = start_time,
+    #         end_time = end_time,
+    #         client = AgapeUser.objects.filter(id=client_id).first(),
+    #         doctor = Doctor.objects.filter(id=doctor_id).first()
+    #     )
+    #     appointment.save()
+        
+    #     return Response({"success":True, "message":"Appointment created successfully", "error":None}, status=status.HTTP_201_CREATED)
+    # except Exception as e:
+    #     return Response({"success":False, "message":"Something went wrong", "error":e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
