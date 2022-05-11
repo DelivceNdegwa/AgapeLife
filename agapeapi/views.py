@@ -178,6 +178,36 @@ class AppointmentDetailView(RetrieveUpdateAPIView):
     serializer_class = AppointmentSerializer
 
 
+class AppointmentRequestListView(ListAPIView):
+    # queryset = AppointmentRequest
+    serializer_class = AppointmentRequestSerializer
+    def get_queryset(self):
+        id_number = self.kwargs.get('id_number', None)
+        doctor = Doctor.objects.filter(id_number=id_number).first()
+        appointment_requests = AppointmentRequest.objects.filter(doctor__in=doctor)
+        
+        return appointment_requests
+    
+    
+class AppointmentRequestDetailView(RetrieveUpdateAPIView):
+    queryset = AppointmentRequest
+    serializer_class = AppointmentRequestSerializer
+    
+    
+class DoctorPrescriptionsDetailView(RetrieveUpdateAPIView):
+    queryset = DoctorPrescription
+    serializer_class = DoctorPrescriptionSerializer
+    
+class DoctorPrescriptionListView(ListAPIView):
+    queryset = DoctorPrescription
+    serializer_class = DoctorPrescriptionSerializer
+    
+    
+class PatientsSymptomsDetailView(RetrieveUpdateAPIView):
+    queryset = PatientSymptoms
+    serializer_class = PatientSymptomsSerializer
+    
+
 @csrf_exempt
 @api_view(["GET"])
 def generateTokens(request, pk):
@@ -203,9 +233,6 @@ def generateTokens(request, pk):
 @api_view(["POST"])
 @permission_classes((AllowAny,))
 def createAppointment(request):
-    
-    # print(request.data)
-    
     appointment_title = request.POST.get("appointment_title")
     start_time = request.POST.get("start_time")
     end_time = request.POST.get("end_time")
@@ -223,16 +250,26 @@ def createAppointment(request):
         
     return Response({"success":True, "message":"Appointment created successfully", "error":None}, status=status.HTTP_201_CREATED)
     
-    # try:
-    #     appointment = Appointment(
-    #         title = appointment_title,
-    #         start_time = start_time,
-    #         end_time = end_time,
-    #         client = AgapeUser.objects.filter(id=client_id).first(),
-    #         doctor = Doctor.objects.filter(id=doctor_id).first()
-    #     )
-    #     appointment.save()
-        
-    #     return Response({"success":True, "message":"Appointment created successfully", "error":None}, status=status.HTTP_201_CREATED)
-    # except Exception as e:
-    #     return Response({"success":False, "message":"Something went wrong", "error":e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def bookAppointment(request):
+    client = int(request.POST.get("client_id"))
+    doctor = request.POST.get("doctor_id")
+    about = request.POST.get("about")
+    symptoms = request.POST.get("patient_symptoms")
+    
+    patient_symptoms = PatientSymptoms()
+    patient_symptoms.symptoms = symptoms
+    patient_symptoms.patient =AgapeUser.objects.filter(id=client).first()
+    patient_symptoms.save()
+    
+    appointment_request = AppointmentRequest()
+    appointment_request.client=AgapeUser.objects.filter(id=client).first()
+    appointment_request.doctor=Doctor.objects.filter(id=doctor).first()
+    appointment_request.about = about
+    appointment_request.symptoms = patient_symptoms
+    appointment_request.save()
+    
+    return Response({"success":True, "message":"Appointment has been booked successfully", "error":None}, status=status.HTTP_201_CREATED)

@@ -32,7 +32,7 @@ class AgapeUser(User):
     
     def __str__(self):
         return str(self.id_number)+" "+self.email
-    
+
 
 class Doctor(User):
     is_verified = models.BooleanField(default=False)
@@ -60,6 +60,29 @@ class Doctor(User):
     
     def __str__(self):
         return "Dr "+self.first_name+" "+self.last_name
+
+
+class PatientSymptoms(models.Model):
+    symptoms = models.TextField()
+    patient = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
+    viewed_by = models.ForeignKey(Doctor, null=True, blank=True,  on_delete=models.SET_NULL)
+    
+    class Meta:
+        verbose_name_plural = 'Patient Symptoms'
+    
+    def __str__(self):
+        return str(self.patient)
+    
+    
+class DoctorPrescription(models.Model):
+    medicine = models.TextField(null=True, blank=True)
+    recommendation = models.TextField()
+    prescription_to = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
+    prescribed_by = models.ForeignKey(Doctor, null=True, blank=True, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return str(self.prescription_to.id_number)
     
 
 class AppointmentRequest(models.Model):
@@ -75,7 +98,7 @@ class AppointmentRequest(models.Model):
     client = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, models.CASCADE)
     about = models.CharField(max_length=50)
-    symptoms = models.TextField()
+    symptoms = models.ForeignKey(PatientSymptoms, on_delete=models.PROTECT, null=True, blank=True)
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
     
@@ -109,28 +132,6 @@ class Appointment(models.Model):
     
     def __str__(self):
         return str(self.about)
-    
-    
-class PatientSymptoms(models.Model):
-    symptoms = models.TextField()
-    patient = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
-    viewed_by = models.ForeignKey(Doctor, null=True, blank=True,  on_delete=models.SET_NULL)
-    
-    def __str__(self):
-        return str(self.patient.id_number)
-    
-    
-class DoctorPrescription(models.Model):
-    medicine = models.TextField(null=True, blank=True)
-    recommendation = models.TextField()
-    prescription_to = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
-    prescribed_by = models.ForeignKey(Doctor, null=True, blank=True, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return str(self.prescription_to.id_number)
-    
-
 class MedicalTips(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     sourced_from = models.TextField(null=True, blank=True)

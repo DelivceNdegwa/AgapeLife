@@ -24,10 +24,14 @@ urlpatterns = [
     
     path("appointments/", AppointmentListView.as_view()),
     path("appointments/<int:pk>", AppointmentDetailView.as_view()),
-    
     path("create-appointment/", createAppointment),
+    
+    path("appointment-requests/<int:id_number>", AppointmentRequestListView.as_view()),
+    path("appointment-requests/<int:pk>", AppointmentRequestDetailView.as_view()),
+    path("book-appointment/", bookAppointment),
     
     path("get-patients/<int:id_number>", DoctorPatientsView.as_view()),
     
     path("generate-meeting-tokens/<int:pk>", generateTokens)
+    
 ]
