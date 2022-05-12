@@ -28,12 +28,14 @@ SECRET_KEY = 'django-insecure-r6)6c_d%=&j_aun(aqop@c0%ftg&e(q(b7_7$dam&wf$!fqme-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.100.188', '192.168.100.121', '192.168.100.126', '192.168.1.38', '127.0.0.1', '192.168.100.150', '192.168.100.142']
+ALLOWED_HOSTS = ['192.168.100.188', '192.168.100.162', '192.168.100.121', '192.168.100.126', '192.168.1.38', '127.0.0.1', '192.168.100.150', '192.168.100.142']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'agapeapi.apps.AgapeapiConfig',
+    
+    'agape_sockets.apps.AgapeSocketsConfig',
     # 'channels',
     # 'rest_framework_simplejwt',
 ]
@@ -51,33 +55,39 @@ INSTALLED_APPS = [
 ASGI_APPLICATION = "agapeweb.asgi.application"
 
 # JWT Authentication
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':(
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )    
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES':(
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )    
+# }
 
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'asgi_redis.RedisChannelLayer',
+#         'CONFIG': {
+#             'hosts': [('192.168.100.159', 6379)],
+#         },
+#         'ROUTING': 'agapeweb.routing.channel_routing',
+#     }
+# }
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'asgi_redis.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('192.168.100.126', 6379)],
-        },
-        'ROUTING': 'agapeweb.routing.channel_routing',
+    'default':{
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
     }
 }
 
 
-# JWT Authentication set up
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-}
+# # JWT Authentication set up
+# REST_FRAMEWORK = {
+#     'DEFAULT_FILTER_BACKENDS': [
+#         'django_filters.rest_framework.DjangoFilterBackend'
+#     ],
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ],
+# }
 
 
 #SIMPLE JWT

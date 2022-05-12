@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket</title>
+  </head>
+  <body>
+    <h2>Sockets Test</h2>
+    <form id="form">
+      <input type="text" name="message" />
+    </form>
+
+    <div id="messages"></div>
+
+    <script type="text/javascript">
+      let url = `ws://${window.location.host}/ws/socket-server`;
+
+      const modelData = new WebSocket(url);
+
+      modelData.onmessage = function (e) {
+        let data = JSON.parse(e.data);
+        console.log("Data: ", data);
+
+        if (data.type === "model_broadcast") {
+          let messages = document.getElementById("messages");
+          messages.insertAdjacentHTML(
+            "beforeend",
+            `<div>
+                                        <p>${data.message}</p>
+                                      </div>`
+          );
+        }
+      };
+
+      let form = document.getElementById("form");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let message = e.target.message.value;
+
+        modelData.send(
+          JSON.stringify({
+            message: message,
+          })
+        );
+        form.reset();
+      });
+    </script>
+  </body>
+</html>
