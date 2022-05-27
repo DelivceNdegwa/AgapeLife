@@ -10,14 +10,19 @@
     {% comment %}
     <input id="chat-message-input" type="text" size="100" /><br />
     <input id="chat-message-submit" type="button" value="Send" />
-    {% endcomment %} {{ room_name|json_script:"room-name" }}
+    {% endcomment %} {{ room_id|json_script:"room-name" }}
     <script>
-      const roomName = JSON.parse(
+      const roomId = JSON.parse(
         document.getElementById("room-name").textContent
       );
 
       const chatSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/test/"
+        //"ws://" + window.location.host + "/ws/test/"
+        "ws://" +
+          window.location.host +
+          "/ws/doctor/appointments/" +
+          roomId +
+          "/"
       );
 
       chatSocket.onmessage = function (e) {

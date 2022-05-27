@@ -1,123 +1,14 @@
-from cgitb import text
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer
 from django.core import serializers
 
 from staff.models import AppointmentRequest
 from .models import TestSocketModel
 
-from .consumer_queries import *
-
-from asgiref.sync import sync_to_async
-
-from channels.db import database_sync_to_async
-
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-
-class ChatConsumer(AsyncWebsocketConsumer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-        self.room_group_name = None
-        self.room_name = None
-
-    async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = 'chat_%s' % self.room_name
-
-        # Join room group
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        # Leave room group
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
-
-    # Receive message from room group
-    async def chat_message(self, event):
-        message = event['message']
-        
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
-        
-    async def observe_monitor(self, event):
-        message = event["message"]
-        print(message)
-        
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
-        
-
-class DoctorAppointmentConsumer(AsyncWebsocketConsumer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.group_name = None
-        
-    async def connect(self):
-        self.group_name = self.scope['url_route']['kwargs']['doctor_room']
-        
-        await self.channel_layer.group_add(
-            self.group_name,
-            self.channel_name
-        )
-        await self.accept()
-        
-    async def disconnect(self, code):
-        await self.channel_layer.group_discard(
-            self.group_name,
-            self.channel_name
-        )
-
-    # def get_total_appointment_requests():
-    #     # return AppointmentRequest.objects.select_related('doctor').filter(
-    #     #                     doctor__id=id, status=AppointmentRequest.PENDING
-    #     #     )
-    #     return Appointment.objects.all()
-
-    
-    # Listens to created Doctor AppointmentRequest instances from AppointmentRequest signal
-    async def appointments_listener(self, event):
-        doctor_id = event['doc_id']
-        print("DOCTOR_ID:", doctor_id)
-        
-        messages = await database_sync_to_async(AppointmentRequest.objects.all)()
-        
-        json_messages = await self.messages_to_json(messages)
-        
-        # print(messages)
-        
-        await self.send(text_data=json.dumps({
-            'messages': messages
-        }))
-        
-    async def messages_to_json(self, messages):
-        result = []
-        for message in messages:
-            result.append(self.message_to_json(message))
-        print("RESULT", result)
-        return result
-
-    async def message_to_json(self, message):
-        return {
-            'id': message.id,
-            'client': message.client,
-            'about': message.about,
-            'symptoms': message.symptoms,
-        }
 
 
 class TestSyncConsumer(WebsocketConsumer):
@@ -185,9 +76,14 @@ class TestSyncConsumer(WebsocketConsumer):
         
         print("RECEIVED MESSAGE", message)
         
-        self.send(text_data=json.dumps({
+        try:
+            self.send(text_data=json.dumps({
                 "message":serializers.serialize('json', TestSocketModel.objects.all())
             }))
+            print("SOCKET MESSAGE SENT SUCCESSFULLY")
+        except Exception as e:
+            print("ERROR:::", e)
+        
 
     def messages_to_json(self, messages):
         for message in messages:
@@ -202,3 +98,41 @@ class TestSyncConsumer(WebsocketConsumer):
             'about': message.about,
             'symptoms': message.symptoms,
         }   
+
+class DoctorAppointmentsConsumer(WebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        self.doctor_id = None
+        
+    def connect(self):
+        print("INITIALIZING CONNECTION... ")
+        
+        self.doctor_id = self.scope['url_route']['kwargs']['id']
+        self.group_name = "doctor_{}".format(self.doctor_id)
+        
+        try:
+            async_to_sync(self.channel_layer.group_add)(
+                self.group_name,
+                self.channel_name
+            )
+            self.accept()
+            print("Connection established for group:", self.group_name)
+            self.load_messages()
+            
+        except Exception as e:
+            print("CONNECTION ERROR:", e)
+            
+    def disconnect(self, status):
+        async_to_sync(self.channel_layer.group_discard)(
+            self.group_name,
+            self.channel_name
+        )
+        
+    def load_messages(self):
+        appointment_requests = AppointmentRequest.objects.select_related('doctor').filter(
+                            doctor__id=self.doctor_id, status=AppointmentRequest.PENDING
+                        )
+        self.send(text_data=json.dumps({
+            "message": serializers.serialize('json', appointment_requests)
+        }))
+        

@@ -5,10 +5,10 @@ from .models import *
 def sockets(request):
     return render(request, 'sockets.html')
 
-def room(request, room_name):
+def room(request, id):
     
     context = {
-        'room_name': room_name,
+        'room_id': id,
         }
     
     return render(request, 'doctor_appointments.html', context)
