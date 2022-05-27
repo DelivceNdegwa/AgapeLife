@@ -1,12 +1,14 @@
 from django.shortcuts import render
-from django.contrib.auth import get_user_model, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.urls import reverse 
-from django.shortcuts import render, redirect
+from .models import *
 
-from django.http import JsonResponse
 
-#################################
-def test_sockets(request):
-    return render(request, "sockets.html")
+def sockets(request):
+    return render(request, 'sockets.html')
+
+def room(request, room_name):
+    
+    context = {
+        'room_name': room_name,
+        }
+    
+    return render(request, 'doctor_appointments.html', context)

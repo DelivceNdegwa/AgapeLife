@@ -103,11 +103,25 @@ class AppointmentRequest(models.Model):
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
     
+    def __init__(self, *args, **kwargs):
+        super(AppointmentRequest, self).__init__(*args, **kwargs)
+        self._original_status= self.status
+    
+    
     def __str__(self):
         if self.read == True:
             return 'Read'
         else:
             return 'Unread'
+    
+    def get_status(self):
+        status_dictionary = {
+            self.APPROVED: "APPROVED",
+            self.DISAPPROVED: "DISAPPROVED",
+            self.PENDING: "PENDING"
+        }
+        
+        return status_dictionary[self.status]
 
 class Appointment(models.Model):
     COMPLETE = 1

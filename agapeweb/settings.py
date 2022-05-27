@@ -35,6 +35,8 @@ ALLOWED_HOSTS = ['192.168.100.188', '192.168.100.162', '192.168.100.121', '192.1
 
 INSTALLED_APPS = [
     'channels',
+    'rest_framework',
+    'django_filters',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,40 +44,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'staff.apps.StaffConfig',
-    'rest_framework',
-    'django_filters',
-    'agapeapi.apps.AgapeapiConfig',
     
+    'staff.apps.StaffConfig',
+    'agapeapi.apps.AgapeapiConfig',
     'agape_sockets.apps.AgapeSocketsConfig',
-    # 'channels',
-    # 'rest_framework_simplejwt',
 ]
 
+WSGI_APPLICATION = "agapeweb.wsgi.application"
 ASGI_APPLICATION = "agapeweb.asgi.application"
 
-# JWT Authentication
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES':(
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     )    
-# }
-
-
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'asgi_redis.RedisChannelLayer',
-#         'CONFIG': {
-#             'hosts': [('192.168.100.159', 6379)],
-#         },
-#         'ROUTING': 'agapeweb.routing.channel_routing',
-#     }
-# }
-
 CHANNEL_LAYERS = {
-    'default':{
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'
-    }
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }
 
 

@@ -1,51 +1,28 @@
+<!-- chat/templates/chat/index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Socket</title>
+    <meta charset="utf-8" />
+    <title>Chat Rooms</title>
   </head>
   <body>
-    <h2>Sockets Test</h2>
-    <form id="form">
-      <input type="text" name="message" />
-    </form>
+    What chat room would you like to enter?<br />
+    <input id="room-name-input" type="text" size="100" /><br />
+    <input id="room-name-submit" type="button" value="Enter" />
 
-    <div id="messages"></div>
-
-    <script type="text/javascript">
-      let url = `ws://${window.location.host}/ws/socket-server`;
-
-      const modelData = new WebSocket(url);
-
-      modelData.onmessage = function (e) {
-        let data = JSON.parse(e.data);
-        console.log("Data: ", data);
-
-        if (data.type === "model_broadcast") {
-          let messages = document.getElementById("messages");
-          messages.insertAdjacentHTML(
-            "beforeend",
-            `<div>
-                                        <p>${data.message}</p>
-                                      </div>`
-          );
+    <script>
+      document.querySelector("#room-name-input").focus();
+      document.querySelector("#room-name-input").onkeyup = function (e) {
+        if (e.keyCode === 13) {
+          // enter, return
+          document.querySelector("#room-name-submit").click();
         }
       };
 
-      let form = document.getElementById("form");
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        let message = e.target.message.value;
-
-        modelData.send(
-          JSON.stringify({
-            message: message,
-          })
-        );
-        form.reset();
-      });
+      document.querySelector("#room-name-submit").onclick = function (e) {
+        var roomName = document.querySelector("#room-name-input").value;
+        window.location.pathname = "/sockets/" + roomName + "/";
+      };
     </script>
   </body>
 </html>
