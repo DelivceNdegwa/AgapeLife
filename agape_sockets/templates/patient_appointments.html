@@ -3,36 +3,33 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Doctor Appointments Room</title>
+    <title>patient Appointments Room</title>
   </head>
   <body>
     <textarea id="chat-log" cols="70" rows="70"> </textarea><br />
     {% comment %}
     <input id="chat-message-input" type="text" size="100" /><br />
     <input id="chat-message-submit" type="button" value="Send" />
-    {% endcomment %} {{ doctor_id|json_script:"doctor-id" }}
+    {% endcomment %} {{ patient_id|json_script:"patient-id" }}
     <script>
-      const doctorId = JSON.parse(
-        document.getElementById("doctor-id").textContent
+      const patientId = JSON.parse(
+        document.getElementById("patient-id").textContent
       );
 
       const agapeSocket = new WebSocket(
         //"ws://" + window.location.host + "/ws/test/"
         "ws://" +
           window.location.host +
-          "/ws/doctor/" +
-          doctorId +
+          "/ws/patient/" +
+          patientId +
           "/appointments/"
       );
 
       agapeSocket.onmessage = function (e) {
         let data = JSON.parse(e.data);
         console.log(data.appointment_list);
-        document.querySelector("#chat-log").value = data.doctor_list + "\n";
-
-        if (data.new_appointment) {
-          print("New appointment");
-        }
+        document.querySelector("#chat-log").value =
+          data.appointment_list + "\n";
       };
 
       agapeSocket.onclose = function (e) {

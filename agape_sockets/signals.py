@@ -1,121 +1,135 @@
-from django.db.models.signals import post_save
+from datetime import datetime
+
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 from .models import TestSocketModel, TestSocketMonitor
-from staff.models import LoggedInDoctor, AppointmentRequest
+from staff.models import Appointment, LoggedInDoctor, AppointmentRequest, Doctor
 
-# Socket tests
-# Test 1
-@receiver(post_save, sender=TestSocketModel, dispatch_uid='test_socket_model_change_listener')
-def test_socket_model_change_listener(sender, instance, created, **kwargs):
+from agape_sockets import common_requirements
+
+@receiver(pre_save, sender=Doctor, dispatch_uid="online_doctor_list_listener")
+def online_doctor_list_listener(sender, instance, **kwargs):
+    channel_layer = get_channel_layer()
+    
     if instance:
-        if created:
-            log_message = "{} created".format(instance.id)
-        else:
-            log_message = "{} updated".format(instance.id)
+        instance_before = Doctor.objects.get(id=instance.id)
+        
+        if instance.is_verified:
+            print("INFO: An update is taking place")
             
-        print(log_message)
-        print("IMPORTANT NOTIFICATION SENDING...")
-        message = {
-            'id': instance.id,
-            'name': instance.name,
-            'status': instance.getStatus(),
-            'user': instance.user.username,
-        }
+            updated_doctor = {
+                'id': instance.id,
+                'is_verified': instance.is_verified,
+                'is_available': instance.is_available,
+                'phone_number': instance.phone_number,
+                'id_number': instance.id_number
+            }
+            
+            if instance_before.is_available != instance.is_available:
+                print("INFO: Availability changed from {} to {}".format(instance_before.is_available, instance.is_available))
+                
+                async_to_sync(channel_layer.group_send)(
+                    common_requirements.online_doctors_group,
+                    {
+                        "type": "update.listener",
+                        "doctor": updated_doctor
+                    }
+                )
+                
+            elif instance_before.is_verified != instance.is_verified and instance.is_verified:
+                async_to_sync(channel_layer.group_send)(
+                    common_requirements.online_doctors_group,
+                    {
+                        "type":"update.listener",
+                        "doctor": updated_doctor
+                    }
+                )
+                
+            else:
+                print("INFO: Changes were not relevant for this context")
+        
+
+@receiver(post_save, sender=AppointmentRequest, dispatch_uid="doctor_appointment_listener")
+def doctor_appointment_listener(sender, created, instance, **kwargs):
+    if instance:
+        doctor_group_name = 'doctor_{}'.format(instance.doctor.id)
         
         channel_layer = get_channel_layer()
         
-        async_to_sync(channel_layer.group_send)(
-            'important_notifications',
-            {
-                'type': 'received_message',
-                'message': message
-            }
-        )
-        
-        print("IMPORTANT NOTIFICATION SENT")
-
-# Test 2    
-@receiver(post_save, sender=TestSocketMonitor, dispatch_uid="test_socket_monitor_change_listener")
-def test_socket_monitor_change_listener(sender, instance, created, **kwargs):
-    if instance:
-        log_message = "{} updated".format(instance.id)
-        
-        if created:
-            log_message = "{} created".format(instance.id)
-        
-        print(log_message)
-        
-        message = {
-            'id': instance.id,
-            'user': instance.username,
-            'email': instance.email
-        }
-        
-        channels_layer = get_channel_layer()
-        
-        async_to_sync(channels_layer.group_send)(
-            'chat_random',
-            {
-                'type': 'observe_monitor',
-                'message': message
-            }
-        )
-        
-
-# AppointmentRequests signal
-@receiver(post_save, sender=AppointmentRequest, dispatch_uid="appointment_requests_change_listener")
-def appointment_requests_change_listener(sender, instance, created, **kwargs):
-    if instance:
-        channel_layers = get_channel_layer()
-        group_name = instance.doctor.username + "_{}".format(instance.doctor.id)
-        print(group_name)
-        log_message = ""
-        
-        status_dictionary = {
-            1: "APPROVED",
-            2: "DISAPPROVED",
-            3: "PENDING"
-        }
-                    
         message = {
             'id': instance.id,
             'client': instance.client.id,
             'doctor': instance.doctor.id,
+            'about': instance.about,
             'status': instance.status,
-            'read': instance.read,
-        }    
+            'read': instance.read
+        }
         
         if created:
-            async_to_sync(channel_layers.group_send)(
-                group_name,
-                {
-                    'type': 'appointments_listener',
-                    'message': message,
-                    'doc_id': instance.doctor.id,
-                }
-            )
-            
-            log_message = "New appointment created"
-            print("SIGNAL_FEEDBACK:", log_message)   
-        
-        if instance._original_status != instance.status:
-            print("ORIGINAL_STATUS: ", status_dictionary[instance._original_status])
-            log_message = "Appointment status updated to: {}".format(instance.get_status())
-            
-            async_to_sync(channel_layers.group_send)(
-                group_name,
-                {
-                    'type': 'doctor_response',
-                    'message': message,
-                    'doc_id': instance.doctor.id,
-                }
-            )
-            
-            print("SIGNAL_FEEDBACK:", log_message)
-            
+            status="created"
+            consumer_function = 'created_appointment_listener'
 
+        else:
+            status="updated"
+            consumer_function = 'updated_appointment_listener'
+            
+            if instance.status == 1:
+                Appointment.objects.create(
+                    title='A TEST APPOINTMENT',
+                    about='Medical stuff',
+                    start_time= datetime.now(),
+                    end_time=datetime.now(),
+                    doctor=instance.doctor,
+                    client=instance.client,
+                    status=Appointment.PENDING
+                )
+                print("NEW APPOINTMENT CREATED")
+            
+        print("INFO: Appointment {}".format(status))
+        
+        async_to_sync(channel_layer.group_send)(
+            doctor_group_name,
+            {
+                'type':consumer_function,
+                'data':message
+            }
+        )
+        
+
+@receiver(post_save, sender=Appointment, dispatch_uid='client_appointment_listener')
+def client_appointment_listener(sender, created, instance, **kwargs):
+        if instance:
+            client_group_name = 'patient_{}'.format(instance.client.id)  
+            channel_layer = get_channel_layer()
+            
+            message = {
+                'id': instance.id,
+                'title': instance.title,
+                'about': instance.about,
+                'doctor': instance.doctor.id,
+                'status': instance.status,
+            }
+            
+            if created:
+                status="created"
+                consumer_function = 'created_appointment_listener'
+
+            else:
+                status="updated"
+                consumer_function = 'updated_appointment_listener'
+                
+            print("INFO: Appointment {}".format(status))
+            
+            async_to_sync(channel_layer.group_send)(
+                client_group_name,
+                {
+                    'type':consumer_function,
+                    'data':message
+                }
+            )
+            
 

@@ -30,8 +30,10 @@ class AgapeUser(User):
     class Meta:
         verbose_name='Agape User'
     
+    # def __str__(self):
+    #     return str(self.id_number)+" "+self.email
     def __str__(self):
-        return str(self.id_number)+" "+self.email
+        return str(self.id)
 
 
 class Doctor(User):
@@ -57,6 +59,11 @@ class Doctor(User):
     
     class Meta:
         verbose_name = 'Agape Doctor'
+        indexes = [
+            models.Index(fields=['is_verified', 'is_available']),
+            models.Index(fields=['is_verified']),
+            models.Index(fields=['is_available'])
+        ]
     
     # def __str__(self):
     #     return "Dr "+self.first_name+" "+self.last_name
@@ -103,9 +110,9 @@ class AppointmentRequest(models.Model):
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
     
-    def __init__(self, *args, **kwargs):
-        super(AppointmentRequest, self).__init__(*args, **kwargs)
-        self._original_status= self.status
+    # def __init__(self, *args, **kwargs):
+    #     super(AppointmentRequest, self).__init__(*args, **kwargs)
+    #     self._original_status= self.status
     
     
     def __str__(self):
