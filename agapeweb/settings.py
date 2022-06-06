@@ -17,6 +17,8 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_URL = '127.0.0.1'
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,6 +39,9 @@ INSTALLED_APPS = [
     'channels',
     'rest_framework',
     'django_filters',
+    
+    'django_celery_beat',
+    'django_celery_results',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -92,7 +97,7 @@ CHANNEL_LAYERS = {
 
 #     'AUTH_HEADER_TYPES': ('Bearer',),
 #     # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-#     # 'USER_ID_FIELD': 'id',
+#     # 'USER_Iperiodic tasks djangoD_FIELD': 'id',
 #     # 'USER_ID_CLAIM': 'user_id',
 #     # 'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
@@ -193,3 +198,11 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CELERY SETTINGS
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'django-db'#'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Nairobi'
