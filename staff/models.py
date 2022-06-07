@@ -223,3 +223,18 @@ class LoggedInDoctor(models.Model):
         return self.user.username
     
 
+class Notification(models.Model):
+    DOCTOR = 1
+    PATIENT = 2
+    
+    RECIPIENT_TYPE=(
+        (DOCTOR, "DOCTOR"),
+        (PATIENT, "PATIENT")
+    )
+    
+    recipient_category = models.IntegerField(choices=RECIPIENT_TYPE)
+    recipient_id = models.IntegerField()
+    message = models.CharField(max_length=300)
+    
+    def __str__(self):
+        return str(self.recipient_id)

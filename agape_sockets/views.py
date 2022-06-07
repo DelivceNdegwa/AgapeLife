@@ -1,6 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import render
-from .models import *
 
+
+from .models import *
+# from .tasks import test_func
 
 def sockets(request):
     return render(request, 'sockets.html')

@@ -15,6 +15,11 @@ app.conf.update(timezone='Africa/Nairobi')
 
 app.config_from_object(settings, namespace='CELERY')
 
+# Celery Beat
+app.conf.beat_schedule = {
+    
+}
+
 app.autodiscover_tasks()
 
 @app.task(bind=True)

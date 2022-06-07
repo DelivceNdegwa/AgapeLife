@@ -1,4 +1,3 @@
-from atexit import register
 from django.contrib import admin
 from .models import *
 
@@ -14,3 +13,4 @@ admin.site.register(MedicalCategory)
 admin.site.register(LoggedInDoctor)
 admin.site.register(EditorDoctorPivot)
 admin.site.register(AppointmentRequest)
+admin.site.register(Notification)
