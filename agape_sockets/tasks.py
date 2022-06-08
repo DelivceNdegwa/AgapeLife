@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from celery import shared_task
 from staff.models import AgapeUser, Doctor, Notification
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
@@ -30,16 +30,13 @@ def say_hi(self):
 
 @shared_task(bind=True)
 def clean_notification_cronjobs(self):
-    current_date = datetime.date()
+    current_date = date.today()
+    print("NUMBER_OF_JOBS: ".format(CrontabSchedule.objects.all().count()))
     cronjobs = CrontabSchedule.objects.filter(day_of_month=current_date.day, month_of_year=current_date.month)
-    try:
-        for job in cronjobs:
-            job.delete()
-            print("{} deleted".format(job.id))
-        return "Done"        
-    except Exception as e:
-        print("DELETION_ERROR: ", e)
-        return "Failed" 
-
+    for job in cronjobs:
+        job.delete()
+        print("{} deleted".format(job))
+    print("NUMBER_OF_JOBS: ".format(CrontabSchedule.objects.all().count()))
+    return "Done" 
 
         
