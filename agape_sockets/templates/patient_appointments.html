@@ -27,9 +27,8 @@
 
       agapeSocket.onmessage = function (e) {
         let data = JSON.parse(e.data);
-        console.log(data.appointment_list);
-        document.querySelector("#chat-log").value =
-          data.notification + "\n";
+        console.log(data.notification);
+        document.querySelector("#chat-log").value = data.notification + "\n";
       };
 
       agapeSocket.onclose = function (e) {

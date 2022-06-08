@@ -27,11 +27,11 @@
 
       agapeSocket.onmessage = function (e) {
         let data = JSON.parse(e.data);
-        console.log(data.appointment_list);
-        document.querySelector("#chat-log").value = data.doctor_list + "\n";
+        console.log(data.notification);
+        document.querySelector("#chat-log").value = data.notification + "\n";
 
-        if (data.new_appointment) {
-          print("New appointment");
+        if (data.notification) {
+          console.log("New notification: ", data.notification.message);
         }
       };
 
