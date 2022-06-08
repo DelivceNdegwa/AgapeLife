@@ -132,31 +132,56 @@ def client_appointment_listener(sender, created, instance, **kwargs):
                 }
             )
             
-@receiver(post_save, sender=Notification, dispatch_uid='notification_listener')
+@receiver(pre_save, sender=Notification, dispatch_uid='notification_listener')
 def notification_listener(sender, instance, **kwargs):
     if instance:
-        channel_layer = get_channel_layer()
-        if instance.recipient_category == Notification.DOCTOR:    
-            group_name = "notify_doctor_{}".format(instance.recipient_id)
-            type_function = "doctor_notification_listener"
-            
-        elif instance.recipient_category == Notification.PATIENT:
-            group_name = "notify_patient_{}".format(instance.recipient_id)
-            type_function = "patient_notification_listener"
-            
+        print("SIGNAL_INFO: New instance created")
+        
+                
         message = {
             "message":instance.message,
             "recipient_id": instance.recipient_id,
             "recipient_category": instance.recipient_category
         }
         
-        async_to_sync(channel_layer.group_send)(
-            group_name,
-            {
-                "notification":message,
-                "type": type_function
-            }
-        )
+        channel_layer = get_channel_layer()
+        if instance.recipient_category == Notification.DOCTOR:      
+            group_name = "notify_doctor_{}".format(instance.recipient_id)
+            type_function = "doctor_notification_listener"
+            
+
+            async_to_sync(channel_layer.group_send)(
+                group_name,
+                {
+                    "type": type_function,
+                    "notification":message
+                }
+            )
+            print("SIGNAL_INFO: data sent successfully")
+            
+
+            print("SIGNAL_INFO: Data will be sent to "+group_name) 
+            
+        else:
+            group_name = "notify_patient_{}".format(instance.recipient_id)
+            type_function = "patient_notification_listener"
+        
+            try:
+                async_to_sync(channel_layer.group_send)(
+                    group_name,
+                    {
+                        "notification":message,
+                        "type": type_function
+                    }
+                )
+                print("SIGNAL_INFO: data sent successfully")
+            
+            except Exception as e:
+                print("SIGNAL_ERROR: ", e)
+            print("SIGNAL_INFO: Data will be sent to "+group_name)  
+
+
+
         
         
         

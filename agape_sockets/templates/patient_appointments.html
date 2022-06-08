@@ -22,14 +22,14 @@
           window.location.host +
           "/ws/patient/" +
           patientId +
-          "/appointments/"
+          "/notifications/"
       );
 
       agapeSocket.onmessage = function (e) {
         let data = JSON.parse(e.data);
         console.log(data.appointment_list);
         document.querySelector("#chat-log").value =
-          data.appointment_list + "\n";
+          data.notification + "\n";
       };
 
       agapeSocket.onclose = function (e) {

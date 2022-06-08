@@ -14,12 +14,11 @@ from channels.layers import get_channel_layer
 @shared_task(bind=True)
 def appointment_reminder(self, id, category, message):
     try:
-        Notification.objects.create(
-            recipient_category=category, 
-            recipient_id= id,
-            message= message
-        )
-        
+        instance= Notification.objects.create(
+                    recipient_category=category, 
+                    recipient_id= id,
+                    message= message
+                )
         return "Notification created"
     except Exception as e:
         return "ERROR: Notification error => {}".format(e)

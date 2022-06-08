@@ -247,9 +247,6 @@ def createAppointment(request):
     client = AgapeUser.objects.filter(id=client_id).first()
     doctor = Doctor.objects.filter(id=doctor_id).first()
     
-    
-    print("DATA: ", request.POST)
-    
     appointment = Appointment(
             title = appointment_title,
             start_time = start_time,
@@ -315,9 +312,9 @@ def createPeriodicTask(cron_time, receiver_id, receiver_type, message):
                                 # id, category, message
         
     PeriodicTask.objects.create(
-        interval= schedule,
+        crontab= cron_job,
         name='doctor_notification_{}_{}'.format(receiver_id, cron_time),
-        task='agape_sockets.tasks.say_hi',
-        # args= json.dumps((receiver_id, receiver_type, message)),
+        task='agape_sockets.tasks.appointment_reminder',
+        args= json.dumps((receiver_id, receiver_type, message)),
         one_off= True
     )

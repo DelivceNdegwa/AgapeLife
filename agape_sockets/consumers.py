@@ -272,6 +272,7 @@ class PatientNotificationsConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        print("INFO: Connection established")
         
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
@@ -281,7 +282,7 @@ class PatientNotificationsConsumer(AsyncWebsocketConsumer):
         
     async def patient_notification_listener(self, event):
         notification = event["notification"]
-        
+        print("PATIENT_NOTIFICATION: ", notification)
         await self.send(text_data=json.dumps({
             "notification": notification
         }))
@@ -289,14 +290,16 @@ class PatientNotificationsConsumer(AsyncWebsocketConsumer):
         
 class DoctorNotificationsConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.doctor_id = self.scope['url_route']['args']['id']
+        self.doctor_id = self.scope['url_route']['kwargs']['id']
         self.group_name = 'notify_doctor_{}'.format(self.doctor_id)
         
         await self.channel_layer.group_add(
             self.group_name,
-            self.channel_layer
+            self.channel_name
         )
         
+        await self.accept()
+        print("Doctor connection established")
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
             self.group_name,
@@ -305,7 +308,7 @@ class DoctorNotificationsConsumer(AsyncWebsocketConsumer):
         
     async def doctor_notification_listener(self, event):
         notification = event['notification']
-        
+        print("DOCTOR_NOTIFICATION: ", notification)
         await self.send(text_data=json.dumps({
             "notification": notification
         }))
