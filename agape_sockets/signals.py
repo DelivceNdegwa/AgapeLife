@@ -7,7 +7,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 from .models import TestSocketModel, TestSocketMonitor
-from staff.models import Appointment, LoggedInDoctor, AppointmentRequest, Doctor
+from staff.models import Appointment, LoggedInDoctor, AppointmentRequest, Doctor, Notification
 
 from agape_sockets import common_requirements
 
@@ -132,4 +132,31 @@ def client_appointment_listener(sender, created, instance, **kwargs):
                 }
             )
             
-
+@receiver(post_save, sender=Notification, dispatch_uid='notification_listener')
+def notification_listener(sender, instance, **kwargs):
+    if instance:
+        channel_layer = get_channel_layer()
+        if instance.recipient_category == Notification.DOCTOR:    
+            group_name = "notify_doctor_{}".format(instance.recipient_id)
+            type_function = "doctor_notification_listener"
+            
+        elif instance.recipient_category == Notification.PATIENT:
+            group_name = "notify_patient_{}".format(instance.recipient_id)
+            type_function = "patient_notification_listener"
+            
+        message = {
+            "message":instance.message,
+            "recipient_id": instance.recipient_id,
+            "recipient_category": instance.recipient_category
+        }
+        
+        async_to_sync(channel_layer.group_send)(
+            group_name,
+            {
+                "notification":message,
+                "type": type_function
+            }
+        )
+        
+        
+        

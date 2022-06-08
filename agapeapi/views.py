@@ -1,12 +1,12 @@
-from django.shortcuts import render
-from staff.models import *
-from .serializers import *
+import json
+import datetime
+from datetime import timedelta
+from re import S
 
 from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
-
+from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.decorators import api_view, permission_classes
@@ -17,9 +17,14 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, UpdateAPIView, CreateAPIView
 
 from agora_tokens.RtcGenerateToken import TokenGenerator
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
 
-import datetime
-from datetime import timedelta
+from staff.models import *
+from .serializers import *
+
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+
+
 
 '''' 
 Data the application should have
@@ -239,15 +244,33 @@ def createAppointment(request):
     end_time = request.POST.get("end_time")
     doctor_id = request.POST.get("doctor_id")
     client_id = request.POST.get("patient_id")
+    client = AgapeUser.objects.filter(id=client_id).first()
+    doctor = Doctor.objects.filter(id=doctor_id).first()
+    
+    
+    print("DATA: ", request.POST)
     
     appointment = Appointment(
             title = appointment_title,
             start_time = start_time,
             end_time = end_time,
-            client = AgapeUser.objects.filter(id=client_id).first(),
+            client = client,
             doctor = Doctor.objects.filter(id=doctor_id).first()
         )
     appointment.save()
+    
+    doctor_message = 'Hello Doctor {}, your appointment with {} {} starts in 5 minutes'.format(doctor.first_name, client.first_name, client.last_name)
+    patient_message= 'Hello {}, your appointment with Doctor {} starts in 5 minutes'.format(client.first_name, doctor.first_name)
+    date_time_obj = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M')
+    
+    try:
+        
+        createPeriodicTask(date_time_obj, doctor_id, Notification.DOCTOR, doctor_message)
+        createPeriodicTask(date_time_obj, client_id, Notification.PATIENT, patient_message)   
+        print("CRONTABSCHEDULE_SUCCESS: Created")    
+        
+    except Exception as e:
+        print("CRONTABSCHEDULE_ERROR: {}".format(e))
         
     return Response({"success":True, "message":"Appointment created successfully", "error":None}, status=status.HTTP_201_CREATED)
     
@@ -274,3 +297,27 @@ def bookAppointment(request):
     appointment_request.save()
     
     return Response({"success":True, "message":"Appointment has been booked successfully", "error":None}, status=status.HTTP_201_CREATED)
+
+def createPeriodicTask(cron_time, receiver_id, receiver_type, message):
+    print("CRON_TIME: ", cron_time.minute)
+    # cron_time = start_time - timedelta(minutes=5)
+    cron_job, _ = CrontabSchedule.objects.get_or_create(
+                            minute=cron_time.minute,
+                            hour=cron_time.hour,
+                            day_of_month=cron_time.day,
+                            month_of_year=cron_time.month
+                        )
+    
+    schedule, created = IntervalSchedule.objects.get_or_create(
+                            every=10,
+                            period=IntervalSchedule.SECONDS,
+                        )
+                                # id, category, message
+        
+    PeriodicTask.objects.create(
+        interval= schedule,
+        name='doctor_notification_{}_{}'.format(receiver_id, cron_time),
+        task='agape_sockets.tasks.say_hi',
+        # args= json.dumps((receiver_id, receiver_type, message)),
+        one_off= True
+    )

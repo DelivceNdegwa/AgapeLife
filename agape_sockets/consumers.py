@@ -260,3 +260,52 @@ class OnlineDoctorsConsumer(AsyncWebsocketConsumer):
             'phone_number': message.phone_number,
             'id_number': message.id_number
         }
+        
+          
+class PatientNotificationsConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.patient_id = self.scope['url_route']['kwargs']['id']
+        self.group_name = "notify_patient_{}".format(self.patient_id)
+        
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
+        await self.accept()
+        
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            self.group_name, 
+            self.channel_name
+        )
+        
+    async def patient_notification_listener(self, event):
+        notification = event["notification"]
+        
+        await self.send(text_data=json.dumps({
+            "notification": notification
+        }))
+      
+        
+class DoctorNotificationsConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.doctor_id = self.scope['url_route']['args']['id']
+        self.group_name = 'notify_doctor_{}'.format(self.doctor_id)
+        
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_layer
+        )
+        
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
+        
+    async def doctor_notification_listener(self, event):
+        notification = event['notification']
+        
+        await self.send(text_data=json.dumps({
+            "notification": notification
+        }))

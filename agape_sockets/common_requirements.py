@@ -15,3 +15,4 @@ def patient_appointments(id):
     return Appointment.objects.select_related('client').filter(
                                  client__id=id
                             )
+    
