@@ -181,7 +181,18 @@ def notification_listener(sender, instance, **kwargs):
             print("SIGNAL_INFO: Data will be sent to "+group_name)  
 
 
-
+def send_notification_to_consumer(channel_layer, group_name, type_function, notification_message):
+    try:
+        async_to_sync(channel_layer.group_send)(
+            group_name,
+            {
+                "notification":notification_message,
+                "type": type_function
+            }
+        )
+        print("SIGNAL_INFO: Data sent to group: {}".format(group_name))
+    except Exception as e:
+        print("SIGNAL_ERROR: {}".format(e))
         
         
         
