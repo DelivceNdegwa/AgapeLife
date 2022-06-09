@@ -33,6 +33,9 @@
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
         <activity
+            android:name=".AgapeSocketActivityTest"
+            android:exported="false" />
+        <activity
             android:name=".DoctorAppointmentsActivity"
             android:exported="false" />
         <activity

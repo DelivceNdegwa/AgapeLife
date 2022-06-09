@@ -88,4 +88,9 @@ dependencies {
 
     // Datetime range picker
     implementation 'nl.joery.timerangepicker:timerangepicker:1.0.0'
+
+
+    implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.3.0'
+
+
 }

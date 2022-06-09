@@ -51,7 +51,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                    intent = new Intent(SplashScreenActivity.this, LoginSignUpActivity.class);
 //
 //                }
-                intent = new Intent(SplashScreenActivity.this, CreateAppointmentActivity.class);
+                intent = new Intent(SplashScreenActivity.this, AgapeSocketActivityTest.class);
                 startActivity(intent);
                 finish();
             }
