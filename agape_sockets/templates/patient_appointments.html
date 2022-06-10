@@ -18,17 +18,20 @@
 
       const agapeSocket = new WebSocket(
         //"ws://" + window.location.host + "/ws/test/"
-        "ws://" +
+        /*"ws://" +
           window.location.host +
           "/ws/patient/" +
           patientId +
-          "/notifications/"
+          "/notifications/"*/
+
+        "ws://192.168.100.188:8000/ws/online-doctors/"
       );
 
       agapeSocket.onmessage = function (e) {
         let data = JSON.parse(e.data);
-        console.log(data.notification);
-        document.querySelector("#chat-log").value = data.notification + "\n";
+        console.log("Number of doctors= ", data.doctor_number);
+        console.log(data.doctor_list);
+        document.querySelector("#chat-log").value = data.doctor_list + "\n";
       };
 
       agapeSocket.onclose = function (e) {

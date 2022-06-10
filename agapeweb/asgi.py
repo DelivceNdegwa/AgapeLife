@@ -22,12 +22,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'agapeweb.settings')
 
 application = ProtocolTypeRouter({
     "http":get_asgi_application(),
-    "websocket":AllowedHostsOriginValidator(
-        AuthMiddlewareStack(
+    "websocket":AuthMiddlewareStack(
             URLRouter(
                 agape_sockets.routing.websocket_urlpatterns
             )
-        )
-    )
+        )  
+    
 })
 

@@ -210,7 +210,7 @@ class OnlineDoctorsConsumer(AsyncWebsocketConsumer):
         
         await self.send(text_data=json.dumps({
             "doctor_list": self.serialized_list,
-            "doctor_number": len(self.serialized_list)
+            # "doctor_number": len(self.serialized_list)
         }))
         
     async def reload_group(self, event):
@@ -258,7 +258,13 @@ class OnlineDoctorsConsumer(AsyncWebsocketConsumer):
             'is_verified': message.is_verified,
             'is_available': message.is_available,
             'phone_number': message.phone_number,
-            'id_number': message.id_number
+            'id_number': message.id_number,
+            'profile_image': str(message.profile_image),
+            'experience_years': message.experience_years,
+            'first_name': message.first_name,
+            'last_name': message.last_name,
+            'hospital': message.hospital,
+            'specialization': message.speciality
         }
         
           

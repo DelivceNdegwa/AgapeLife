@@ -11,7 +11,7 @@ from staff.models import Appointment, LoggedInDoctor, AppointmentRequest, Doctor
 
 from agape_sockets import common_requirements
 
-@receiver(pre_save, sender=Doctor, dispatch_uid="online_doctor_list_listener")
+@receiver(post_save, sender=Doctor, dispatch_uid="online_doctor_list_listener")
 def online_doctor_list_listener(sender, instance, **kwargs):
     channel_layer = get_channel_layer()
     
