@@ -1,15 +1,7 @@
-from concurrent.futures import thread
 import json
-from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 
-from asgiref.sync import async_to_sync, sync_to_async
-
-from staff.models import Appointment, AppointmentRequest, Doctor
-from .models import AppointmentRequest1, TestSocketModel
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.core import serializers
 
 from agape_sockets import common_requirements

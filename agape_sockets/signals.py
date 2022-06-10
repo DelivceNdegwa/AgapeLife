@@ -6,8 +6,8 @@ from django.dispatch import receiver
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-from .models import TestSocketModel, TestSocketMonitor
-from staff.models import Appointment, LoggedInDoctor, AppointmentRequest, Doctor, Notification
+
+from staff.models import Appointment, AppointmentRequest, Doctor, Notification
 
 from agape_sockets import common_requirements
 
