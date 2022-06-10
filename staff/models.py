@@ -81,17 +81,6 @@ class PatientSymptoms(models.Model):
     def __str__(self):
         return str(self.patient)
     
-    
-class DoctorPrescription(models.Model):
-    medicine = models.TextField(null=True, blank=True)
-    recommendation = models.TextField()
-    prescription_to = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
-    prescribed_by = models.ForeignKey(Doctor, null=True, blank=True, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return str(self.prescription_to.id_number)
-    
 
 class AppointmentRequest(models.Model):
     APPROVED = 1

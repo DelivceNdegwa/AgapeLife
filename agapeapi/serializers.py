@@ -50,14 +50,14 @@ class AppointmentRequestSerializer(serializers.ModelSerializer):
         model = AppointmentRequest
         fields   = '__all__'
         
-
-class DoctorPrescriptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DoctorPrescription
-        fields = '__all__'
-        
         
 class PatientSymptomsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientSymptoms
+        fields = '__all__'
+        
+
+class MedicalReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicalReport
         fields = '__all__'
