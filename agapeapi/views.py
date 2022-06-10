@@ -200,13 +200,13 @@ class AppointmentRequestDetailView(RetrieveUpdateAPIView):
     serializer_class = AppointmentRequestSerializer
     
     
-class DoctorPrescriptionsDetailView(RetrieveUpdateAPIView):
-    queryset = DoctorPrescription
-    serializer_class = DoctorPrescriptionSerializer
+class MedicalReportsDetailView(RetrieveUpdateAPIView):
+    queryset = MedicalReport
+    serializer_class = MedicalReportSerializer
     
-class DoctorPrescriptionListView(ListAPIView):
-    queryset = DoctorPrescription
-    serializer_class = DoctorPrescriptionSerializer
+class MedicalReportListView(ListAPIView):
+    queryset = MedicalReport
+    serializer_class = MedicalReportSerializer
     
     
 class PatientsSymptomsDetailView(RetrieveUpdateAPIView):
