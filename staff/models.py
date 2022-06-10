@@ -238,3 +238,17 @@ class Notification(models.Model):
     
     def __str__(self):
         return str(self.recipient_id)
+    
+
+class MedicalReport(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
+    patient = models.ForeignKey(AgapeUser, on_delete=models.PROTECT)
+    medication = models.TextField(null=True)
+    doctor_report = models.TextField()
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return "patient_{}_{}_report".format(self.patient.first_name, self.patient.id)
+
+            
