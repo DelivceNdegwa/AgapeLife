@@ -42,9 +42,10 @@ class AgapeUserRegisterView(APIView):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes((AllowAny,))
+# @permission_classes((AllowAny,))
 def doctorRegister(request):
-    # print(request.data)
+    print(request.data)
+    print(request.POST)
     
     license_certificate = request.FILES['license_certificate']
     first_name = request.POST.get('first_name')
@@ -62,6 +63,7 @@ def doctorRegister(request):
     errors = validate_fields(username, email, id_number, phone_number)
     
     if errors:
+
         print(errors)
         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
     

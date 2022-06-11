@@ -95,7 +95,8 @@ class AppointmentRequest(models.Model):
     client = models.ForeignKey(AgapeUser, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, models.CASCADE)
     about = models.CharField(max_length=50)
-    symptoms = models.ForeignKey(PatientSymptoms, on_delete=models.PROTECT, null=True, blank=True)
+    symptoms = models.TextField(null=True, blank=True)
+    persistence_period = models.IntegerField(null=True, blank=True)
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
     

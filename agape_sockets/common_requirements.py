@@ -8,11 +8,11 @@ def get_online_doctors():
 
 def get_doctor_appointments(id):
     return AppointmentRequest.objects.select_related('doctor').filter(
-                                    doctor__id=id, status=AppointmentRequest.PENDING
+                                    doctor__id_number=id, status=AppointmentRequest.PENDING
                                 )
 
 def patient_appointments(id):
     return Appointment.objects.select_related('client').filter(
-                                 client__id=id
+                                 client__id_number=id
                             )
     

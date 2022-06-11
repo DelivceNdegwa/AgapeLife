@@ -93,7 +93,7 @@ class PatientAppointmentsConsumer(AsyncWebsocketConsumer):
         super().__init__(self, *args, **kwargs)
         
     async def connect(self):
-        self.patient_id = self.scope['url_route']['kwargs']['id']
+        self.patient_id = self.scope['url_route']['kwargs']['id_number']
         self.group_name = 'patient_{}'.format(self.patient_id)
         
         await self.channel_layer.group_add(
