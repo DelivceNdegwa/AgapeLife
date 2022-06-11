@@ -72,8 +72,11 @@ class Doctor(User):
 
 class PatientSymptoms(models.Model):
     symptoms = models.TextField()
+    persistence_period = models.CharField(max_length=30, null=True)
     patient = models.ForeignKey(AgapeUser, null=True,  on_delete=models.SET_NULL)
     viewed_by = models.ForeignKey(Doctor, null=True, blank=True,  on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True, null=True)
     
     class Meta:
         verbose_name_plural = 'Patient Symptoms'
@@ -96,7 +99,7 @@ class AppointmentRequest(models.Model):
     doctor = models.ForeignKey(Doctor, models.CASCADE)
     about = models.CharField(max_length=50)
     symptoms = models.TextField(null=True, blank=True)
-    persistence_period = models.IntegerField(null=True, blank=True)
+    persistence_period = models.CharField(max_length=30, null=True, blank=True)
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
     

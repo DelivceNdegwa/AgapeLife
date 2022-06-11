@@ -280,17 +280,20 @@ def bookAppointment(request):
     doctor = request.POST.get("doctor_id")
     about = request.POST.get("about")
     symptoms = request.POST.get("patient_symptoms")
+    persistence_period = request.POST.get("perisistence_period")
     
     patient_symptoms = PatientSymptoms()
     patient_symptoms.symptoms = symptoms
+    patient_symptoms.persistence_period=persistence_period
     patient_symptoms.patient =AgapeUser.objects.filter(id=client).first()
     patient_symptoms.save()
     
     appointment_request = AppointmentRequest()
-    appointment_request.client=AgapeUser.objects.filter(id=client).first()
-    appointment_request.doctor=Doctor.objects.filter(id=doctor).first()
+    appointment_request.client=AgapeUser.objects.filter(id_number=client).first()
+    appointment_request.doctor=Doctor.objects.filter(id_number=doctor).first()
     appointment_request.about = about
-    appointment_request.symptoms = patient_symptoms
+    appointment_request.symptoms = symptoms
+    appointment_request.persistence_period = persistence_period
     appointment_request.save()
     
     return Response({"success":True, "message":"Appointment has been booked successfully", "error":None}, status=status.HTTP_201_CREATED)
