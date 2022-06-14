@@ -321,3 +321,18 @@ def createPeriodicTask(cron_time, receiver_id, receiver_type, message):
         args= json.dumps((receiver_id, receiver_type, message)),
         one_off= True
     )
+    
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def testMultipartMap(request):
+    print("FORM_POST: ", request.POST)
+    print("FORM_DATA: ", request.data)
+    
+    return Response({'success':'Test passed'}, status=status.HTTP_201_CREATED)
+    
+    
+
+    
+    

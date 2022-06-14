@@ -20,7 +20,7 @@ from .forms import *
 ## navigation to all content i.e doctors section, tips section and feedbacks section
 def index(request): 
     categories = MedicalCategory.objects.all()
-    doctors = Doctor.objects.all()
+    doctors = Doctor.objects.all().order_by('-created_at')
     
     context={
         "number_of_doctors":doctors.count(),
@@ -33,7 +33,7 @@ def index(request):
 
 ## Doctor views
 def doctorsList(request):
-    doctors = Doctor.objects.all()
+    doctors = Doctor.objects.all().order_by('-created_at')
     context = {
         "doctors":doctors
     }

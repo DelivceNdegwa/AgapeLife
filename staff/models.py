@@ -50,7 +50,7 @@ class Doctor(User):
     is_available = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    
+
     @property
     def get_status(self):
         if self.is_verified:
@@ -65,10 +65,10 @@ class Doctor(User):
             models.Index(fields=['is_available'])
         ]
     
-    # def __str__(self):
-    #     return "Dr "+self.first_name+" "+self.last_name
     def __str__(self):
-        return str(self.id)
+        return "Dr "+self.first_name+" "+self.last_name
+    # def __str__(self):
+    #     return str(self.id)
 
 class PatientSymptoms(models.Model):
     symptoms = models.TextField()
@@ -110,9 +110,9 @@ class AppointmentRequest(models.Model):
     
     def __str__(self):
         if self.read == True:
-            return 'Read'
+            return 'Read '+self.about
         else:
-            return 'Unread'
+            return 'Unread'+self.about
     
     def get_status(self):
         status_dictionary = {

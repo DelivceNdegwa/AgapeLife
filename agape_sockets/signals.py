@@ -28,6 +28,13 @@ def online_doctor_list_listener(sender, instance, **kwargs):
                 'phone_number': instance.phone_number,
                 'id_number': instance.id_number
             }
+            async_to_sync(channel_layer.group_send)(
+                    common_requirements.online_doctors_group,
+                    {
+                        "type": "update.listener",
+                        "doctor": updated_doctor
+                    }
+                )
             
             if instance_before.is_available != instance.is_available:
                 print("INFO: Availability changed from {} to {}".format(instance_before.is_available, instance.is_available))
@@ -56,7 +63,7 @@ def online_doctor_list_listener(sender, instance, **kwargs):
 @receiver(post_save, sender=AppointmentRequest, dispatch_uid="doctor_appointment_listener")
 def doctor_appointment_listener(sender, created, instance, **kwargs):
     if instance:
-        doctor_group_name = 'doctor_{}'.format(instance.doctor.id)
+        doctor_group_name = 'doctor_{}'.format(instance.doctor.id_number)
         
         channel_layer = get_channel_layer()
         
@@ -98,7 +105,7 @@ def doctor_appointment_listener(sender, created, instance, **kwargs):
                 'data':message
             }
         )
-        
+        print("INFO:Message sent")
 
 @receiver(post_save, sender=Appointment, dispatch_uid='client_appointment_listener')
 def client_appointment_listener(sender, created, instance, **kwargs):

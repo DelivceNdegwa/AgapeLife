@@ -53,7 +53,7 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
                                         )
         
         await self.send(text_data=json.dumps({
-            "appointment_list": serializers.serialize('json', doctor_appointments),
+            "appointment_list": serializers.serialize('array', doctor_appointments),
             "new_appointment": True,
             "appointments_number": len(self.serialized_list)
         })) 
@@ -174,18 +174,20 @@ class PatientAppointmentsConsumer(AsyncWebsocketConsumer):
 class OnlineDoctorsConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(self, *args, **kwargs)
-        self.group_name = common_requirements.online_doctors_group
     
     async def connect(self):
+        self.group_name = common_requirements.online_doctors_group
+        
         await self.channel_layer.group_add(
             self.group_name,
             self.channel_name
         )   
+        
         await self.accept()
         print("1. CONNECTED")
         await self.load_doctors()  
         
-    async def disconnect(self, status_code):
+    async def disconnect(self):
         self.channel_layer.group_discard(
              self.group_name,
              self.channel_name
@@ -219,20 +221,21 @@ class OnlineDoctorsConsumer(AsyncWebsocketConsumer):
         print("INFO: update_listener function called")
         
         print("INFO: DOCTOR_ID=",online_doctor['id'])
+        await self.load_doctors()
         
-        if online_doctor['is_available']:
-            self.serialized_list.append(online_doctor)
+        # if online_doctor['is_available']:
+        #     self.serialized_list.append(online_doctor)
             
-        else:
-            doctor_index = next((index for (index, item) in enumerate(self.serialized_list) if item['id'] == online_doctor['id']), None)
-            print("INFO: FILTERED_ITEM=", doctor_index)
-            del self.serialized_list[doctor_index]
-        print("INFO: UPDATED_LIST_LENGTH=", len(self.serialized_list))   
+        # else:
+        #     doctor_index = next((index for (index, item) in enumerate(self.serialized_list) if item['id'] == online_doctor['id']), None)
+        #     print("INFO: FILTERED_ITEM=", doctor_index)
+        #     del self.serialized_list[doctor_index]
+        # print("INFO: UPDATED_LIST_LENGTH=", len(self.serialized_list))   
         
-        await self.send(text_data=json.dumps({
-            "doctor_list": self.serialized_list,
-            "doctor_number": len(self.serialized_list)
-        }))
+        # await self.send(text_data=json.dumps({
+        #     "doctor_list": self.serialized_list,
+        #     "doctor_number": len(self.serialized_list)
+        # }))
 
     def get_online_doctors(self):
         print("3. get_online_doctors() called")

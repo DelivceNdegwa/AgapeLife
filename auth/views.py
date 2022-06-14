@@ -43,22 +43,22 @@ class AgapeUserRegisterView(APIView):
 @csrf_exempt
 @api_view(["POST"])
 # @permission_classes((AllowAny,))
-def doctorRegister(request):
+def doctorFormRegister(request):
     print(request.data)
     print(request.POST)
     
-    license_certificate = request.FILES['license_certificate']
+    # license_certificate = request.FILES['license_certificate']
     first_name = request.POST.get('first_name')
     last_name = request.POST.get('last_name')
-    username = request.POST.get('first_name')
-    email = request.POST.get('email')
     id_number = request.POST.get('id_number')
+    username = first_name+"_"+id_number
+    email = request.POST.get('email')
     phone_number = request.POST.get('phone_number')
     password = request.POST.get('password')
     hospital = request.POST.get('hospital')
     speciality = request.POST.get('speciality')
     category_id = int(request.POST.get('category'))
-    profile_image = request.FILES['profile_image']
+    # profile_image = request.FILES['profile_image']
     
     errors = validate_fields(username, email, id_number, phone_number)
     
@@ -69,10 +69,10 @@ def doctorRegister(request):
     
     else:
         doctor = Doctor()
-        doctor.license_certificate = license_certificate
+        # doctor.license_certificate = license_certificate
         doctor.email = email
         doctor.username = username
-        doctor.profile_image = profile_image
+        # doctor.profile_image = profile_image
         doctor.set_password(password)
         doctor.id_number = id_number
         doctor.phone_number = phone_number
@@ -110,4 +110,25 @@ def validate_fields(username, email, id_number, phone_number):
     return errors    
     
 
-
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def uploadDoctorFiles(request, id):
+    print("DOCTOR_ID: ", id)
+    print("FILE_POST: ", request.POST)
+    print("fILE_DATA: ", request.data)    # path('reg-doc/', testMultipartMap),
+    
+    license_certificate = request.FILES['license_certificate']
+    profile_image = request.FILES['profile_image']
+    
+    print("License:", license_certificate)
+    print("Profile: ", profile_image)
+    
+    doctor = Doctor.objects.filter(id_number=id).first()
+    
+    doctor.license_certificate = license_certificate
+    doctor.profile_image = profile_image
+    doctor.save()
+    
+    return Response({'success':'Uploaded files for doctor {}'.format(doctor.username)}, status=status.HTTP_201_CREATED)
+    
