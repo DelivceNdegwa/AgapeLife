@@ -26,7 +26,7 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
         await self.accept()
         print("INFO: CONNECTION FOR DoctorAppointmentsConsumer HAS BEEN ESTABLISHED")
         await self.load_appointment_requests()
-        
+
     async def disconnect(self, status_code):
         await self.channel_layer.group_discard(
             self.group_name,
@@ -36,25 +36,18 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
     async def load_appointment_requests(self):
         doctor_appointments = await database_sync_to_async(list)(
                                             self.get_appointment_requests()
-                                        )
-        
+                                        ) 
         self.serialized_list = self.appointment_requests_messages_to_json(doctor_appointments)
-        print(self.serialized_list)
         
-        await self.send(text_data=json.dumps({
-            "appointment_request_list":self.serialized_list
-        }))
-        
-    async def load_appointments(self):
         doctor_appointments = await database_sync_to_async(list)(
                                             self.get_upcoming_appointments()
                                         )
-
         self.appointments_list = self.appointment_messages_to_json(doctor_appointments)
         print(self.appointments_list)
         
         await self.send(text_data=json.dumps({
-            "appointment_list": self.appointments_list
+            "appointment_requests_list":self.serialized_list,
+            "upcoming_appointments_list": self.appointments_list
         }))
     
     async def created_appointment_listener(self, event):
@@ -66,9 +59,10 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
                                         )
         
         await self.send(text_data=json.dumps({
-            "appointment_list": self.appointment_requests_messages_to_json(doctor_appointments),
+            "appointment_requests_list": self.appointment_requests_messages_to_json(doctor_appointments),
             "new_appointment": True,
-            "appointments_number": len(self.serialized_list)
+            "appointments_number": len(self.serialized_list),
+            "upcoming_appointments_list": self.appointments_list
         })) 
         
     async def updated_appointment_listener(self, event):
@@ -76,9 +70,10 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
         print('INFO: updated_appointment_listener', updated_appointment)
         
         await self.send(text_data=json.dumps({
-            "appointment_list": self.serialized_list,
+            "appointment_requests_list": self.serialized_list,
             "updated_item": updated_appointment,
             "updated_appointment": True,
+            "upcoming_appointments_list": self.appointments_list,
         }))
         
     def get_appointment_requests(self):
@@ -104,8 +99,8 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
             'id': message.id,
             'title': message.title,
             'about': message.about,
-            'start_time': str(message.start_time),
-            'end_time': str(message.end_time),
+            'start_time': message.start_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'end_time': message.end_time.strftime("%m-%d-%Y %H:%M:%S"),
             'doctor': message.doctor_id,
             'client': message.client_id,
             'status': message.status 

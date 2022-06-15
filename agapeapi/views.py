@@ -186,8 +186,25 @@ class ClientDetailView(RetrieveUpdateAPIView):
         id = self.kwargs.get('pk', None)
         print("USER_ID:",id)
         user = AgapeUser.objects.filter(id=id).first()
-        print(user.username)
+        print("USER:", user)
+        print(user.first_name)
         return user
+    
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))  
+def getClientDetails(request, pk):
+    user = AgapeUser.objects.filter(id=pk).first()
+    
+    data = {
+        'id': user.id,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'profile_image': user.profile_image    
+    }
+    
+    return JsonResponse(data, status=status.HTTP_200_OK)
+    
     
     
 class AppointmentDetailView(RetrieveUpdateAPIView):

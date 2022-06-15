@@ -12,9 +12,16 @@ def get_doctor_appointment_requests(id):
                                 )
     
 def get_doctor_upcoming_appointment(id):
-    return Appointment.objects.select_related('doctor').filter(
-                                doctor_id_number=id, status=Appointment.PENDING
+    
+    appointments =  Appointment.objects.select_related('client').filter(
+                                doctor__id_number=id, status=Appointment.PENDING
                             )
+    
+    # for appointment in appointments:
+    #     appointment.client_name = appointment.client.first_name + " "+appointment.client.last_name
+    #     # print("DOCTOR_UPCOMING_APPOINTMENT: {}, {}".format(appointment.doctor_fname, appointment.doctor_lname))
+    
+    return appointments
     
 def patient_appointments(id):
     return Appointment.objects.select_related('client').filter(

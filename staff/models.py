@@ -125,41 +125,16 @@ class AppointmentRequest(models.Model):
     persistence_period = models.CharField(max_length=30, null=True, blank=True)
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
+
     
-    def __get_client_first_name(self):
-        return self.client.first_name
+    client_first_name = models.CharField(max_length=30, null=True)
+    client_last_name = models.CharField(max_length=30, null=True)
+    client_profile_image = models.ImageField(upload_to="media/", null=True)
     
-    def __get_client_last_name(self):
-        return self.client.last_name
-    
-    def __get_client_profile_image(self):
-        return self.client.profile_image
-    
-    def __get_client_id(self):
-        return self.client.id
-    
-    def __get_doctor_id(self):
-        return self.doctor.id
-    
-    def __get_doctor_first_name(self):
-        return self.doctor.get_first_name
-    
-    def __get_doctor_last_name(self):
-        return self.doctor.get_last_name
-    
-    def __get_doctor_profile_image(self):
-        return self.doctor.profile_image
-    
-    client_first_name = property(__get_client_first_name)
-    client_last_name = property(__get_client_last_name)
-    client_profile_image = property(__get_client_profile_image)
-        
-    doctor_first_name = property(__get_doctor_first_name)
-    doctor_last_name = property(__get_doctor_last_name)
-    doctor_profile_image = property(__get_doctor_profile_image)
-    
-    doctor_id = property(__get_doctor_id)
-    client_id = property(__get_client_id)
+    doctor_first_name = models.CharField(max_length=30, null=True)
+    doctor_last_name = models.CharField(max_length=30, null=True)
+    doctor_profile_image = models.ImageField(upload_to="media/", null=True)
+
     
     def __str__(self):
         if self.read == True:
@@ -198,40 +173,14 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
-    def __get_doctor_id(self):
-        return self.doctor.id
+    client_first_name = models.CharField(max_length=30, null=True)
+    client_last_name = models.CharField(max_length=30, null=True)
+    client_profile_image = models.ImageField(upload_to="media/", null=True)
+    
+    doctor_first_name = models.CharField(max_length=30, null=True)
+    doctor_last_name = models.CharField(max_length=30, null=True)
+    doctor_profile_image = models.ImageField(upload_to="media/", null=True)
 
-    def __get_client_id(self):
-        return self.client.id
-    
-    def __get_client_first_name(self):
-        return self.client.first_name
-    
-    def __get_client_last_name(self):
-        return self.client.last_name
-    
-    def __get_client_profile_image(self):
-        return self.client.profile_image
-    
-    def __get_doctor_first_name(self):
-        return self.doctor.first_name
-    
-    def __get_doctor_last_name(self):
-        return self.doctor.last_name
-    
-    def __get_doctor_profile_image(self):
-        return self.doctor.profile_image
-    
-    client_id = property(__get_client_id)
-    doctor_id = property(__get_doctor_id)
-    
-    client_first_name = property(__get_client_first_name)
-    client_last_name = property(__get_client_last_name)
-    client_profile_image = property(__get_client_profile_image)
-    
-    doctor_first_name = property(__get_doctor_first_name)
-    doctor_last_name = property(__get_doctor_last_name)
-    doctor_profile_image = property(__get_doctor_profile_image)
         
     def __str__(self):
         return str(self.about)
