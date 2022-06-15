@@ -13,8 +13,10 @@ urlpatterns = [
     path("users/", AgapeUserListView.as_view()),
     path("users/<int:id_number>", AgapeUserDetailView.as_view()),
     
+
     path("doctor-appointments/<int:pk>", DoctorAppointmentsListView.as_view()),
     path("client-appointments/<int:pk>", UserAppointmentsListView.as_view()),
+    path('clients/<int:pk>', ClientDetailView.as_view()),
     
     path("feedbacks/", UserFeedBackListView.as_view()),
     path("feedbacks/<int:pk>", UserFeedBackDetailView.as_view()),

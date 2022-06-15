@@ -18,13 +18,13 @@
 
       const agapeSocket = new WebSocket(
         //"ws://" + window.location.host + "/ws/test/"
-        /*"ws://" +
+        "ws://" +
           window.location.host +
-          "/ws/doctor/" +
-          37696611 +
-          "/appointments/"*/
+          "/ws/patient/" +
+          33577744 +
+          "/appointments/"
 
-        "ws://192.168.100.191:8000/ws/online-doctors/"
+        //"ws://192.168.100.191:8000/ws/online-doctors/"
       );
 
       agapeSocket.onmessage = function (e) {

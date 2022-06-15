@@ -26,6 +26,16 @@ class MedicalCategory(models.Model):
 class AgapeUser(User):
     phone_number = models.IntegerField()
     id_number = models.IntegerField()
+    profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
+    
+    def __get_first_name(self):
+        return self.first_name
+    
+    def __get_last_name(self):
+        return self.last_name
+    
+    get_first_name = property(__get_first_name)
+    get_last_name = property(__get_last_name)
     
     class Meta:
         verbose_name='Agape User'
@@ -33,7 +43,7 @@ class AgapeUser(User):
     # def __str__(self):
     #     return str(self.id_number)+" "+self.email
     def __str__(self):
-        return str(self.id)
+        return str(self.id_number)
 
 
 class Doctor(User):
@@ -57,6 +67,19 @@ class Doctor(User):
             return "Verified"
         return "Pending"
     
+    def __get_category_id(self):
+        return self.category.id
+    
+    def __get_first_name(self):
+        return self.first_name
+    
+    def __get_last_name(self):
+        return self.last_name
+    
+    get_first_name = property(__get_first_name)
+    get_last_name = property(__get_last_name)
+    category_id = property(__get_category_id)
+    
     class Meta:
         verbose_name = 'Agape Doctor'
         indexes = [
@@ -65,10 +88,10 @@ class Doctor(User):
             models.Index(fields=['is_available'])
         ]
     
-    def __str__(self):
-        return "Dr "+self.first_name+" "+self.last_name
     # def __str__(self):
-    #     return str(self.id)
+    #     return "Dr "+self.first_name+" "+self.last_name
+    def __str__(self):
+        return str(self.id_number)
 
 class PatientSymptoms(models.Model):
     symptoms = models.TextField()
@@ -103,16 +126,46 @@ class AppointmentRequest(models.Model):
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
     
-    # def __init__(self, *args, **kwargs):
-    #     super(AppointmentRequest, self).__init__(*args, **kwargs)
-    #     self._original_status= self.status
+    def __get_client_first_name(self):
+        return self.client.first_name
     
+    def __get_client_last_name(self):
+        return self.client.last_name
+    
+    def __get_client_profile_image(self):
+        return self.client.profile_image
+    
+    def __get_client_id(self):
+        return self.client.id
+    
+    def __get_doctor_id(self):
+        return self.doctor.id
+    
+    def __get_doctor_first_name(self):
+        return self.doctor.get_first_name
+    
+    def __get_doctor_last_name(self):
+        return self.doctor.get_last_name
+    
+    def __get_doctor_profile_image(self):
+        return self.doctor.profile_image
+    
+    client_first_name = property(__get_client_first_name)
+    client_last_name = property(__get_client_last_name)
+    client_profile_image = property(__get_client_profile_image)
+        
+    doctor_first_name = property(__get_doctor_first_name)
+    doctor_last_name = property(__get_doctor_last_name)
+    doctor_profile_image = property(__get_doctor_profile_image)
+    
+    doctor_id = property(__get_doctor_id)
+    client_id = property(__get_client_id)
     
     def __str__(self):
         if self.read == True:
-            return 'Read '+self.about
+            return 'Read'
         else:
-            return 'Unread'+self.about
+            return 'Unread: '+self.about
     
     def get_status(self):
         status_dictionary = {
@@ -145,8 +198,44 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
+    def __get_doctor_id(self):
+        return self.doctor.id
+
+    def __get_client_id(self):
+        return self.client.id
+    
+    def __get_client_first_name(self):
+        return self.client.first_name
+    
+    def __get_client_last_name(self):
+        return self.client.last_name
+    
+    def __get_client_profile_image(self):
+        return self.client.profile_image
+    
+    def __get_doctor_first_name(self):
+        return self.doctor.first_name
+    
+    def __get_doctor_last_name(self):
+        return self.doctor.last_name
+    
+    def __get_doctor_profile_image(self):
+        return self.doctor.profile_image
+    
+    client_id = property(__get_client_id)
+    doctor_id = property(__get_doctor_id)
+    
+    client_first_name = property(__get_client_first_name)
+    client_last_name = property(__get_client_last_name)
+    client_profile_image = property(__get_client_profile_image)
+    
+    doctor_first_name = property(__get_doctor_first_name)
+    doctor_last_name = property(__get_doctor_last_name)
+    doctor_profile_image = property(__get_doctor_profile_image)
+        
     def __str__(self):
         return str(self.about)
+    
 class MedicalTips(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     sourced_from = models.TextField(null=True, blank=True)

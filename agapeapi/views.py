@@ -3,7 +3,7 @@ import datetime
 from datetime import timedelta
 from re import S
 
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
@@ -133,7 +133,8 @@ class UserAppointmentsListView(RetrieveAPIView):
     serializer_class = AppointmentSerializer
     
     def get_queryset(self):
-        client = AgapeUser.objects.filter(id=id).first()
+        pk = self.kwargs.get('pk')
+        client = AgapeUser.objects.filter(id=pk).first()
         appointments = Appointment.objects.select_related('client').filter(client=client)
         return appointments
     
@@ -164,8 +165,8 @@ class DoctorPatientsView(ListAPIView):
         doctor = Doctor.objects.filter(id_number=id_number).first()
         appointment = Appointment.objects.select_related('doctor').filter(doctor=doctor)
     
-        patients = doctor.appointment_set.all()
-        return patients
+        
+        return appointment.appointments.all()
         
     
     
@@ -175,6 +176,17 @@ class AgapeUserDetailView(RetrieveUpdateAPIView):
     def get_object(self):
         id_number = self.kwargs.get('id_number', None)
         user = AgapeUser.objects.filter(id_number=id_number).first()
+        return user
+
+
+class ClientDetailView(RetrieveUpdateAPIView):
+    serializer_class = AgapeUserSerializer
+    
+    def get_object(self):
+        id = self.kwargs.get('pk', None)
+        print("USER_ID:",id)
+        user = AgapeUser.objects.filter(id=id).first()
+        print(user.username)
         return user
     
     

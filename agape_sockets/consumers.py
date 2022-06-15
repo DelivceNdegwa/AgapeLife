@@ -6,6 +6,8 @@ from django.core import serializers
 
 from agape_sockets import common_requirements
 
+from asgiref.sync import sync_to_async
+
 
 class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -19,11 +21,11 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(
             self.group_name,
             self.channel_name
-        )
+        )   
         
         await self.accept()
         print("INFO: CONNECTION FOR DoctorAppointmentsConsumer HAS BEEN ESTABLISHED")
-        await self.load_appointments()
+        await self.load_appointment_requests()
         
     async def disconnect(self, status_code):
         await self.channel_layer.group_discard(
@@ -31,29 +33,40 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         
-    async def load_appointments(self):
+    async def load_appointment_requests(self):
         doctor_appointments = await database_sync_to_async(list)(
-                                            self.get_appointments()
+                                            self.get_appointment_requests()
                                         )
-        print("NOW:",doctor_appointments)
-        self.serialized_list = serializers.serialize('json', doctor_appointments)
+        
+        self.serialized_list = self.appointment_requests_messages_to_json(doctor_appointments)
         print(self.serialized_list)
         
         await self.send(text_data=json.dumps({
-            "appointment_list":self.serialized_list
+            "appointment_request_list":self.serialized_list
         }))
         
+    async def load_appointments(self):
+        doctor_appointments = await database_sync_to_async(list)(
+                                            self.get_upcoming_appointments()
+                                        )
+
+        self.appointments_list = self.appointment_messages_to_json(doctor_appointments)
+        print(self.appointments_list)
+        
+        await self.send(text_data=json.dumps({
+            "appointment_list": self.appointments_list
+        }))
     
     async def created_appointment_listener(self, event):
         new_appointment = event['data']
         print('INFO: created_appointment_listener', new_appointment)  
         
         doctor_appointments = await database_sync_to_async(list)(
-                                            self.get_appointments()
+                                            self.get_appointment_requests()
                                         )
         
         await self.send(text_data=json.dumps({
-            "appointment_list": serializers.serialize('array', doctor_appointments),
+            "appointment_list": self.appointment_requests_messages_to_json(doctor_appointments),
             "new_appointment": True,
             "appointments_number": len(self.serialized_list)
         })) 
@@ -68,22 +81,45 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
             "updated_appointment": True,
         }))
         
-    def get_appointments(self):
-        return common_requirements.get_doctor_appointments(self.doctor_id)
+    def get_appointment_requests(self):
+        return common_requirements.get_doctor_appointment_requests(self.doctor_id)
         
-    def messages_to_json(self, messages):
+    def get_upcoming_appointments(self):
+        return common_requirements.get_doctor_upcoming_appointment(self.doctor_id)  
+        
+    def appointment_requests_messages_to_json(self, messages):
         result = []
         for message in messages:
-            result.append(self.message_to_json(message))
+            result.append(self.appointment_requests_message_to_json(message))
         return result
-
-    def message_to_json(self, message):
+    
+    def appointment_messages_to_json(self, messages):
+        result = []
+        for message in messages:
+            result.append(self.appointment_message_to_json(message))
+        return result
+    
+    def appointment_message_to_json(self, message):
         return {
             'id': message.id,
-            'client': message.client.id,
-            'doctor': message.doctor.id,
+            'title': message.title,
+            'about': message.about,
+            'start_time': str(message.start_time),
+            'end_time': str(message.end_time),
+            'doctor': message.doctor_id,
+            'client': message.client_id,
+            'status': message.status 
+        }
+
+    def appointment_requests_message_to_json(self, message):
+        return {
+            'id': message.id,
+            'client': message.client_id,
+            'doctor': message.doctor_id,
             'about': message.about,
             'status': message.status,
+            'symptoms': message.symptoms,
+            'persistence_period': message.persistence_period,
             'read': message.read
         }
         
@@ -93,7 +129,7 @@ class PatientAppointmentsConsumer(AsyncWebsocketConsumer):
         super().__init__(self, *args, **kwargs)
         
     async def connect(self):
-        self.patient_id = self.scope['url_route']['kwargs']['id_number']
+        self.patient_id = self.scope['url_route']['kwargs']['id']
         self.group_name = 'patient_{}'.format(self.patient_id)
         
         await self.channel_layer.group_add(
@@ -136,21 +172,22 @@ class PatientAppointmentsConsumer(AsyncWebsocketConsumer):
             "updated_appointment":True
         }))
         
-    def patient_appointments(self):
-        print("PATIENT_ID", self.patient_id)
-        return common_requirements.patient_appointments(self.patient_id)
-    
     async def load_appointments(self):
         patient_appointments = await database_sync_to_async(list)(
                                     self.patient_appointments()
                                 )
         print(patient_appointments)
-        self.serialized_appointments = serializers.serialize('json', patient_appointments)
+        self.serialized_appointments = self.messages_to_json(patient_appointments)#serializers.serialize('json', patient_appointments)
         print("INFO: SERIALIZED APPOINTMENTS ", self.serialized_appointments)
         
+
         await self.send(text_data=json.dumps({
             "appointment_list":self.serialized_appointments
         }))
+        
+    def patient_appointments(self):
+        print("PATIENT_ID", self.patient_id)
+        return common_requirements.patient_appointments(self.patient_id)
 
     def messages_to_json(self, messages):
         result = []
@@ -159,17 +196,17 @@ class PatientAppointmentsConsumer(AsyncWebsocketConsumer):
         return result
 
     def message_to_json(self, message):
+        print("TIMES::::::>",message.end_time)
         return {
             'id': message.id,
             'title': message.title,
             'about': message.about,
-            'start_time': message.start_time,
-            'end_time': message.end_time,
-            'doctor': message.doctor.id,
+            'start_time': str(message.start_time),
+            'end_time': str(message.end_time),
+            'doctor': message.doctor_id,
             'status': message.status,
         }
         
- 
 
 class OnlineDoctorsConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -223,19 +260,6 @@ class OnlineDoctorsConsumer(AsyncWebsocketConsumer):
         print("INFO: DOCTOR_ID=",online_doctor['id'])
         await self.load_doctors()
         
-        # if online_doctor['is_available']:
-        #     self.serialized_list.append(online_doctor)
-            
-        # else:
-        #     doctor_index = next((index for (index, item) in enumerate(self.serialized_list) if item['id'] == online_doctor['id']), None)
-        #     print("INFO: FILTERED_ITEM=", doctor_index)
-        #     del self.serialized_list[doctor_index]
-        # print("INFO: UPDATED_LIST_LENGTH=", len(self.serialized_list))   
-        
-        # await self.send(text_data=json.dumps({
-        #     "doctor_list": self.serialized_list,
-        #     "doctor_number": len(self.serialized_list)
-        # }))
 
     def get_online_doctors(self):
         print("3. get_online_doctors() called")
