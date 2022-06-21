@@ -53,14 +53,14 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-//    private FragmentHomeBinding binding;
+    //    private FragmentHomeBinding binding;
     PreferenceStorage preferenceStorage;
 
     ConsultationsAdapter consultationsAdapter;
     PatientsAdapter patientsAdapter;
     AppointmentRequestsAdapter appointmentRequestsAdapter;
     AppointmentsAdapter appointmentsAdapter;
-    
+
     RecyclerView rvConsultations, rvAppointmentRequests;
     ConstraintLayout notVerifiedLayout, verifiedLayout, recentPatientsLayout, consultationLayout;
 
@@ -326,8 +326,8 @@ public class HomeFragment extends Fragment {
                 if(response.code() == 200 && response.body() !=null){
                     doctorDetails = response.body();
                     if(!doctorDetails.getIsVerified()){
-                         notVerifiedLayout.setVisibility(View.VISIBLE);
-                         verifiedLayout.setVisibility(View.GONE);
+                        notVerifiedLayout.setVisibility(View.VISIBLE);
+                        verifiedLayout.setVisibility(View.GONE);
                     }
                 }
                 else{

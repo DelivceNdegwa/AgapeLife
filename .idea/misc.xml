@@ -32,6 +32,7 @@
         <entry key="app/src/main/res/drawable/file_searching_rafiki__1_.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/ic_baseline_add_alert_24.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/ic_baseline_call_24.xml" value="0.258" />
+        <entry key="app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.1625" />
         <entry key="app/src/main/res/drawable/ic_success_doc.xml" value="0.2465" />
         <entry key="app/src/main/res/drawable/mobile_login_pana.xml" value="0.258" />
         <entry key="app/src/main/res/drawable/navigation_bg.xml" value="0.1205" />
@@ -74,8 +75,10 @@
         <entry key="app/src/main/res/layout/activity_test_bottom.xml" value="0.2115036231884058" />
         <entry key="app/src/main/res/layout/activity_user_main.xml" value="0.1078125" />
         <entry key="app/src/main/res/layout/activity_video_call.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/content_doctor_reports.xml" value="0.12310030395136778" />
         <entry key="app/src/main/res/layout/content_scrolling.xml" value="0.22" />
         <entry key="app/src/main/res/layout/custom_toolbar.xml" value="0.12310030395136778" />
+        <entry key="app/src/main/res/layout/doctor_content_scrolling.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/fragment_doctor_home.xml" value="0.2115036231884058" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />

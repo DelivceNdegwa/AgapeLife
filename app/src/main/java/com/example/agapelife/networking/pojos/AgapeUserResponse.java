@@ -29,9 +29,9 @@ public class AgapeUserResponse {
     @Expose
     private Integer idNumber;
 
-//    @SerializedName("profile_photo")
-//    @Expose
-    private String profilePhoto ="profile_link";
+    @SerializedName("profile_photo")
+    @Expose
+    private String profilePhoto;
 
 
 

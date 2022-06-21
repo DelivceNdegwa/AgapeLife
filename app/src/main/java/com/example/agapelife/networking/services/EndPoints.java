@@ -88,7 +88,7 @@ public interface EndPoints {
     Call<AppointmentResponse> getAppointmentDetails(@Path("pk") long pk);
 
     @GET("api/get-medical-report/{id}")
-    Call<MedicalReportResponse> getDoctorsNotes(@Path("id") long idNumber);
+    Call<List<MedicalReportResponse>> getDoctorsNotes(@Path("id") long idNumber);
 
     // Patient Request appointment
     @FormUrlEncoded

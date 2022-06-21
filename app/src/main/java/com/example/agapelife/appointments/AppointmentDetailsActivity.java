@@ -28,7 +28,7 @@ public class AppointmentDetailsActivity extends AppCompatActivity {
     ConstraintLayout dateContainer, timeContainer;
     TextView tvDate, tvTime, genderAge, patientName, appointmentTitle;
     String selectedDate="", start_time="", end_time, appointment_title, strPatientName;
-    Toolbar toolbar;
+//    Toolbar toolbar;
     
     long id;
     long patientId;
@@ -41,7 +41,7 @@ public class AppointmentDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_details);
 
-        toolbar = findViewById(R.id.custom_toolbar);
+//        toolbar = findViewById(R.id.custom_toolbar);
         appointmentTitle = findViewById(R.id.tv_appointment);
         patientName = findViewById(R.id.tv_patient_request_name);
         genderAge = findViewById(R.id.host_tag);

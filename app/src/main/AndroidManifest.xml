@@ -34,10 +34,17 @@
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
         <activity
-            android:name=".medical_reports.DoctorReportDetailsActivity"
-            android:exported="false" />
+            android:name=".DoctorReportsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_doctor_reports"
+            android:theme="@style/Theme.AgapeLife.NoActionBar.NoActionBar" />
         <activity
-            android:name=".medical_reports.DoctorReportsActivity"
+            android:name=".DoctorReports"
+            android:exported="false"
+            android:label="@string/title_activity_doctor_reports"
+            android:theme="@style/Theme.AgapeLife.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".medical_reports.DoctorReportDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".doctors.DoctorNotesActivity"

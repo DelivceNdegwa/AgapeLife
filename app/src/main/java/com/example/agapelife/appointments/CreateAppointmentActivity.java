@@ -2,6 +2,7 @@ package com.example.agapelife.appointments;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.DatePickerDialog;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.agapelife.R;
 import com.example.agapelife.doctors.DoctorsSection;
+import com.example.agapelife.medical_reports.DoctorReportsActivity;
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -38,8 +40,8 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
     ConstraintLayout dateContainer, timeContainer;
     TextView tvDate, tvTime, genderAge, patientName;
     String selectedDate="", start_time="", end_time, appointment_title;
-    Toolbar toolbar;
     Button btnCreate;
+    CardView cardPatientDetails;
 
     int doctor_id, client_id;
 
@@ -52,7 +54,6 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_create_appointment);
-        toolbar = findViewById(R.id.custom_toolbar);
         appointmentTitle = findViewById(R.id.appointment_title);
         patientName = findViewById(R.id.tv_patient_request_name);
         genderAge = findViewById(R.id.host_tag);
@@ -61,6 +62,8 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
         timeContainer = findViewById(R.id.time_container);
         tvDate = findViewById(R.id.tv_date);
         tvTime = findViewById(R.id.tv_time);
+
+        cardPatientDetails = findViewById(R.id.card_patient_details);
 
         btnCreate = findViewById(R.id.btn_create);
 
@@ -84,6 +87,7 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
                 verifyField(appointment_title, selectedDate, start_time);
             }
         });
+
         // title, starttime, endtime, doctor, client
     }
 
@@ -95,6 +99,16 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
         client_id = intent.getIntExtra("CLIENT_ID",0);
         doctor_id = intent.getIntExtra("DOCTOR_ID", 0);
         patientName.setText(intent.getStringExtra("PATIENT_NAME"));
+
+        cardPatientDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateAppointmentActivity.this, DoctorReportsActivity.class);
+                intent.putExtra("CLIENT_ID", client_id);
+                intent.putExtra("DOCTOR_ID", doctor_id);
+                startActivity(intent);
+            }
+        });
 
     }
 
