@@ -19,6 +19,8 @@ def appointment_reminder(self, id, category, message):
                     recipient_id= id,
                     message= message
                 )
+        
+        
         return "Notification created"
     except Exception as e:
         return "ERROR: Notification error => {}".format(e)

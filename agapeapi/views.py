@@ -245,23 +245,61 @@ class PatientsSymptomsDetailView(RetrieveUpdateAPIView):
 
 @csrf_exempt
 @api_view(["GET"])
-def generateTokens(request, pk):
+def generateClientTokens(request, pk):
     # this is the id for the meeting 
     appointment = Appointment.objects.filter(id=pk).first()
     
     channel_name = appointment.title
     start_time = appointment.start_time
     end_time = appointment.end_time
-    uid = appointment.client.username+"_"+str(appointment.client.id)
     
+    uid = appointment.client.username+"_"+str(appointment.client.id)
     time_delta = end_time - start_time
     
     try:
         token_generator = TokenGenerator(uid, channel_name, start_time, int(time_delta.total_seconds()))
         token = token_generator.generate()
-        return Response({'token': token}, status=status.HTTP_200_OK)
+        print("CLIENT_TOKEN: ",token)
+        print("CHANNEL_NAME: ", channel_name)
+        data = {
+            'token': token,
+            'channel_name': channel_name
+            }
+        return Response(data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error':str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@csrf_exempt
+@api_view(["GET"])
+def generateDoctorTokens(request, pk):
+    # this is the id for the meeting 
+    appointment = Appointment.objects.filter(id=pk).first()
+    
+    channel_name = appointment.title
+    start_time = appointment.start_time
+    end_time = appointment.end_time
+    
+    uid = appointment.doctor.username+"_"+str(appointment.doctor.id)
+    time_delta = end_time - start_time
+    print("DOCTOR_UID:", uid)
+    print("CHANNEL_NAME: ", channel_name)
+    try:
+        token_generator = TokenGenerator(uid, channel_name, start_time, int(time_delta.total_seconds()))
+        token = token_generator.generate()
+        print("DOCTOR_TOKEN: ",token)
+        
+        data = {
+            'token': token,
+            'channel_name': channel_name
+            }
+        
+        return Response(data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error':str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @csrf_exempt
@@ -273,17 +311,34 @@ def createAppointment(request):
     end_time = request.POST.get("end_time")
     doctor_id = request.POST.get("doctor_id")
     client_id = request.POST.get("patient_id")
+    request_appointment_id = int(request.POST.get("appointment_id"))
+    
     client = AgapeUser.objects.filter(id=client_id).first()
     doctor = Doctor.objects.filter(id=doctor_id).first()
     
+    
     appointment = Appointment(
             title = appointment_title,
+            about = appointment_title,
             start_time = start_time,
             end_time = end_time,
             client = client,
-            doctor = Doctor.objects.filter(id=doctor_id).first()
+            doctor = doctor,
+            client_first_name = client.first_name,
+            client_last_name = client.last_name,
+            client_profile_image = client.profile_image,
+            doctor_first_name = doctor.first_name,
+            doctor_last_name = doctor.last_name,
+            doctor_profile_image = doctor.profile_image
         )
     appointment.save()
+    
+    appointment_request = AppointmentRequest.objects.filter(id=request_appointment_id).first()
+    print("REQUEST_APT", appointment_request)
+    
+    appointment_request.status = AppointmentRequest.APPROVED
+    appointment_request.read = True
+    appointment_request.save()
     
     doctor_message = 'Hello Doctor {}, your appointment with {} {} starts in 5 minutes'.format(doctor.first_name, client.first_name, client.last_name)
     patient_message= 'Hello {}, your appointment with Doctor {} starts in 5 minutes'.format(client.first_name, doctor.first_name)
@@ -305,24 +360,41 @@ def createAppointment(request):
 @api_view(["POST"])
 @permission_classes((AllowAny,))
 def bookAppointment(request):
-    client = int(request.POST.get("client_id"))
-    doctor = request.POST.get("doctor_id")
+    client_id = int(request.POST.get("client_id"))
+    doctor_id = request.POST.get("doctor_id")
     about = request.POST.get("about")
     symptoms = request.POST.get("patient_symptoms")
     persistence_period = request.POST.get("perisistence_period")
     
+    doctor = Doctor.objects.filter(id_number=doctor_id).first()
+    client = AgapeUser.objects.filter(id_number=client_id).first()
+    
     patient_symptoms = PatientSymptoms()
     patient_symptoms.symptoms = symptoms
     patient_symptoms.persistence_period=persistence_period
-    patient_symptoms.patient =AgapeUser.objects.filter(id=client).first()
+    patient_symptoms.patient =AgapeUser.objects.filter(id=client_id).first()
     patient_symptoms.save()
     
     appointment_request = AppointmentRequest()
-    appointment_request.client=AgapeUser.objects.filter(id_number=client).first()
-    appointment_request.doctor=Doctor.objects.filter(id_number=doctor).first()
+    appointment_request.client=client
+    appointment_request.doctor=doctor
     appointment_request.about = about
     appointment_request.symptoms = symptoms
     appointment_request.persistence_period = persistence_period
+    
+    appointment_request.client_first_name = client.first_name
+    appointment_request.client_last_name = client.last_name
+    
+    if(client.profile_image):
+        appointment_request.client_profile_image = client.profile_image
+    
+    
+    appointment_request.doctor_first_name = doctor.first_name
+    appointment_request.doctor_last_name = doctor.last_name
+    
+    if(doctor.profile_image):
+        appointment_request.doctor_profile_image = doctor.profile_image
+    
     appointment_request.save()
     
     return Response({"success":True, "message":"Appointment has been booked successfully", "error":None}, status=status.HTTP_201_CREATED)
@@ -355,11 +427,28 @@ def createPeriodicTask(cron_time, receiver_id, receiver_type, message):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def testMultipartMap(request):
-    print("FORM_POST: ", request.POST)
-    print("FORM_DATA: ", request.data)
+def createMedicalReport(request):
+    appointment = request.POST.get('appointment_id', None)
+    doctor_report = request.POST.get('doctor_report', None)
+    medication = request.POST.get('medication', None)
     
-    return Response({'success':'Test passed'}, status=status.HTTP_201_CREATED)
+    try:
+        medical_report = MedicalReport(
+            appointment=Appointment.objects.filter(id=appointment).first(),
+            medication = medication,
+            doctor_report = doctor_report
+        )
+        
+        medical_report.save()
+        error=None
+        message="Report created successfully"
+        success=True
+    except Exception as e:
+        error=str(e)
+        message="Sorry, we encountered an error"
+        success = False
+    
+    return Response({'success':success, 'error':error, 'message':message}, status=status.HTTP_201_CREATED)
     
     
 

@@ -40,7 +40,7 @@ def doctorsList(request):
     
     return render(request, "doctors/doctors-list.html", context)
 
-def doctorDetails(request,id):
+def doctorDetails(request, id):
     doctor = Doctor.objects.filter(id=id).first()
     appointments = Appointment.objects.select_related('doctor').filter(doctor=doctor)
     

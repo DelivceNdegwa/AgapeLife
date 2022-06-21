@@ -84,17 +84,17 @@ def doctor_appointment_listener(sender, created, instance, **kwargs):
             status="updated"
             consumer_function = 'updated_appointment_listener'
             
-            if instance.status == 1:
-                Appointment.objects.create(
-                    title='A TEST APPOINTMENT',
-                    about='Medical stuff',
-                    start_time= datetime.now(),
-                    end_time=datetime.now(),
-                    doctor=instance.doctor,
-                    client=instance.client,
-                    status=Appointment.PENDING
-                )
-                print("NEW APPOINTMENT CREATED")
+            # if instance.status == 1:
+            #     Appointment.objects.create(
+            #         title='A TEST APPOINTMENT',
+            #         about='Medical stuff',
+            #         start_time= datetime.now(),
+            #         end_time=datetime.now(),
+            #         doctor=instance.doctor,
+            #         client=instance.client,
+            #         status=Appointment.PENDING
+            #     )
+                # print("NEW APPOINTMENT CREATED")
             
         print("INFO: Appointment {}".format(status))
         

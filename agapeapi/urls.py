@@ -34,8 +34,8 @@ urlpatterns = [
     
     path("get-patients/<int:id_number>", DoctorPatientsView.as_view()),
     
-    path("generate-meeting-tokens/<int:pk>", generateTokens),
-    
+    path("generate-client-meeting-tokens/<int:pk>", generateClientTokens),
+    path("generate-doctor-meeting-tokens/<int:pk>", generateDoctorTokens),
     # path('reg-doc/', testMultipartMap),
     # path('doctor/files/<id>', uploadDoctorFiles)
     

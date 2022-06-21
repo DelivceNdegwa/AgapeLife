@@ -14,8 +14,8 @@ class TokenGenerator:
     def __init__(self, uid, channelName, startTime, expiryTimeInSeconds):
         self.uid = uid
         self.channelName = channelName
-        self.__appID="0ceac686d87c4ba9811edbc7ee666356"
-        self.__appCertificate = "e25d627fbcf04ad183a8b528aa216acc"
+        self.__appID="f320179c8f6947c29eb4a6e48f2a0cad"
+        self.__appCertificate = "a438e6def2f4466c931b39b755947927"
         self.userAccount = uid
         self.expireTimeInSeconds = expiryTimeInSeconds
         self.startTime = startTime

@@ -43,7 +43,7 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
                                             self.get_upcoming_appointments()
                                         )
         self.appointments_list = self.appointment_messages_to_json(doctor_appointments)
-        print(self.appointments_list)
+        print(self.serialized_list)
         
         await self.send(text_data=json.dumps({
             "appointment_requests_list":self.serialized_list,
@@ -100,10 +100,14 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
             'title': message.title,
             'about': message.about,
             'start_time': message.start_time.strftime("%Y-%m-%d %H:%M:%S"),
-            'end_time': message.end_time.strftime("%m-%d-%Y %H:%M:%S"),
+            'end_time': message.end_time.strftime("%Y-%m-%d %H:%M:%S"),
             'doctor': message.doctor_id,
             'client': message.client_id,
-            'status': message.status 
+            'status': message.status,
+            
+            'client_first_name': message.client_first_name,
+            'client_last_name': message.client_last_name,
+            'client_profile_image': str(message.client_profile_image)
         }
 
     def appointment_requests_message_to_json(self, message):
@@ -115,7 +119,11 @@ class DoctorAppointmentsConsumer(AsyncWebsocketConsumer):
             'status': message.status,
             'symptoms': message.symptoms,
             'persistence_period': message.persistence_period,
-            'read': message.read
+            'read': message.read,
+            
+            'client_first_name': message.client_first_name,
+            'client_last_name': message.client_last_name,
+            'client_profile_image': str(message.client_profile_image)
         }
         
 
@@ -163,43 +171,84 @@ class PatientAppointmentsConsumer(AsyncWebsocketConsumer):
         print('INFO: UPDATED DATA: ', appointment)
         
         await self.send(text_data=json.dumps({
-            "appointment_list":self.serialized_appointments,
-            "updated_appointment":True
+            "appointment_requests_list": self.appointments_list,
+            "upcoming_appointments_list": self.serialized_appointments,
         }))
         
     async def load_appointments(self):
         patient_appointments = await database_sync_to_async(list)(
                                     self.patient_appointments()
                                 )
-        print(patient_appointments)
+        patient_appointment_requests = await database_sync_to_async(list)(
+                                    self.patient_appointment_requests()
+                                )
+
         self.serialized_appointments = self.messages_to_json(patient_appointments)#serializers.serialize('json', patient_appointments)
+        self.appointments_list = self.request_messages_to_json(patient_appointment_requests)
+        
+        
         print("INFO: SERIALIZED APPOINTMENTS ", self.serialized_appointments)
         
 
         await self.send(text_data=json.dumps({
-            "appointment_list":self.serialized_appointments
+            "appointment_requests_list": self.appointments_list,
+            "upcoming_appointments_list": self.serialized_appointments,
         }))
         
     def patient_appointments(self):
         print("PATIENT_ID", self.patient_id)
         return common_requirements.patient_appointments(self.patient_id)
 
+    def patient_appointment_requests(self):
+        print("PATIENT_ID", self.patient_id)
+        return common_requirements.patient_appointment_requests(self.patient_id)
+
+
     def messages_to_json(self, messages):
         result = []
         for message in messages:
             result.append(self.message_to_json(message))
         return result
+    
+    def request_messages_to_json(self, messages):
+        result = []
+        for message in messages:
+            result.append(self.request_message_to_json(message))
+        return result
+    
+    
+    def request_message_to_json(self, message):
+        print(message)
+        return {
+            'id': message.id,
+            'client': message.client_id,
+            'doctor': message.doctor_id,
+            'about': message.about,
+            'status': message.status,
+            'symptoms': message.symptoms,
+            'persistence_period': message.persistence_period,
+            'read': message.read,
+            
+            'doctor_first_name': message.doctor_first_name,
+            'doctor_last_name': message.doctor_last_name,
+            'doctor_profile_image': str(message.doctor_profile_image)
+        }
+        
 
     def message_to_json(self, message):
-        print("TIMES::::::>",message.end_time)
         return {
             'id': message.id,
             'title': message.title,
             'about': message.about,
-            'start_time': str(message.start_time),
-            'end_time': str(message.end_time),
+            'start_time': message.start_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'end_time': message.end_time.strftime("%Y-%m-%d %H:%M:%S"),
             'doctor': message.doctor_id,
+            'client': message.client_id,
             'status': message.status,
+            
+            'doctor_first_name': message.doctor_first_name,
+            'doctor_last_name': message.doctor_last_name,
+            'doctor_profile_image': str(message.doctor_profile_image)
         }
         
 

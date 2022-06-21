@@ -1,8 +1,3 @@
-from distutils.command.upload import upload
-from pickletools import UP_TO_NEWLINE
-from random import choices
-from statistics import mode
-from xml.etree.ElementTree import QName
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -56,7 +51,7 @@ class Doctor(User):
     category = models.ForeignKey(MedicalCategory, null=True, blank=True, on_delete=models.SET_NULL)
     phone_number = models.IntegerField(null=True)
     id_number = models.IntegerField(null=True)
-    self_description = models.TextField(null=True, blank=True)
+    self_description = models.TextField(default="No description provided.", blank=True)
     is_available = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -126,6 +121,8 @@ class AppointmentRequest(models.Model):
     status = models.IntegerField(choices=STATUS, default=PENDING)
     read = models.BooleanField(default=False)
 
+    created_at = models.DateTimeField(auto_now=True, blank=True)
+    updated_at = models.DateTimeField(auto_now_add=True, null=True)
     
     client_first_name = models.CharField(max_length=30, null=True)
     client_last_name = models.CharField(max_length=30, null=True)
@@ -173,6 +170,8 @@ class Appointment(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
+    appointment_token = models.CharField(max_length=300, null=True, blank=True)
+    
     client_first_name = models.CharField(max_length=30, null=True)
     client_last_name = models.CharField(max_length=30, null=True)
     client_profile_image = models.ImageField(upload_to="media/", null=True)
@@ -183,7 +182,7 @@ class Appointment(models.Model):
 
         
     def __str__(self):
-        return str(self.about)
+        return str(self.id)
     
 class MedicalTips(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -272,8 +271,9 @@ class Notification(models.Model):
     
 
 class MedicalReport(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
-    patient = models.ForeignKey(AgapeUser, on_delete=models.PROTECT)
+    # doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
+    # patient = models.ForeignKey(AgapeUser, on_delete=models.PROTECT)
+    appointment = models.ForeignKey(Appointment, on_delete=models.PROTECT, null=True, blank=False)
     medication = models.TextField(null=True)
     doctor_report = models.TextField()
     created_at = models.DateTimeField(auto_now=True)
