@@ -14,11 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.agapelife.DoctorDetails;
+import com.example.agapelife.doctors.DoctorDetails;
 import com.example.agapelife.R;
 import com.example.agapelife.models.OnlineDoctor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OnlineDoctorAdapter extends RecyclerView.Adapter<OnlineDoctorAdapter.ViewHolder> {

@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.doctors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,16 +33,15 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.agapelife.R;
+import com.example.agapelife.authentication.LoginSignUpActivity;
 import com.example.agapelife.networking.pojos.DoctorRequest;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.example.agapelife.utils.AnimationsConfig;
 import com.example.agapelife.utils.PreferenceStorage;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

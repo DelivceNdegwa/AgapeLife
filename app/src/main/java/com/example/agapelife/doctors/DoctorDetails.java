@@ -1,9 +1,12 @@
-package com.example.agapelife;
+package com.example.agapelife.doctors;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
+import com.example.agapelife.appointments.AppointmentRequestActivity;
+import com.example.agapelife.R;
+import com.example.agapelife.UserMainActivity;
 import com.example.agapelife.databinding.ActivityDoctorDetailsBinding;
 import com.example.agapelife.networking.pojos.DoctorResponse;
 import com.example.agapelife.networking.services.ServiceGenerator;

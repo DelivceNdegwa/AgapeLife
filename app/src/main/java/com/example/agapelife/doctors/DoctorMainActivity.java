@@ -1,9 +1,10 @@
-package com.example.agapelife;
+package com.example.agapelife.doctors;
 
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.View;
 
+import com.example.agapelife.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;

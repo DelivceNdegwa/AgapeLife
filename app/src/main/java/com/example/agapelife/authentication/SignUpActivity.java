@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.authentication;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.agapelife.R;
+import com.example.agapelife.UserMainActivity;
 import com.example.agapelife.networking.pojos.AgapeUserRequest;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.example.agapelife.utils.AnimationsConfig;

@@ -15,11 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.agapelife.AppointmentRequestDetailsActivity;
+import com.example.agapelife.appointments.AppointmentRequestDetailsActivity;
 import com.example.agapelife.R;
 import com.example.agapelife.models.AppointmentRequest;
 import com.example.agapelife.networking.pojos.AgapeUserResponse;
-import com.example.agapelife.networking.pojos.AppointmentResponse;
 import com.example.agapelife.networking.pojos.DoctorResponse;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.example.agapelife.utils.PreferenceStorage;

@@ -59,6 +59,8 @@
         <entry key="app/src/main/res/layout/activity_doctor_details.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_doctor_main.xml" value="0.23385416666666667" />
         <entry key="app/src/main/res/layout/activity_doctor_notes.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_doctor_report_details.xml" value="0.12310030395136778" />
+        <entry key="app/src/main/res/layout/activity_doctor_reports.xml" value="0.18478260869565216" />
         <entry key="app/src/main/res/layout/activity_doctor_sign_up.xml" value="0.1078125" />
         <entry key="app/src/main/res/layout/activity_doctors_form.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_doctors_section.xml" value="0.1" />
@@ -88,6 +90,7 @@
         <entry key="app/src/main/res/layout/item_consultation.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_doctor.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_patient.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_report.xml" value="0.25" />
         <entry key="app/src/main/res/layout/no_connection_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/no_patient.xml" value="0.22" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.253125" />

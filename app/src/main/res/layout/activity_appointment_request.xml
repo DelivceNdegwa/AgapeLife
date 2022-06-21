@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/agape_layout_background"
-    tools:context=".AppointmentRequestActivity">
+    tools:context=".appointments.AppointmentRequestActivity">
 
     <TextView
         android:id="@+id/tv_appointmnt_request"

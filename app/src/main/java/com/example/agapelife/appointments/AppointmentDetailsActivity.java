@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.appointments;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.agapelife.R;
 import com.example.agapelife.networking.pojos.AgapeUserResponse;
 import com.example.agapelife.networking.pojos.AppointmentResponse;
 import com.example.agapelife.networking.services.ServiceGenerator;

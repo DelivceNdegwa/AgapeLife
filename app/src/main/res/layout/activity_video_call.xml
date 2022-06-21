@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/agape_layout_text"
-    tools:context=".VideoCallActivity">
+    tools:context=".appointments.VideoCallActivity">
 
     <FrameLayout
         android:id="@+id/remote_video_view_container"

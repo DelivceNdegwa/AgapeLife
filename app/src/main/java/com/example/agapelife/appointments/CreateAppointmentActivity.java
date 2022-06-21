@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.appointments;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,6 +18,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 
+import com.example.agapelife.R;
+import com.example.agapelife.doctors.DoctorsSection;
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.google.android.material.textfield.TextInputEditText;

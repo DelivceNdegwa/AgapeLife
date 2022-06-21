@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.agapelife.DoctorDetails;
+import com.example.agapelife.doctors.DoctorDetails;
 import com.example.agapelife.R;
 import com.example.agapelife.networking.pojos.DoctorResponse;
 

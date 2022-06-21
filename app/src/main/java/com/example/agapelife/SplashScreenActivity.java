@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.agapelife.appointments.VideoCallActivity;
+import com.example.agapelife.authentication.LoginSignUpActivity;
 import com.example.agapelife.utils.AnimationsConfig;
 import com.example.agapelife.utils.GlobalVariables;
 import com.example.agapelife.utils.PreferenceStorage;

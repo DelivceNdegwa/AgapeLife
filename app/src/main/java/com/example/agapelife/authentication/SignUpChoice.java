@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.authentication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import com.example.agapelife.doctors.DoctorsFormActivity;
+import com.example.agapelife.R;
 
 public class SignUpChoice extends AppCompatActivity {
     Button btnAgapeUser, btnAgapeDoctor;

@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.appointments;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.agapelife.R;
 import com.example.agapelife.networking.pojos.AgoraTokenGenerator;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.example.agapelife.utils.PreferenceStorage;

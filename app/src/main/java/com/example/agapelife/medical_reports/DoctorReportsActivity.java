@@ -1,14 +1,16 @@
-package com.example.agapelife;
+package com.example.agapelife.medical_reports;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class DoctorAppointmentsActivity extends AppCompatActivity {
+import com.example.agapelife.R;
+
+public class DoctorReportsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_doctor_appointments);
+        setContentView(R.layout.activity_doctor_reports);
     }
 }

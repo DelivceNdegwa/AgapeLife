@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.agapelife.AppointmentDetailsActivity;
-import com.example.agapelife.AppointmentJoiningRoomActivity;
+import com.example.agapelife.appointments.AppointmentDetailsActivity;
+import com.example.agapelife.appointments.AppointmentJoiningRoomActivity;
 import com.example.agapelife.R;
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.utils.PreferenceStorage;

@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.doctors;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.agapelife.R;
 import com.example.agapelife.networking.pojos.MedicalReport;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.google.android.material.textfield.TextInputEditText;

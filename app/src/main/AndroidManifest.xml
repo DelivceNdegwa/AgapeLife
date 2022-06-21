@@ -34,56 +34,62 @@
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
         <activity
-            android:name=".DoctorNotesActivity"
+            android:name=".medical_reports.DoctorReportDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".AppointmentRequestDetailsActivity"
+            android:name=".medical_reports.DoctorReportsActivity"
             android:exported="false" />
         <activity
-            android:name=".AppointmentJoiningRoomActivity"
+            android:name=".doctors.DoctorNotesActivity"
             android:exported="false" />
         <activity
-            android:name=".AppointmentDetailsActivity"
+            android:name=".appointments.AppointmentRequestDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".AppointmentRequestActivity"
+            android:name=".appointments.AppointmentJoiningRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".appointments.AppointmentDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".appointments.AppointmentRequestActivity"
             android:exported="false" />
         <activity
             android:name=".AgapeSocketActivityTest"
             android:exported="false" />
         <activity
-            android:name=".DoctorAppointmentsActivity"
+            android:name=".doctors.DoctorAppointmentsActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateAppointmentActivity"
+            android:name=".appointments.CreateAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name=".PostAppointmentActivity"
+            android:name=".appointments.PostAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name=".PreAppointmentActivity"
+            android:name=".appointments.PreAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name=".VideoCallActivity"
+            android:name=".appointments.VideoCallActivity"
             android:exported="false" />
         <activity
-            android:name=".DoctorsSection"
+            android:name=".doctors.DoctorsSection"
             android:exported="false" />
         <activity
-            android:name=".DoctorMainActivity"
+            android:name=".doctors.DoctorMainActivity"
             android:exported="false"
             android:label="@string/title_activity_doctor_main" />
         <activity
-            android:name=".DoctorDetails"
+            android:name=".doctors.DoctorDetails"
             android:exported="false"
             android:label="@string/title_activity_doctor_details"
             android:theme="@style/Theme.AgapeLife.NoActionBar.NoActionBar" />
         <activity
-            android:name=".DoctorsFormActivity"
+            android:name=".doctors.DoctorsFormActivity"
             android:exported="false"
             android:theme="@style/Theme.AgapeLife.NoActionBar" />
         <activity
-            android:name=".SignUpChoice"
+            android:name=".authentication.SignUpChoice"
             android:exported="false"
             android:theme="@style/Theme.AgapeLife.NoActionBar" />
         <activity
@@ -91,11 +97,11 @@
             android:exported="false"
             android:label="@string/title_activity_main" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".authentication.SignUpActivity"
             android:exported="false"
             android:theme="@style/Theme.AgapeLife.NoActionBar" />
         <activity
-            android:name=".LoginSignUpActivity"
+            android:name=".authentication.LoginSignUpActivity"
             android:exported="false"
             android:theme="@style/Theme.AgapeLife.NoActionBar" />
         <activity

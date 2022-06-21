@@ -1,4 +1,4 @@
-package com.example.agapelife;
+package com.example.agapelife.doctors;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.agapelife.R;
 import com.example.agapelife.doctor_ui.dashboard.DashboardFragment;
 import com.example.agapelife.doctor_ui.home.HomeFragment;
 import com.example.agapelife.doctor_ui.notifications.NotificationsFragment;

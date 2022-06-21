@@ -1,6 +1,5 @@
 package com.example.agapelife.networking.services;
 
-import com.example.agapelife.AppointmentRequestActivity;
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.models.AppointmentRequest;
 import com.example.agapelife.networking.pojos.AgapeUserRequest;
@@ -9,7 +8,6 @@ import com.example.agapelife.networking.pojos.AgoraTokenGenerator;
 import com.example.agapelife.networking.pojos.AppointmentResponse;
 import com.example.agapelife.networking.pojos.DoctorRequest;
 import com.example.agapelife.networking.pojos.DoctorResponse;
-import com.example.agapelife.networking.pojos.GenerateAgoraToken;
 import com.example.agapelife.networking.pojos.MedicalCategoryResponse;
 import com.example.agapelife.networking.pojos.MedicalReport;
 import com.example.agapelife.networking.pojos.MedicalReportResponse;

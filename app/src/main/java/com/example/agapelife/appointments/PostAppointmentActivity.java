@@ -1,8 +1,10 @@
-package com.example.agapelife;
+package com.example.agapelife.appointments;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.agapelife.R;
 
 public class PostAppointmentActivity extends AppCompatActivity {
 
