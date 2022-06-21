@@ -22,6 +22,8 @@ class AgapeUser(User):
     phone_number = models.IntegerField()
     id_number = models.IntegerField()
     profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
+    gender = models.CharField(max_length=30, null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True)
     
     def __get_first_name(self):
         return self.first_name
@@ -55,6 +57,8 @@ class Doctor(User):
     is_available = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    gender = models.CharField(max_length=30, null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True)
 
     @property
     def get_status(self):
@@ -280,6 +284,6 @@ class MedicalReport(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return "patient_{}_{}_report".format(self.patient.first_name, self.patient.id)
+        return "patient_{}_{}_report".format(self.appointment.client.first_name, self.appointment.client.id)
 
             

@@ -61,3 +61,14 @@ class MedicalReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalReport
         fields = '__all__'
+
+class CustomMedicalReportSerializer(serializers.Serializer):
+    doctor_name = serializers.CharField(max_length=100)
+    doctor_id = serializers.IntegerField()
+    medication = serializers.CharField(max_length=300)
+    doctor_report = serializers.CharField(max_length=500)
+    appointment_id = serializers.IntegerField()
+    created_at = serializers.CharField(max_length=100)
+    updated_at = serializers.CharField(max_length=100)
+            
+        

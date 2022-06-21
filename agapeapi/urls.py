@@ -36,7 +36,9 @@ urlpatterns = [
     
     path("generate-client-meeting-tokens/<int:pk>", generateClientTokens),
     path("generate-doctor-meeting-tokens/<int:pk>", generateDoctorTokens),
-    # path('reg-doc/', testMultipartMap),
+    
+    path('generate-medical-report/', createMedicalReport),
+    path('get-medical-report/<id>', retrieveDoctorMedicalReport)
     # path('doctor/files/<id>', uploadDoctorFiles)
     
 ]

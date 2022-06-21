@@ -1,6 +1,7 @@
 import json
 import datetime
 from datetime import timedelta
+from os import stat
 from re import S
 
 from django.http import Http404, JsonResponse
@@ -440,16 +441,29 @@ def createMedicalReport(request):
         )
         
         medical_report.save()
-        error=None
-        message="Report created successfully"
-        success=True
+        return Response({'success':True, 'error':None, 'message':"Report created successfully"}, status=status.HTTP_201_CREATED)
+    
     except Exception as e:
-        error=str(e)
-        message="Sorry, we encountered an error"
-        success = False
+        return Response({'success':False, 'error':str(e), 'message':"Sorry, we encountered an error"}, status=status.HTTP_400_BAD_REQUEST)
     
-    return Response({'success':success, 'error':error, 'message':message}, status=status.HTTP_201_CREATED)
     
+    
+@csrf_exempt
+@api_view(["GET"])
+def retrieveDoctorMedicalReport(request, id):
+    patient_appointments = Appointment.objects.select_related('client').filter(client__id_number=id)
+    reports = MedicalReport.objects.select_related('appointment').filter(appointment__in=patient_appointments)
+    
+    for report in reports:
+        report.doctor_name = report.appointment.doctor_first_name+" "+report.appointment.doctor_last_name
+        report.doctor_id = report.appointment.doctor.id
+        report.appointment_id = report.appointment.id 
+        report.created_at = datetime.datetime.strftime(report.created_at, '%Y-%m-%d %H:%M')
+        report.updated_at = datetime.datetime.strftime(report.updated_at, '%Y-%m-%d %H:%M')
+    
+        
+    serialized_report = CustomMedicalReportSerializer(reports, many=True)
+    return Response(serialized_report.data, status=status.HTTP_200_OK)
     
 
     
