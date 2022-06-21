@@ -43,6 +43,13 @@ public class AgapeUserResponse {
     public AgapeUserResponse() {
     }
 
+    public AgapeUserResponse(Integer id, String firstName, String lastName, String profilePhoto) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.profilePhoto = profilePhoto;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,13 +1,12 @@
 package com.example.agapelife;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.DatePickerDialog;
-import android.app.Service;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,12 +21,10 @@ import android.widget.Toast;
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.timepicker.TimeFormat;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,7 +39,7 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
     Toolbar toolbar;
     Button btnCreate;
 
-    int doctor_id=1, client_id=1;
+    int doctor_id, client_id;
 
     TextInputEditText appointmentTitle;
 
@@ -55,8 +52,8 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
         setContentView(R.layout.activity_create_appointment);
         toolbar = findViewById(R.id.custom_toolbar);
         appointmentTitle = findViewById(R.id.appointment_title);
-        patientName = findViewById(R.id.patient_title);
-        genderAge = findViewById(R.id.gender_age);
+        patientName = findViewById(R.id.tv_patient_request_name);
+        genderAge = findViewById(R.id.host_tag);
 
         dateContainer = findViewById(R.id.date_container);
         timeContainer = findViewById(R.id.time_container);
@@ -91,6 +88,12 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
     @Override
     protected void onResume() {
         super.onResume();
+
+        Intent intent = getIntent();
+        client_id = intent.getIntExtra("CLIENT_ID",0);
+        doctor_id = intent.getIntExtra("DOCTOR_ID", 0);
+        patientName.setText(intent.getStringExtra("PATIENT_NAME"));
+
     }
 
     public void verifyField(String appointment_title, String setDate, String startTime){
@@ -124,14 +127,15 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
             Date start_date_time = dateTimeFormatter.parse(startDateTime);
             Date end_date_time = dateTimeFormatter.parse(endDateTime);
 
-            Toast.makeText(this, String.valueOf(end_date_time), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, String.valueOf(end_date_time), Toast.LENGTH_SHORT).show();
 
             Call<Appointment> call = ServiceGenerator.getInstance().getApiConnector().createAppointment(
                     appointment_title,
                     startDateTime,
                     endDateTime,
                     doctor_id,
-                    client_id
+                    client_id,
+                    getIntent().getIntExtra("APPOINTMENT_ID", 0)
             );
 
             call.enqueue(new Callback<Appointment>() {
@@ -139,7 +143,9 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
                 public void onResponse(Call<Appointment> call, Response<Appointment> response) {
                     Log.d("onResponseAppointment", String.valueOf(response.body()));
                     if(response.code() == 201){
-                        Toast.makeText(CreateAppointmentActivity.this, "The appointment was created", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateAppointmentActivity.this, "The appointment has been created", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(CreateAppointmentActivity.this, DoctorsSection.class);
+                        startActivity(intent);
                     }
                     else{
                         Toast.makeText(CreateAppointmentActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();

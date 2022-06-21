@@ -19,6 +19,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.agapelife.utils.PreferenceStorage;
+
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
@@ -27,59 +29,43 @@ import io.agora.rtc.video.VideoEncoderConfiguration;
 
 
 public class VideoCallActivity extends AppCompatActivity {
-    // Permissions
-    private static final int PERMISSION_REQ_ID = 22;
+    public String channelName="Toothache";
+    public String TOKEN="006f320179c8f6947c29eb4a6e48f2a0cadIABFXjKjtYCiSv8kgrn9pwdvsD/ZlcwW8siv/1tLS/kqzfNohN0AAAAAEACDxJolwpSxYgEAAQDBlLFi";
+    public String APP_ID = "f320179c8f6947c29eb4a6e48f2a0cad";
 
+    private long appointmentId;
+
+    private RtcEngine mRtcEngine;
+    PreferenceStorage preferenceStorage;
+
+    private static final int PERMISSION_REQ_ID = 22;
     private static final String[] REQUESTED_PERMISSIONS = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CAMERA
     };
 
-    private RtcEngine mRtcEngine;
-
-    public String channelName = "AgapeTest";
-    public String TOKEN = "0060ceac686d87c4ba9811edbc7ee666356IABQ2+P/do9meS4NfGlR9dzM54WVMEwFyuaZLu4s2J+0E8sW9ttNBiG1IgCaGCUDEip2YgQAAQAqJnZiAgAqJnZiAwAqJnZiBAAqJnZi";
-    public String APP_ID = "0ceac686d87c4ba9811edbc7ee666356";
-
-    // Responsible for handling events such as joining the group and leaving the group
-    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
-
-        @Override
-        public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-            super.onJoinChannelSuccess(channel, uid, elapsed);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(VideoCallActivity.this, "Access ID="+uid, Toast.LENGTH_SHORT).show();
-                }
-            });
+    private boolean checkSelfPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
+            return false;
         }
+        return true;
+    }
 
+    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
         @Override
         public void onUserJoined(int uid, int elapsed) {
             super.onUserJoined(uid, elapsed);
-
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    setUpRemoteVideo(uid);
-                }
-            });
-        }
-
-        @Override
-        public void onUserOffline(int uid, int reason) {
-            super.onUserOffline(uid, reason);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    onRemoteUserLeft();
+                    // Call setupRemoteVideo to set the remote video view after getting uid from the onUserJoined callback.
+                    setupRemoteVideo(uid);
                 }
             });
         }
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +75,13 @@ public class VideoCallActivity extends AppCompatActivity {
         ImageView micToggler = findViewById(R.id.btn_audio);
         ImageView videoToggler = findViewById(R.id.btn_video);
         ImageView leaveCall = findViewById(R.id.leave_call);
+
+        preferenceStorage = new PreferenceStorage(this);
+        // If all the permissions are granted, initialize the RtcEngine object and join a channel.
+        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
+                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+            initializeAndJoinChannel();
+        }
 
         micToggler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,76 +101,72 @@ public class VideoCallActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                    leaveChannel();
-                    removeVideo(R.id.local_video_view_container);
-                    removeVideo(R.id.remote_video_view_container);
+                leaveChannel();
+                removeVideo(R.id.local_video_view_container);
+                removeVideo(R.id.remote_video_view_container);
 
-                    Intent intent = new Intent(VideoCallActivity.this, SplashScreenActivity.class);
-                    startActivity(intent);
-                    finish();
+                Intent intent;
+                if(preferenceStorage.isDoctor()){
+                    intent = new Intent(VideoCallActivity.this, DoctorNotesActivity.class);
+                    intent.putExtra("APPOINTMENT_ID", appointmentId);
+                }
+                else{
+                    intent = new Intent(VideoCallActivity.this, UserMainActivity.class);
+                }
+                startActivity(intent);
+                finish();
             }
         });
+    }
 
-        // Checking for permissions
-        if(checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) && checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)){
-            initAgoraEngineAndJoinChannel();
+    private void initializeAndJoinChannel() {
+        try {
+            mRtcEngine = RtcEngine.create(getBaseContext(), APP_ID, mRtcEventHandler);
+        } catch (Exception e) {
+            throw new RuntimeException("Check the error.");
         }
+        // For a live streaming scenario, set the channel profile as BROADCASTING.
+        mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
+        // Set the client role as BORADCASTER or AUDIENCE according to the scenario.
+        mRtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
+        // By default, video is disabled, and you need to call enableVideo to start a video stream.
+        mRtcEngine.enableVideo();
+        FrameLayout container = findViewById(R.id.local_video_view_container);
+        // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
+        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+        container.addView(surfaceView);
+        // Pass the SurfaceView object to Agora so that it renders the local video.
+        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
+
+        // Join the channel with a token.
+//        mRtcEngine.joinChannel(TOKEN, channelName, "", 0);
+        mRtcEngine.joinChannelWithUserAccount(TOKEN, channelName, "delivce_mwangi");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        intent.getLongExtra("APPOINTMENT_ID", 0);
+        channelName = "Test_appointment";//intent.getStringExtra("CHANNEL_NAME");
+        TOKEN = "006f320179c8f6947c29eb4a6e48f2a0cadIADyaOtmUm6Ct5rbnOzAY0ra3UfzGX5t8oX+rjRbAr8eaIc4ebYAAAAAEAD2FHLceFCxYgEAAQB4ULFi";
+//        intent.getStringExtra("TOKEN_ID");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         mRtcEngine.leaveChannel();
-        RtcEngine.destroy();
+        mRtcEngine.destroy();
     }
 
-    public void initAgoraEngineAndJoinChannel(){
-        initializeAgoraEngine();
-
-        setUpLocalVideo();
-        // Join the channel with a token.
-        joinChannelWithUserAccount();
-    }
-
-    private void joinChannelWithUserAccount() {
-        mRtcEngine.joinChannelWithUserAccount(TOKEN, channelName, "brian_12");
-    }
-
-    private void initializeAgoraEngine() {
-        //Initializing agora involves initializing the RTCEngine
-        try{
-            mRtcEngine = RtcEngine.create(getBaseContext(), APP_ID, mRtcEventHandler);
-            mRtcEngine.registerLocalUserAccount(APP_ID, "brian_12");
-        }
-        catch(Exception e){
-            Log.e("initializeAgoraError", Log.getStackTraceString(e));
-
-            throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
-        }
-        mRtcEngine.enableVideo();
-    }
-
-    private void setUpLocalVideo() {
-        Toast.makeText(this, "called", Toast.LENGTH_SHORT).show();
-        FrameLayout localVideoContainer = findViewById(R.id.local_video_view_container);
+    private void setupRemoteVideo(int uid) {
+        FrameLayout container = findViewById(R.id.remote_video_view_container);
         SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
         surfaceView.setZOrderMediaOverlay(true);
-        localVideoContainer.addView(surfaceView);
-        // Pass the SurfaceView object to Agora so that it renders the local video.
-        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
-    }
-
-    private void setUpRemoteVideo(int uid) {
-        FrameLayout container = findViewById(R.id.remote_video_view_container);
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
         container.addView(surfaceView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FILL, uid));
-        surfaceView.setTag(uid);
-    }
-
-    private void onRemoteUserLeft() {
-        FrameLayout container = findViewById(R.id.remote_video_view_container);
-        container.removeAllViews();
+        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
     }
 
     public void onAudioMuteClicked(View view) {
@@ -212,11 +201,6 @@ public class VideoCallActivity extends AppCompatActivity {
         videoSurface.setVisibility(btn.isSelected() ? View.GONE : View.VISIBLE);
     }
 
-    public void setUpVideoProfile(){
-        mRtcEngine.enableAudio();
-
-    }
-
     private void leaveChannel() {
         mRtcEngine.leaveChannel();
     }
@@ -224,29 +208,6 @@ public class VideoCallActivity extends AppCompatActivity {
     private void removeVideo(int containerID) {
         FrameLayout videoContainer = findViewById(containerID);
         videoContainer.removeAllViews();
-    }
-
-    public boolean checkSelfPermission(String permission, int requestCode){
-        if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_REQ_ID: {
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
-                    Log.d("onRequestPermission", "Need permissions " + Manifest.permission.RECORD_AUDIO + "/" + Manifest.permission.CAMERA);
-                    break;
-                }
-                // if permission granted, initialize the engine
-                break;
-            }
-        }
     }
 
 }

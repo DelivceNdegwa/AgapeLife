@@ -13,7 +13,7 @@
     <string name="title_activity_doctor_main">DoctorMainActivity</string>
     <string name="doctor_name">Doctor Name</string>
     <string name="current_hospital">Hospital</string>
-    <string name="our_doctors">Find Doctors</string>
+    <string name="our_doctors">Online Doctors</string>
     <string name="title_activity_doctor_details">DoctorDetails</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -115,4 +115,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="agora_app_id">0ceac686d87c4ba9811edbc7ee666356</string>
+    <string name="you_have_no_patients_currently_make_sure_that_you_are_open">You have no patients currently, make sure that you are open</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
 </resources>

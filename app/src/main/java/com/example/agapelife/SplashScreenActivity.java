@@ -38,22 +38,25 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent;
-//                if(preferenceStorage.isLoggedIn() == true){
-//                    if(preferenceStorage.isDoctor() == true){
-////                        intent = new Intent(SplashScreenActivity.this, DoctorsSection.class);
-//                        intent = new Intent(SplashScreenActivity.this, VideoCallActivity.class);
-//                    }
+                if(preferenceStorage.isLoggedIn() == true){
+                    if(preferenceStorage.isDoctor() == true){
+//                        intent = new Intent(SplashScreenActivity.this, DoctorsSection.class);
+                        intent = new Intent(SplashScreenActivity.this, VideoCallActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
 //                    else{
 //                        intent = new Intent(SplashScreenActivity.this, UserMainActivity.class);
 //                    }
-//                }
-//                else{
-//                    intent = new Intent(SplashScreenActivity.this, LoginSignUpActivity.class);
-//
-//                }
-                intent = new Intent(SplashScreenActivity.this, AgapeSocketActivityTest.class);
-                startActivity(intent);
-                finish();
+                }
+                else{
+                    intent = new Intent(SplashScreenActivity.this, LoginSignUpActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                }
+//                intent = new Intent(SplashScreenActivity.this, AgapeSocketActivityTest.class);
+
             }
         }, SPLASH_SCREEN);
 

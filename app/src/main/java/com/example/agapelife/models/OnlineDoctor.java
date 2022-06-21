@@ -1,14 +1,41 @@
 package com.example.agapelife.models;
 
-// List of all online doctors
+
+
 public class OnlineDoctor {
-    long id, idNumber, phoneNumber;
-    boolean isVerified, isAvailable;
+    private long id, idNumber, phoneNumber;
+    private boolean isVerified, isAvailable;
+    private String profileImage, firstName, lastName, hospital, specialization;
+
 
     public OnlineDoctor() {
     }
 
-    public OnlineDoctor(long id, long idNumber, long phoneNumber, boolean isVerified, boolean isAvailable) {
+    public OnlineDoctor(long id, long idNumber, long phoneNumber, boolean isVerified, boolean isAvailable, String profileImage, String firstName, String lastName, String hospital, String specialization) {
+        this.id = id;
+        this.idNumber = idNumber;
+        this.phoneNumber = phoneNumber;
+        this.isVerified = isVerified;
+        this.isAvailable = isAvailable;
+        this.profileImage = profileImage;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.hospital = hospital;
+        this.specialization = specialization;
+    }
+
+    public OnlineDoctor(long id, long idNumber, long phoneNumber, boolean isVerified, boolean isAvailable, String profileImage, String firstName, String lastName) {
+        this.id = id;
+        this.idNumber = idNumber;
+        this.phoneNumber = phoneNumber;
+        this.isVerified = isVerified;
+        this.isAvailable = isAvailable;
+        this.profileImage = profileImage;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public OnlineDoctor(long id, long idNumber, long phoneNumber, boolean isVerified, boolean isAvailable, String firstName, String lastName) {
         this.id = id;
         this.idNumber = idNumber;
         this.phoneNumber = phoneNumber;
@@ -54,5 +81,45 @@ public class OnlineDoctor {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(String hospital) {
+        this.hospital = hospital;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 }

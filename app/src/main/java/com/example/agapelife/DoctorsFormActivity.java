@@ -33,12 +33,16 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.agapelife.networking.pojos.DoctorRequest;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.example.agapelife.utils.AnimationsConfig;
 import com.example.agapelife.utils.PreferenceStorage;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,6 +68,7 @@ public class DoctorsFormActivity extends AppCompatActivity {
     PreferenceStorage preferenceStorage;
 
     String specialization, hospitalTxt, email, password, confirmPasswordTxt, firstNameTxt, lastNameTxt, idNumberTxt, phoneNumberTxt;
+    MultipartBody.Part licenseFile, profileImage;
 
     final static int DOCUMENT_CODE = 177;
     int GALLERY_REQUEST_CODE = 100;
@@ -337,8 +342,11 @@ public class DoctorsFormActivity extends AppCompatActivity {
     }
 
     public void takeFormDetails(){
-        MultipartBody.Part licenseFile = prepareFilePart("license_certificate", licenseUri);
-        MultipartBody.Part profileImg = prepareFilePart("profile_image", selectedImageUri);
+        progress.show();
+        licenseFile = prepareFilePart("license_certificate", licenseUri);
+        profileImage = prepareFilePart("profile_image", selectedImageUri);
+
+        //is_verified, license_certificate, profile_image, , experience_years, , , , ,self_description, is_available
 
         RequestBody hospitalResponse = createPartFromString(hospitalTxt);
         RequestBody specializationResponse = createPartFromString(specialization);
@@ -365,15 +373,105 @@ public class DoctorsFormActivity extends AppCompatActivity {
         doctorDetails.put("password2", confirmPasswordRequest);
         doctorDetails.put("id_number", idNumberRequest);
         doctorDetails.put("phone_number", phoneRequest);
-        registerDoctor(doctorDetails, licenseFile, profileImg);
+        //registerDoctor(doctorDetails, licenseFile, profileImg);
+
+        RequestBody description = createPartFromString("hello, this is description speaking");
+        RequestBody place = createPartFromString("Magdeburg");
+        RequestBody time = createPartFromString("2016");
+
+        HashMap<String, RequestBody> map = new HashMap<>();
+        map.put("description", description);
+        map.put("place", place);
+        map.put("time", time);
+        uploadDoctorDetails();
+
+    }
+
+    public void uploadDoctorDetails(){
+        Call<DoctorRequest> call = ServiceGenerator.getInstance().getApiConnector().doctorForm(
+                hospitalTxt,
+                "3",
+                specialization,
+                firstNameTxt,
+                phoneNumberTxt,
+                idNumberTxt,
+                password,
+                confirmPasswordTxt,
+                email,
+                firstNameTxt,
+                lastNameTxt
+        );
+        call.enqueue(new Callback<DoctorRequest>() {
+            @Override
+            public void onResponse(Call<DoctorRequest> call, Response<DoctorRequest> response) {
+                Log.d("DOC_FORM_CODE:", String.valueOf(response.code()));
+//                Toast.makeText(DoctorsFormActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                if(response.code() == 201){
+                    uploadDoctorFiles();
+                }
+                else if(response.code() == 400 && response.body() != null){
+                    progress.hide();
+                    Log.d("DOC_FORM_ERROR: ", String.valueOf(response.body()));
+                    Toast.makeText(DoctorsFormActivity.this, "Check your credentials and try again", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    progress.hide();
+                    Toast.makeText(DoctorsFormActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DoctorRequest> call, Throwable t) {
+                Log.d("DOC_FORM_ERROR:", String.valueOf(t.getStackTrace()));
+            }
+        });
+    }
+
+    private void uploadDoctorFiles() {
+        Call<DoctorRequest> call = ServiceGenerator.getInstance().getApiConnector().uploadDocFiles(
+                Long.parseLong(idNumberTxt),
+                licenseFile,
+                profileImage
+        );
+        call.enqueue(new Callback<DoctorRequest>() {
+            @Override
+            public void onResponse(Call<DoctorRequest> call, Response<DoctorRequest> response) {
+                Log.d("DOC_FILES_CODE:", String.valueOf(response.code()));
+//                Toast.makeText(DoctorsFormActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                if(response.code() == 201){
+                    preferenceStorage.saveUserId(idNumberTxt);
+                    //preferenceStorage.
+                    preferenceStorage.setLoggedInStatus(true);
+                    preferenceStorage.setIsDoctor(true);
+                    preferenceStorage.saveUserDetails(firstNameTxt, lastNameTxt);
+                    preferenceStorage.setUserId(idNumberTxt);
+                    preferenceStorage.saveLoginData(firstNameTxt, confirmPasswordTxt);
+                    progress.hide();
+                    Intent intent = new Intent(DoctorsFormActivity.this, DoctorsSection.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    Toast.makeText(DoctorsFormActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DoctorRequest> call, Throwable t) {
+                progress.hide();
+                Log.d("DOC_FILES_ERROR:", String.valueOf(t.getStackTrace()));
+            }
+        });
     }
 
     public void registerDoctor(Map<String, RequestBody> doctorDetails, MultipartBody.Part licenseFile, MultipartBody.Part profileImg){
+        Log.d("DATA_MAP", String.valueOf(doctorDetails));
         Call<ResponseBody> call = ServiceGenerator.getInstance().getApiConnector().registerDoctor(doctorDetails,licenseFile, profileImg);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.body() != null && response.code() == 201){
+                progress.hide();
+                if(response.code() == 201){
                     Toast.makeText(DoctorsFormActivity.this, "Your details have been submitted, we will get back to you", Toast.LENGTH_SHORT).show();
 
                     preferenceStorage.saveUserId(idNumberTxt);
@@ -390,12 +488,14 @@ public class DoctorsFormActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(DoctorsFormActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     Log.d("onResponseErrorStatus", String.valueOf(response.code()));
-                    Log.d("onResponseErrorBody", String.valueOf(response.errorBody()));
+                    Log.d("onResponseErrorBody", String.valueOf(response));
+
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progress.hide();
                 Toast.makeText(DoctorsFormActivity.this, "Check your connection and try again", Toast.LENGTH_SHORT).show();
                 Log.d("onFailureThrowable", t.toString());
                 Log.d("onFailureStackTrace", String.valueOf(t.getStackTrace()));

@@ -48,42 +48,13 @@ public class ConsultationsAdapter extends RecyclerView.Adapter<ConsultationsAdap
     public void onBindViewHolder(@NonNull ConsultationsAdapter.ViewHolder holder, int position) {
         AppointmentResponse consultation = consultations.get(position);
         holder.clientId = consultation.getClient();
-        holder.client = getClientDetails(holder.clientId);
-        holder.clientFirstName.setText(holder.client.getFirstName());
-        holder.clientLastName.setText(holder.client.getLastName());
+//        holder.client = getClientDetails(holder.clientId);
+        holder.clientFirstName.setText("Yvonne");
+        holder.clientLastName.setText("Atieno");
         Glide.with(context).
                 load(holder.client.getProfilePhoto())
                 .placeholder(R.drawable.agape_life_logo_no_bg)
                 .into(holder.clientPhoto);
-    }
-
-    private AgapeUserResponse getClientDetails(long clientId) {
-        Call<AgapeUserResponse> call = ServiceGenerator.getInstance().getApiConnector().getUserDetails(clientId);
-        call.enqueue(new Callback<AgapeUserResponse>() {
-
-            @Override
-            public void onResponse(Call<AgapeUserResponse> call, Response<AgapeUserResponse> response) {
-                if(response.code() == 200 && response.body() != null){
-                    client = response.body();
-                }
-                else{
-                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
-                    Log.d("onResponseErrorCode", String.valueOf(response.code()));
-                    Log.d("onResponseErrorBody", String.valueOf(response.body()));
-                    client = null;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AgapeUserResponse> call, Throwable t) {
-                Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show();
-                Log.d("onFailureThrowable", t.getMessage());
-                Log.d("onFailureStackTrace", Arrays.toString(t.getStackTrace()));
-                client = null;
-            }
-        }
-        );
-        return client;
     }
 
     @Override

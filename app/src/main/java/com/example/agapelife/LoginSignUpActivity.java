@@ -97,6 +97,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     preferenceStorage.setLoggedInStatus(true);
 
                     Intent intent = new Intent(LoginSignUpActivity.this, UserMainActivity.class);
+                    intent.putExtra("FIRST_NAME", username);
                     startActivity(intent);
                     finish();
                 }

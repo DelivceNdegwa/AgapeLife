@@ -177,16 +177,17 @@ public class SignUpActivity extends AppCompatActivity {
                     preferenceStorage.saveLoginData(first_name, passwordtxt);
 
                     Intent intent = new Intent(SignUpActivity.this, UserMainActivity.class);
+                    intent.putExtra("FIRST_NAME", first_name);
                     startActivity(intent);
                     finish();
-//                    fragmentTransaction.add(R.id.nav_host_fragment_activity_main, homeFragment).commit();
+
                 }
             }
-
+            // not permitted by security policy
             @Override
             public void onFailure(Call<AgapeUserRequest> call, Throwable t) {
                 progress.hide();
-                Toast.makeText(SignUpActivity.this, "Check your connection and try again", Toast.LENGTH_LONG).show();
+                Toast.makeText(SignUpActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });

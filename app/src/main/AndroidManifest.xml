@@ -4,13 +4,13 @@
     package="com.example.agapelife">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -20,6 +20,7 @@
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
         android:allowBackup="true"
@@ -32,6 +33,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
+        <activity
+            android:name=".DoctorNotesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AppointmentRequestDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AppointmentJoiningRoomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AppointmentDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AppointmentRequestActivity"
+            android:exported="false" />
         <activity
             android:name=".AgapeSocketActivityTest"
             android:exported="false" />

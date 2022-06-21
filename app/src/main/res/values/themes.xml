@@ -38,10 +38,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="CustomHeadlineTitle" parent="@style/TextAppearance.MaterialComponents.Headline5">
+    <style name="CustomHeadlineTitle" parent="@style/TextAppearance.AppCompat.Title">
         <item name="android:textColor">#333633</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
 
 

@@ -48,12 +48,8 @@ public class AgapeSocketsListener{
             @Override
             public void onMessage(String s) {
                 message = s;
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tvServerMessage.setText(tvServerMessage.getText().toString()+"\n\n"+ message);
-//                    }
-//                });
+
+                Log.i("Websocket_msg", message);
             }
 
             @Override

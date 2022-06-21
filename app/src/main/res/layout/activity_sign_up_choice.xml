@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/tv_sign_up_as"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
+            style="@style/TextAppearance.MaterialComponents.Headline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -35,7 +35,6 @@
             android:fontFamily="sans-serif-thin"
             android:text="Sign Up"
             android:textColor="@color/agape_primary"
-            android:textSize="40sp"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +63,6 @@
                 android:elevation="8dp"
                 android:fontFamily="sans-serif-condensed-medium"
                 android:text="@string/agape_user"
-                android:textSize="16sp"
                 app:cornerRadius="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +81,6 @@
 
                 android:fontFamily="sans-serif-condensed-medium"
                 android:text="@string/agape_doctor"
-                android:textSize="16sp"
                 app:cornerRadius="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

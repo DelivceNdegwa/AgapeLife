@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CreateAppointmentActivity"
+    tools:context=".AppointmentDetailsActivity"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -62,13 +62,13 @@
 
         <TextView
             android:id="@+id/activity_title"
-            style="@style/CustomHeadlineTitle"
+
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:text="Create "
+            android:text=""
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -80,35 +80,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:fontFamily="sans-serif-black"
-            android:text="New appointment"
+            android:text="Appointment details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activity_title" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <TextView
             android:id="@+id/tv_appointment"
+            style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
-            android:textColorHint="@color/agape_primary"
-            android:theme="@style/EditTextThemeOverlay"
-            app:errorTextAppearance="@style/ErrorTextAppearance"
-            app:helperTextTextAppearance="@style/HelperTextAppearance"
+            android:text="Patient Appointment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_2">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/appointment_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Appointment Title"
-                android:textColorHighlight="#CE2F9F44"
-                app:backgroundTint="@color/agape_layout_text" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/tv_2" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/date_container"
@@ -156,31 +144,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/appointment_date" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/btn_create"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:padding="8dp"
-            android:text="Create"
-            app:cornerRadius="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time_container" />
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_patient_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             app:cardCornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time_container">
+            app:layout_constraintTop_toBottomOf="@+id/textView18">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -199,7 +175,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_baseline_person_24" />
+                    app:srcCompat="@drawable/ic_baseline_person_24"
+                    />
 
                 <TextView
                     android:id="@+id/tv_patient_request_name"
@@ -217,11 +194,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Request pending"
+                    android:text="Gender . Age"
                     app:layout_constraintStart_toEndOf="@+id/iv_host"
                     app:layout_constraintTop_toBottomOf="@+id/tv_patient_request_name" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textView18"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Patient Details"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/time_container"
+            app:layout_constraintBottom_toTopOf="@+id/card_patient_details"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

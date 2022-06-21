@@ -41,7 +41,7 @@
                 />
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/iv_dr_profile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"

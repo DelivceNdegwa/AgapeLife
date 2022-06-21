@@ -32,7 +32,7 @@ public class AppointmentResponse {
     @Expose
     private Integer client;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_consultation"
-    android:layout_width="150dp"
-    android:layout_height="180dp"
+    android:layout_width="130dp"
+    android:layout_height="160dp"
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
     app:cardCornerRadius="8dp"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="3:20 PM"
+            android:text=""
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="8dp"
-            android:text="Today"
+            android:text=""
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_upcoming_time" />
 

@@ -19,6 +19,26 @@ public class DoctorRequest {
         this.lastName = lastName;
     }
 
+    public DoctorRequest(String licenseCertificate, String profileImage, String idNumber) {
+        this.licenseCertificate = licenseCertificate;
+        this.profileImage = profileImage;
+        this.idNumber = idNumber;
+    }
+
+    public DoctorRequest(String hospital, String speciality, String category, String username, String phoneNumber, String idNumber, String password, String password2, String email, String firstName, String lastName) {
+        this.hospital = hospital;
+        this.speciality = speciality;
+        this.category = category;
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.idNumber = idNumber;
+        this.password = password;
+        this.password2 = password2;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public DoctorRequest(String username, String password) {
         this.username = username;
         this.password = password;

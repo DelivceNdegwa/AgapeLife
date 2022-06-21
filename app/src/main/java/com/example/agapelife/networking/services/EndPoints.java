@@ -1,16 +1,20 @@
 package com.example.agapelife.networking.services;
 
+import com.example.agapelife.AppointmentRequestActivity;
 import com.example.agapelife.models.Appointment;
+import com.example.agapelife.models.AppointmentRequest;
 import com.example.agapelife.networking.pojos.AgapeUserRequest;
 import com.example.agapelife.networking.pojos.AgapeUserResponse;
+import com.example.agapelife.networking.pojos.AgoraTokenGenerator;
 import com.example.agapelife.networking.pojos.AppointmentResponse;
 import com.example.agapelife.networking.pojos.DoctorRequest;
 import com.example.agapelife.networking.pojos.DoctorResponse;
 import com.example.agapelife.networking.pojos.GenerateAgoraToken;
 import com.example.agapelife.networking.pojos.MedicalCategoryResponse;
+import com.example.agapelife.networking.pojos.MedicalReport;
+import com.example.agapelife.networking.pojos.MedicalReportResponse;
 import com.example.agapelife.networking.pojos.MedicalTipResponse;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +55,9 @@ public interface EndPoints {
     @GET("api/users/{id}")
     Call<AgapeUserResponse> getUserDetails(@Path("id") long id);
 
+    @GET("api/clients/{pk}")
+    Call<AgapeUserResponse> getPatientDetails(@Path("pk") long id);
+
     // Health tips
     @GET("api/health-tips/")
     Call<List<MedicalTipResponse>> getHealthTips();
@@ -66,8 +73,11 @@ public interface EndPoints {
     @GET("api/client-appointments/{pk}")
     Call<List<AppointmentResponse>> getClientAppointments(@Path("pk") long idNumber);
 
-    @GET("api/generate-meeting-tokens/{pk}")
-    Call<GenerateAgoraToken> getGeneratedToken(@Path("pk") long id);
+    @GET("api/generate-client-meeting-tokens/{pk}")
+    Call<AgoraTokenGenerator> getClientGeneratedToken(@Path("pk") long id);
+
+    @GET("api/generate-doctor-meeting-tokens/{pk}")
+    Call<AgoraTokenGenerator> getDoctorGeneratedToken(@Path("pk") long id);
 
     @GET("api/user-appointments/{pk}")
     Call<List<AppointmentResponse>> getUserAppointments(@Path("pk") long idNumber);
@@ -75,18 +85,34 @@ public interface EndPoints {
 //    Get all patients with a certain doctor ID
     @GET("api/get-patients/{id}")
     Call<List<AgapeUserResponse>> getDoctorPatients(@Path("id") long id);
-//
-//    @GET("api/appointment-requests{id}")
-//    Call<List<>>
 
+    @GET("api/appointments/{pk}")
+    Call<AppointmentResponse> getAppointmentDetails(@Path("pk") long pk);
+
+    @GET("api/get-medical-report/{id}")
+    Call<MedicalReportResponse> getDoctorsNotes(@Path("id") long idNumber);
+
+    // Patient Request appointment
     @FormUrlEncoded
-    @POST("api/create-appointment/")
+    @POST("api/book-appointment/")
+    Call<AppointmentRequest> bookAppointment(
+            @Field("client_id") long patientId,
+            @Field("doctor_id") long doctorId,
+            @Field("about") String about,
+            @Field("patient_symptoms") String symptoms,
+            @Field("perisistence_period") String persistencePeriod
+    );
+
+    // Doctor create appointment
+    @FormUrlEncoded
+    @POST("api/accept-appointment/")
     Call<Appointment> createAppointment(
             @Field("appointment_title") String appointmentTitle,
             @Field("start_time") String startTime,
             @Field("end_time") String endTime,
-            @Field("doctor_id") long clientId,
-            @Field("patient_id") long patientId
+            @Field("doctor_id") long doctorId,
+            @Field("patient_id") long patientId,
+            @Field("appointment_id") long appointmentId
     );
 
     @FormUrlEncoded
@@ -102,15 +128,57 @@ public interface EndPoints {
             @Field("last_name") String lastName
     );
 
+
     @POST("auth/login")
     Call<AgapeUserResponse> loginForm(@Body AgapeUserResponse userResponse);
 
     @Multipart
-    @POST("auth/doctor-register")
+    @POST("auth/doctor-signup/")
     Call<ResponseBody> registerDoctor(
             @PartMap Map<String, RequestBody> detailsMap,
             @Part MultipartBody.Part licenseFile,
             @Part MultipartBody.Part profileImg
             );
+
+
+    @FormUrlEncoded
+    @POST("auth/doctor/form/register/")
+    Call<DoctorRequest> doctorForm(
+            @Field("hospital") String hospital,
+            @Field("category") String category,
+            @Field("speciality") String speciality,
+            @Field("username") String username,
+            @Field("phone_number") String phoneNumber,
+            @Field("id_number") String idNumber,
+            @Field("password") String password,
+            @Field("password2") String password2,
+            @Field("email") String email,
+            @Field("first_name") String firstName,
+            @Field("last_name") String lastName
+    );
+
+    @FormUrlEncoded
+    @POST("api/generate-medical-report/")
+    Call<MedicalReport> createMedicalReport(
+            @Field("appointment_id") long appointmentId,
+            @Field("medication") String medication,
+            @Field("doctor_report") String doctorReport
+    );
+
+    @Multipart
+    @POST("auth/doctor/files/{id}")
+    Call<DoctorRequest> uploadDocFiles(
+            @Path("id") long id,
+            @Part MultipartBody.Part licenseFile,
+            @Part MultipartBody.Part profileImg
+    );
+
+
+    @Multipart
+    @POST("api/partmap-test")
+    Call<ResponseBody> uploadFileWithPartMap(
+            @PartMap() Map<String, RequestBody> partMap
+//            @Part MultipartBody.Part file
+    );
 
 }
