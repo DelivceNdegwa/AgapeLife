@@ -156,6 +156,15 @@ class DoctorDetailsView(RetrieveUpdateAPIView):
         id_number = self.kwargs.get('id_number', None)
         doctor = Doctor.objects.filter(id_number=id_number).first()
         return doctor
+
+
+class DoctorDetailsIDView(RetrieveUpdateAPIView):
+    serializer_class = DoctorSerializer
+    
+    def get_object(self):
+        id = self.kwargs.get('id', None)
+        doctor = Doctor.objects.filter(id=id).first()
+        return doctor
     
 
 class DoctorPatientsView(ListAPIView):
@@ -184,12 +193,25 @@ class ClientDetailView(RetrieveUpdateAPIView):
     serializer_class = AgapeUserSerializer
     
     def get_object(self):
-        id = self.kwargs.get('pk', None)
+        id = int(self.kwargs.get('pk', None))
         print("USER_ID:",id)
-        user = AgapeUser.objects.filter(id=id).first()
+        patient = AgapeUser.objects.filter(id=id).first()
+        print("USER:", patient)
+        print(patient)
+        return patient
+    
+
+class PatientDetailView(RetrieveUpdateAPIView):
+    serializer_class = AgapeUserSerializer
+    
+    def get_object(self):
+        id = self.kwargs.get('id', None)
+        print("USER_ID:",id)
+        user = AgapeUser.objects.filter(id_number=id).first()
         print("USER:", user)
         print(user.first_name)
         return user
+
     
 @csrf_exempt
 @api_view(["POST"])
@@ -451,18 +473,23 @@ def createMedicalReport(request):
 @csrf_exempt
 @api_view(["GET"])
 def retrieveDoctorMedicalReport(request, id):
-    patient_appointments = Appointment.objects.select_related('client').filter(client__id_number=id)
+    patient_appointments = Appointment.objects.select_related('client').filter(client__id=id)
     reports = MedicalReport.objects.select_related('appointment').filter(appointment__in=patient_appointments)
     
+    
     for report in reports:
-        report.doctor_name = report.appointment.doctor_first_name+" "+report.appointment.doctor_last_name
+        report.doctor_name = "Dr "+report.appointment.doctor_first_name
         report.doctor_id = report.appointment.doctor.id
-        report.appointment_id = report.appointment.id 
+        report.appointment_id = report.appointment.id
+        report.appointment_title =  report.appointment.title
         report.created_at = datetime.datetime.strftime(report.created_at, '%Y-%m-%d %H:%M')
         report.updated_at = datetime.datetime.strftime(report.updated_at, '%Y-%m-%d %H:%M')
     
         
     serialized_report = CustomMedicalReportSerializer(reports, many=True)
+    
+    print(serialized_report.data)
+    
     return Response(serialized_report.data, status=status.HTTP_200_OK)
     
 

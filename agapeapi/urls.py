@@ -7,6 +7,7 @@ urlpatterns = [
     
     path("doctors/", DoctorListView.as_view()),
     path("doctors/<int:id_number>", DoctorDetailsView.as_view()),
+    path("doctor/details/<int:id>", DoctorDetailsIDView.as_view()),
     path("doctors/edit-status/<int:id_number>", editOnlineStatus),
     
     
@@ -17,6 +18,7 @@ urlpatterns = [
     path("doctor-appointments/<int:pk>", DoctorAppointmentsListView.as_view()),
     path("client-appointments/<int:pk>", UserAppointmentsListView.as_view()),
     path('clients/<int:pk>', ClientDetailView.as_view()),
+    path('patients/<int:id>', PatientDetailView.as_view()),
     
     path("feedbacks/", UserFeedBackListView.as_view()),
     path("feedbacks/<int:pk>", UserFeedBackDetailView.as_view()),

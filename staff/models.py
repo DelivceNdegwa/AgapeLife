@@ -40,7 +40,7 @@ class AgapeUser(User):
     # def __str__(self):
     #     return str(self.id_number)+" "+self.email
     def __str__(self):
-        return str(self.id_number)
+        return str(self.id)
 
 
 class Doctor(User):

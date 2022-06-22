@@ -68,6 +68,7 @@ class CustomMedicalReportSerializer(serializers.Serializer):
     medication = serializers.CharField(max_length=300)
     doctor_report = serializers.CharField(max_length=500)
     appointment_id = serializers.IntegerField()
+    appointment_title = serializers.CharField(max_length=150)
     created_at = serializers.CharField(max_length=100)
     updated_at = serializers.CharField(max_length=100)
             
