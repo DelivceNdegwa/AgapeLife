@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".doctors.DoctorDetails"
+    tools:context=".doctors.DoctorDetailsActivity"
     android:background="@color/agape_layout_background"
     tools:showIn="@layout/activity_doctor_details">
 
@@ -23,7 +23,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="sans-serif"
-            android:text="Dr John Doe"
+            android:text="Loading..."
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

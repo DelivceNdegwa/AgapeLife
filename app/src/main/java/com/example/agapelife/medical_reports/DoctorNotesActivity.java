@@ -1,4 +1,4 @@
-package com.example.agapelife.doctors;
+package com.example.agapelife.medical_reports;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.agapelife.R;
+import com.example.agapelife.doctors.DoctorsSection;
 import com.example.agapelife.networking.pojos.MedicalReport;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -36,10 +37,10 @@ public class DoctorNotesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        appointmentId = getIntent().getLongExtra("APPOINTMENT_ID", 0);
         btnCreateReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                appointmentId = getIntent().getLongExtra("APPOINTMENT_ID", 0);
                 if(appointmentId != 0){
                     validateDoctorSummary();
                 }

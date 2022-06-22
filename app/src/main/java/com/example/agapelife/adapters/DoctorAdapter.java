@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.agapelife.doctors.DoctorDetails;
+import com.example.agapelife.doctors.DoctorDetailsActivity;
 import com.example.agapelife.R;
 import com.example.agapelife.networking.pojos.DoctorResponse;
 
@@ -77,7 +77,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.ViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, DoctorDetails.class);
+                    Intent intent = new Intent(context, DoctorDetailsActivity.class);
                     intent.putExtra("DOCTOR_ID", id);
                     context.startActivity(intent);
                 }

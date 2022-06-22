@@ -153,13 +153,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding = null;
-//    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -196,17 +189,6 @@ public class HomeFragment extends Fragment {
         rvConsultations.setAdapter(appointmentsAdapter);
         rvAppointmentRequests.setAdapter(appointmentRequestsAdapter);
 
-
-//        if(noConsultations && noPatients){
-//            recentPatientsLayout.setVisibility(View.GONE);
-//            consultationLayout.setVisibility(View.GONE);
-//            noPatientsLayout.setVisibility(View.VISIBLE);
-//        }
-//        else{
-//            recentPatientsLayout.setVisibility(View.VISIBLE);
-//            consultationLayout.setVisibility(View.VISIBLE);
-//            noPatientsLayout.setVisibility(View.GONE);
-//        }
 
 
     }

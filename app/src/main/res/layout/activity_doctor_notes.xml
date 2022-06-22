@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/agape_layout_text"
-    tools:context=".doctors.DoctorNotesActivity">
+    tools:context=".medical_reports.DoctorNotesActivity">
 
     <TextView
         android:id="@+id/notes_title"

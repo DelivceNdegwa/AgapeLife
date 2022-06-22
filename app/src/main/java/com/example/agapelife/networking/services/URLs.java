@@ -2,7 +2,7 @@ package com.example.agapelife.networking.services;
 
 public class URLs {
 //    private static final String IP_ADDRESS = "192.168.100.188:8000";
-    private static final String IP_ADDRESS = "192.168.100.191:8000";
+    private static final String IP_ADDRESS = "192.168.100.197:8000";
 
 //    API URLS
     public static final String API_URL = "http://"+IP_ADDRESS+"/";

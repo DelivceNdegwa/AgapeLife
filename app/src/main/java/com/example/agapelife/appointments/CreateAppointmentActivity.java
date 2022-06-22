@@ -1,7 +1,6 @@
 package com.example.agapelife.appointments;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -55,8 +54,8 @@ public class CreateAppointmentActivity extends AppCompatActivity implements Date
 
         setContentView(R.layout.activity_create_appointment);
         appointmentTitle = findViewById(R.id.appointment_title);
-        patientName = findViewById(R.id.tv_patient_request_name);
-        genderAge = findViewById(R.id.host_tag);
+        patientName = findViewById(R.id.tv_doctor_details_name);
+        genderAge = findViewById(R.id.tv_doctor_details_hospital);
 
         dateContainer = findViewById(R.id.date_container);
         timeContainer = findViewById(R.id.time_container);

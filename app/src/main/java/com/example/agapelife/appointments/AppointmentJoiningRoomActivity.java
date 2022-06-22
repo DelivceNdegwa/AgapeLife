@@ -38,7 +38,7 @@ public class AppointmentJoiningRoomActivity extends AppCompatActivity {
 
         tvAppointmentTitle = findViewById(R.id.tv_appointment_title);
         tvAppointmentAbout = findViewById(R.id.tv_about_text);
-        tvHostName = findViewById(R.id.tv_patient_request_name);
+        tvHostName = findViewById(R.id.tv_doctor_details_name);
         tvUserName = findViewById(R.id.tv_patient_name);
         tvAppointmentTime = findViewById(R.id.tv_aptmt_time);
         tvAppointmentDate = findViewById(R.id.tv_aptmt_day);

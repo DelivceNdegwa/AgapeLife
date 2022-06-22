@@ -15,7 +15,7 @@ import android.widget.ImageView;
 
 import com.example.agapelife.R;
 import com.example.agapelife.UserMainActivity;
-import com.example.agapelife.doctors.DoctorNotesActivity;
+import com.example.agapelife.medical_reports.DoctorNotesActivity;
 import com.example.agapelife.utils.PreferenceStorage;
 
 import io.agora.rtc.Constants;
@@ -26,10 +26,12 @@ import io.agora.rtc.video.VideoCanvas;
 
 public class VideoCallActivity extends AppCompatActivity {
     public String channelName="Toothache";
-    public String TOKEN="006f320179c8f6947c29eb4a6e48f2a0cadIABFXjKjtYCiSv8kgrn9pwdvsD/ZlcwW8siv/1tLS/kqzfNohN0AAAAAEACDxJolwpSxYgEAAQDBlLFi";
+    public String TOKEN="006f320179c8f6947c29eb4a6e48f2a0cadIAAORo+H/CT3KrY9BgD+Mqs8+phu/OkOCDvB1Oj4uUDHHfNohN0AAAAAEACDxJolnn6zYgEAAQCefrNi";
     public String APP_ID = "f320179c8f6947c29eb4a6e48f2a0cad";
 
     private long appointmentId;
+
+    ImageView micToggler, videoToggler, leaveCall;
 
     private RtcEngine mRtcEngine;
     PreferenceStorage preferenceStorage;
@@ -68,9 +70,9 @@ public class VideoCallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
 
-        ImageView micToggler = findViewById(R.id.btn_audio);
-        ImageView videoToggler = findViewById(R.id.btn_video);
-        ImageView leaveCall = findViewById(R.id.leave_call);
+        micToggler = findViewById(R.id.btn_audio);
+        videoToggler = findViewById(R.id.btn_video);
+        leaveCall = findViewById(R.id.leave_call);
 
         preferenceStorage = new PreferenceStorage(this);
         // If all the permissions are granted, initialize the RtcEngine object and join a channel.
@@ -93,26 +95,7 @@ public class VideoCallActivity extends AppCompatActivity {
             }
         });
 
-        leaveCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                leaveChannel();
-                removeVideo(R.id.local_video_view_container);
-                removeVideo(R.id.remote_video_view_container);
-
-                Intent intent;
-                if(preferenceStorage.isDoctor()){
-                    intent = new Intent(VideoCallActivity.this, DoctorNotesActivity.class);
-                    intent.putExtra("APPOINTMENT_ID", appointmentId);
-                }
-                else{
-                    intent = new Intent(VideoCallActivity.this, UserMainActivity.class);
-                }
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
     private void initializeAndJoinChannel() {
@@ -143,10 +126,31 @@ public class VideoCallActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Intent intent = getIntent();
-        intent.getLongExtra("APPOINTMENT_ID", 0);
+        appointmentId = intent.getLongExtra("APPOINTMENT_ID", 0);
         channelName = "Test_appointment";//intent.getStringExtra("CHANNEL_NAME");
         TOKEN = "006f320179c8f6947c29eb4a6e48f2a0cadIADyaOtmUm6Ct5rbnOzAY0ra3UfzGX5t8oX+rjRbAr8eaIc4ebYAAAAAEAD2FHLceFCxYgEAAQB4ULFi";
 //        intent.getStringExtra("TOKEN_ID");
+
+        leaveCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                leaveChannel();
+                removeVideo(R.id.local_video_view_container);
+                removeVideo(R.id.remote_video_view_container);
+
+                Intent intent;
+                if(preferenceStorage.isDoctor()){
+                    intent = new Intent(VideoCallActivity.this, DoctorNotesActivity.class);
+                    intent.putExtra("APPOINTMENT_ID", appointmentId);
+                }
+                else{
+                    intent = new Intent(VideoCallActivity.this, UserMainActivity.class);
+                }
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override

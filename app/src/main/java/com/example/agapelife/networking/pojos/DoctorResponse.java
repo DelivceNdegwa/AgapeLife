@@ -29,7 +29,7 @@ public class DoctorResponse {
     private Boolean isAvailable;
     @SerializedName("self_description")
     @Expose
-    private Object selfDescription;
+    private String selfDescription;
     @SerializedName("experience_years")
     @Expose
     private Object experienceYears;
@@ -94,11 +94,11 @@ public class DoctorResponse {
         this.category = category;
     }
 
-    public Object getSelfDescription() {
+    public String getSelfDescription() {
         return selfDescription;
     }
 
-    public void setSelfDescription(Object selfDescription) {
+    public void setSelfDescription(String selfDescription) {
         this.selfDescription = selfDescription;
     }
 

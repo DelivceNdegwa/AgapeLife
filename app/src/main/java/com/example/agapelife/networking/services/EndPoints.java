@@ -39,6 +39,9 @@ public interface EndPoints {
     @GET("api/doctors/{id}")
     Call<DoctorResponse> getDoctorDetails(@Path("id") long id);
 
+    @GET("api/doctor/details/{id}")
+    Call<DoctorResponse> getDoctorDetailsWithId(@Path("id") long id);
+
     @FormUrlEncoded
     @PUT("api/doctors/edit-status/{id}")
     Call<DoctorResponse> updateDoctorStatus(
@@ -55,6 +58,9 @@ public interface EndPoints {
 
     @GET("api/clients/{pk}")
     Call<AgapeUserResponse> getPatientDetails(@Path("pk") long id);
+
+    @GET("api/patients/{pk}")
+    Call<AgapeUserResponse> getClientDetails(@Path("pk") long id);
 
     // Health tips
     @GET("api/health-tips/")

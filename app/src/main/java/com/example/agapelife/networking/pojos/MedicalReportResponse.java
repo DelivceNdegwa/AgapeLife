@@ -25,6 +25,11 @@ public class MedicalReportResponse {
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
+    @SerializedName("appointment_title")
+    @Expose
+    private String appointmentTitle;
+
+
 
     public String getDoctorName() {
         return doctorName;
@@ -81,4 +86,8 @@ public class MedicalReportResponse {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public String getAppointmentTitle() { return appointmentTitle; }
+
+    public void setAppointmentTitle(String appointmentTitle) { this.appointmentTitle = appointmentTitle; }
 }

@@ -55,7 +55,7 @@
             android:background="@color/agape_primary"
             android:layout_height="match_parent">
             <ImageView
-                android:id="@+id/iv_host"
+                android:id="@+id/iv_doctor_profile_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginVertical="4dp"
@@ -68,24 +68,24 @@
                 />
 
             <TextView
-                android:id="@+id/tv_patient_request_name"
+                android:id="@+id/tv_doctor_details_name"
                 style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Doctor Name"
                 android:textColor="@color/agape_layout_text"
-                app:layout_constraintStart_toEndOf="@+id/iv_host"
-                app:layout_constraintTop_toTopOf="@+id/iv_host" />
+                app:layout_constraintStart_toEndOf="@+id/iv_doctor_profile_image"
+                app:layout_constraintTop_toTopOf="@+id/iv_doctor_profile_image" />
 
             <TextView
-                android:id="@+id/host_tag"
+                android:id="@+id/tv_doctor_details_hospital"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="Host"
-                app:layout_constraintStart_toEndOf="@+id/iv_host"
-                app:layout_constraintTop_toBottomOf="@+id/tv_patient_request_name" />
+                app:layout_constraintStart_toEndOf="@+id/iv_doctor_profile_image"
+                app:layout_constraintTop_toBottomOf="@+id/tv_doctor_details_name" />
 
             <ImageView
                 android:id="@+id/iv_view_doctor"

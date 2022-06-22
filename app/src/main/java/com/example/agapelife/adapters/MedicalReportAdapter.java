@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,8 @@ public class MedicalReportAdapter extends RecyclerView.Adapter<MedicalReportAdap
         holder.doctorName = patientResponse.getDoctorName();
         holder.doctorMedication = patientResponse.getMedication();
         holder.createdAt = patientResponse.getCreatedAt();
+        holder.doctorReport = patientResponse.getDoctorReport();
+        holder.appointmentTitle = patientResponse.getAppointmentTitle();
 
         holder.tvDoctorName.setText(holder.doctorName);
         holder.tvReportDate.setText(holder.createdAt);
@@ -56,10 +59,10 @@ public class MedicalReportAdapter extends RecyclerView.Adapter<MedicalReportAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         long appointmentId, doctorId;
-        String doctorName, doctorMedication, createdAt;
+        String doctorName, appointmentTitle,doctorMedication, createdAt, doctorReport;
 
         TextView tvDoctorName, tvReportDate;
-        Button btnViewReport;
+        ImageView btnViewReport;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,11 +74,14 @@ public class MedicalReportAdapter extends RecyclerView.Adapter<MedicalReportAdap
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, DoctorReportDetailsActivity.class);
+
                     intent.putExtra("DOCTOR_NAME", doctorName);
                     intent.putExtra("DOCTOR_MEDICATION", doctorMedication);
+                    intent.putExtra("DOCTOR_REPORT", doctorReport);
                     intent.putExtra("CREATED_AT", createdAt);
                     intent.putExtra("APPOINTMENT_ID", appointmentId);
                     intent.putExtra("DOCTOR_ID", doctorId);
+                    intent.putExtra("APPOINTMENT_TITLE", appointmentTitle);
                     context.startActivity(intent);
                 }
             });

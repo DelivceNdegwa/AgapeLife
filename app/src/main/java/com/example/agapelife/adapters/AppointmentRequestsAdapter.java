@@ -122,6 +122,7 @@ public class AppointmentRequestsAdapter extends RecyclerView.Adapter<Appointment
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         int clientId, doctorId, appointmentId;
+        long clientIdNumber;
         AgapeUserResponse client;
         ImageView clientPhoto;
         TextView appointmentDate, appointmentTime, clientFirstName, clientLastName;

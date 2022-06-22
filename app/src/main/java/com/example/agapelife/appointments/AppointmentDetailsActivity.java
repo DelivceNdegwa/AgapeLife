@@ -1,7 +1,6 @@
 package com.example.agapelife.appointments;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
@@ -43,8 +42,8 @@ public class AppointmentDetailsActivity extends AppCompatActivity {
 
 //        toolbar = findViewById(R.id.custom_toolbar);
         appointmentTitle = findViewById(R.id.tv_appointment);
-        patientName = findViewById(R.id.tv_patient_request_name);
-        genderAge = findViewById(R.id.host_tag);
+        patientName = findViewById(R.id.tv_doctor_details_name);
+        genderAge = findViewById(R.id.tv_doctor_details_hospital);
 
         dateContainer = findViewById(R.id.date_container);
         timeContainer = findViewById(R.id.time_container);

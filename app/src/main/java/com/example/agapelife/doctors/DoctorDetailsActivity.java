@@ -27,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DoctorDetails extends AppCompatActivity {
+public class DoctorDetailsActivity extends AppCompatActivity {
 
     private ActivityDoctorDetailsBinding binding;
 
@@ -40,7 +40,7 @@ public class DoctorDetails extends AppCompatActivity {
 
     ImageView drProfileImage;
 
-    long id;
+    long id, pk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +56,9 @@ public class DoctorDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getLongExtra("DOCTOR_ID", 0);
+        pk = intent.getLongExtra("DOCTOR_PK", 0);
         toolbar.setTitle("Dr John Doe");
 
-//        fabMessage = binding.fab;
-//        fabMessage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         tvDrName = findViewById(R.id.tv_full_name);
         tvDrDescription = findViewById(R.id.tv_dr_description);
@@ -82,7 +75,7 @@ public class DoctorDetails extends AppCompatActivity {
         btnBookAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DoctorDetails.this, AppointmentRequestActivity.class);
+                Intent intent = new Intent(DoctorDetailsActivity.this, AppointmentRequestActivity.class);
                 intent.putExtra("DOCTOR_ID", id);
                 startActivity(intent);
             }
@@ -92,8 +85,52 @@ public class DoctorDetails extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(id > 0){
+            getDoctorDetails();
+        }
+        else{
+            getDoctorDetailsWithId();
+        }
 
-        getDoctorDetails();
+    }
+
+    private void getDoctorDetailsWithId() {
+        Call<DoctorResponse> call = ServiceGenerator.getInstance().getApiConnector().getDoctorDetailsWithId(pk);
+
+        call.enqueue(new Callback<DoctorResponse>() {
+            @Override
+            public void onResponse(Call<DoctorResponse> call, Response<DoctorResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    DoctorResponse doctor = response.body();
+                    if(doctor.getSelfDescription().isEmpty()){
+                        tvDrDescription.setText(doctor.getSelfDescription());
+                    }
+                    else{
+                        tvDrDescription.setText("Dr "+doctor.getFirstName()+" "+doctor.getLastName()+" is in our team of verified doctors. More details will be uploaded soon ");
+                    }
+
+                    updateViewValues(
+                            "Dr "+doctor.getFirstName()+" "+doctor.getLastName(),
+                            doctor.getSpeciality(),
+                            doctor.getHospital(),
+                            doctor.getProfileImage()
+                    );
+                }
+                else{
+                    Toast.makeText(DoctorDetailsActivity.this, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DoctorDetailsActivity.this, UserMainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DoctorResponse> call, Throwable t) {
+                Toast.makeText(DoctorDetailsActivity.this, "Check your connection and try again", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(DoctorDetailsActivity.this, UserMainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getDoctorDetails() {
@@ -104,17 +141,24 @@ public class DoctorDetails extends AppCompatActivity {
             public void onResponse(Call<DoctorResponse> call, Response<DoctorResponse> response) {
                 if(response.isSuccessful() && response.body() != null){
                     DoctorResponse doctor = response.body();
-
+                    if(doctor.getSelfDescription().isEmpty()){
+                        tvDrDescription.setText(doctor.getSelfDescription());
+                    }
+                    else{
+                        tvDrDescription.setText("Dr "+doctor.getFirstName()+" "+doctor.getLastName()+" is in our team of verified doctors. More details will be uploaded soon ");
+                    }
                     updateViewValues(
                             "Dr "+doctor.getFirstName()+" "+doctor.getLastName(),
                             doctor.getSpeciality(),
                             doctor.getHospital(),
                             doctor.getProfileImage()
+
                     );
+
                 }
                 else{
-                    Toast.makeText(DoctorDetails.this, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(DoctorDetails.this, UserMainActivity.class);
+                    Toast.makeText(DoctorDetailsActivity.this, "Something went wrong please try again", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DoctorDetailsActivity.this, UserMainActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -122,8 +166,8 @@ public class DoctorDetails extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<DoctorResponse> call, Throwable t) {
-                Toast.makeText(DoctorDetails.this, "Check your connection and try again", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(DoctorDetails.this, UserMainActivity.class);
+                Toast.makeText(DoctorDetailsActivity.this, "Check your connection and try again", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(DoctorDetailsActivity.this, UserMainActivity.class);
                 startActivity(intent);
             }
         });
@@ -131,7 +175,7 @@ public class DoctorDetails extends AppCompatActivity {
 
     private void updateViewValues(String name, String specialization, String hospital, String profileImage) {
         tvDrName.setText(name);
-        tvDrSpecialization.setText(specialization);
+        tvDrSpecialization.setText("Specialization: "+specialization);
         chipHospital.setText(hospital);
         Glide.with(this).
                 load(profileImage)
