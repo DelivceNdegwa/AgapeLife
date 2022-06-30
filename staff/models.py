@@ -73,6 +73,7 @@ class Doctor(User):
     
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    date_of_birth = models.DateField(null=True, blank=True)
 
 
     @property

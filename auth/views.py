@@ -59,14 +59,15 @@ def doctorFormRegister(request):
     speciality = request.POST.get('speciality')
     category_id = int(request.POST.get('category'))
     
-    gender = request.POST.get('gender')
-    age = request.POST.get('age')
+    experience_years = request.POST.get('experience_years')
+    gender = int(request.POST.get('gender'))
+    age = int(request.POST.get('age'))
+    
     # profile_image = request.FILES['profile_image']
     
     errors = validate_fields(username, email, id_number, phone_number)
     
     if errors:
-
         print(errors)
         return Response(errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -83,6 +84,11 @@ def doctorFormRegister(request):
         doctor.speciality = speciality
         doctor.first_name = first_name
         doctor.last_name = last_name
+        
+        doctor.gender = gender
+        doctor.age = age
+        doctor.experience_years = experience_years
+        
         doctor.category = MedicalCategory.objects.filter(id=category_id).first()
         doctor.save()
         
