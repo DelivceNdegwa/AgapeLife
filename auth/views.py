@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 
 from .serializers import AgapeUserTokenObtainPairSerializer, RegisterUserSerializer, RegisterDoctorSerializer
@@ -63,6 +65,9 @@ def doctorFormRegister(request):
     gender = int(request.POST.get('gender'))
     age = int(request.POST.get('age'))
     
+    date_of_birth = request.POST.get('date_of_birth')
+    dob_obj = datetime.datetime.strptime(date_of_birth, '%Y-%m-%d').date()
+    
     # profile_image = request.FILES['profile_image']
     
     errors = validate_fields(username, email, id_number, phone_number)
@@ -87,7 +92,8 @@ def doctorFormRegister(request):
         
         doctor.gender = gender
         doctor.age = age
-        doctor.experience_years = experience_years
+        # doctor.experience_years = experience_years
+        doctor.date_of_birth = dob_obj
         
         doctor.category = MedicalCategory.objects.filter(id=category_id).first()
         doctor.save()
