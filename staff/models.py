@@ -4,6 +4,13 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 
+MALE=1
+FEMALE=2
+
+GENDER_CHOICES = (
+    (MALE, "Male"),
+    (FEMALE, "Female")
+)
 
 class MedicalCategory(models.Model):
     name = models.CharField(max_length=200)
@@ -17,13 +24,13 @@ class MedicalCategory(models.Model):
         return self.name
 
 
-
 class AgapeUser(User):
     phone_number = models.IntegerField()
     id_number = models.IntegerField()
     profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
-    gender = models.CharField(max_length=30, null=True, blank=True)
+    gender = models.IntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
+    
     
     def __get_first_name(self):
         return self.first_name
@@ -45,20 +52,28 @@ class AgapeUser(User):
 
 class Doctor(User):
     is_verified = models.BooleanField(default=False)
+    is_available = models.BooleanField(default=False)
+    
     license_certificate = models.FileField(upload_to='license/', null=True, blank=True)
     profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
+    front_id_part = models.ImageField(upload_to='front_id_part/', null=True, blank=True)
+    back_id_part = models.ImageField(upload_to='back_id_part/', null=True, blank=True)
+    
     hospital = models.CharField(max_length=200)
-    experience_years = models.IntegerField(null=True, blank=True)
     speciality = models.CharField(max_length=100)
     category = models.ForeignKey(MedicalCategory, null=True, blank=True, on_delete=models.SET_NULL)
-    phone_number = models.IntegerField(null=True)
-    id_number = models.IntegerField(null=True)
+    
     self_description = models.TextField(default="No description provided.", blank=True)
-    is_available = models.BooleanField(default=False)
+    
+    id_number = models.IntegerField(null=True)
+    gender = models.IntegerField(choices=GENDER_CHOICES, null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True)
+    phone_number = models.IntegerField(null=True)
+    experience_years = models.IntegerField(null=True, blank=True)
+    
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    gender = models.CharField(max_length=30, null=True, blank=True)
-    age = models.IntegerField(null=True, blank=True)
+
 
     @property
     def get_status(self):
@@ -275,8 +290,6 @@ class Notification(models.Model):
     
 
 class MedicalReport(models.Model):
-    # doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
-    # patient = models.ForeignKey(AgapeUser, on_delete=models.PROTECT)
     appointment = models.ForeignKey(Appointment, on_delete=models.PROTECT, null=True, blank=False)
     medication = models.TextField(null=True)
     doctor_report = models.TextField()

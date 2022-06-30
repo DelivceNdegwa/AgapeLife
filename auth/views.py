@@ -58,6 +58,9 @@ def doctorFormRegister(request):
     hospital = request.POST.get('hospital')
     speciality = request.POST.get('speciality')
     category_id = int(request.POST.get('category'))
+    
+    gender = request.POST.get('gender')
+    age = request.POST.get('age')
     # profile_image = request.FILES['profile_image']
     
     errors = validate_fields(username, email, id_number, phone_number)
