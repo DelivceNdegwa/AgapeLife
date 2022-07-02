@@ -38,13 +38,15 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         required=False
     )
 
+    date_of_birth = serializers.DateField()
+
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = AgapeUser
-        fields = ('username', 'phone_number', 'id_number', 'password', 'password2', 'email', 'first_name', 'last_name')
-        extra_kwargs = {
+        fields = ('username', 'phone_number', 'id_number', 'password', 'password2', 'email', 'first_name', 'last_name', 'date_of_birth')
+        extra_kwargs = {                                                                    
             'first_name': {'required': True},
             'last_name': {'required': True},
         }
@@ -62,7 +64,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             phone_number=validated_data['phone_number'],
-            id_number=validated_data['id_number']
+            id_number=validated_data['id_number'],
+            date_of_birth=validated_data['date_of_birth']
         )
 
         

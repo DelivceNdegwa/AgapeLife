@@ -1,9 +1,10 @@
 import datetime
+import json
 
 from django.shortcuts import render
 
 from .serializers import AgapeUserTokenObtainPairSerializer, RegisterUserSerializer, RegisterDoctorSerializer
-from staff.models import AgapeUser, Doctor, MedicalCategory
+from staff.models import AgapeUser, Doctor, MedicalCategory, Notification
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -24,6 +25,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from universal import periodic_task_functions
 
 class AgapeUserObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
@@ -38,6 +40,7 @@ class AgapeUserRegisterView(APIView):
             serializer = RegisterUserSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
+                periodic_task_functions.createBirthdayScheduler(serializer.data, Notification.PATIENT)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -94,7 +97,6 @@ def doctorFormRegister(request):
         doctor.age = age
         # doctor.experience_years = experience_years
         doctor.date_of_birth = dob_obj
-        
         doctor.category = MedicalCategory.objects.filter(id=category_id).first()
         doctor.save()
         
@@ -145,5 +147,5 @@ def uploadDoctorFiles(request, id):
     doctor.profile_image = profile_image
     doctor.save()
     
-    return Response({'success':'Uploaded files for doctor {}'.format(doctor.username)}, status=status.HTTP_201_CREATED)
     
+    return Response({'success':'Uploaded files for doctor {}'.format(doctor.username)}, status=status.HTTP_201_CREATED)

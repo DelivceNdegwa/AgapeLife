@@ -18,13 +18,12 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, UpdateAPIView, CreateAPIView
 
 from agora_tokens.RtcGenerateToken import TokenGenerator
-from django_celery_beat.models import PeriodicTask, CrontabSchedule
+from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
 
 from staff.models import *
-from .serializers import *
+from .serializers import *  
 
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
-
+from universal import periodic_task_functions
 
 
 '''' 
@@ -367,10 +366,9 @@ def createAppointment(request):
     patient_message= 'Hello {}, your appointment with Doctor {} starts in 5 minutes'.format(client.first_name, doctor.first_name)
     date_time_obj = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M')
     
-    try:
-        
-        createPeriodicTask(date_time_obj, doctor_id, Notification.DOCTOR, doctor_message)
-        createPeriodicTask(date_time_obj, client_id, Notification.PATIENT, patient_message)   
+    try: 
+        periodic_task_functions.createPeriodicTask(date_time_obj, doctor_id, Notification.DOCTOR, doctor_message)
+        periodic_task_functions.createPeriodicTask(date_time_obj, client_id, Notification.PATIENT, patient_message)   
         print("CRONTABSCHEDULE_SUCCESS: Created")    
         
     except Exception as e:
@@ -422,30 +420,7 @@ def bookAppointment(request):
     
     return Response({"success":True, "message":"Appointment has been booked successfully", "error":None}, status=status.HTTP_201_CREATED)
 
-def createPeriodicTask(cron_time, receiver_id, receiver_type, message):
-    print("CRON_TIME: ", cron_time.minute)
-    # cron_time = start_time - timedelta(minutes=5)
-    cron_job, _ = CrontabSchedule.objects.get_or_create(
-                            minute=cron_time.minute,
-                            hour=cron_time.hour,
-                            day_of_month=cron_time.day,
-                            month_of_year=cron_time.month
-                        )
-    
-    schedule, created = IntervalSchedule.objects.get_or_create(
-                            every=10,
-                            period=IntervalSchedule.SECONDS,
-                        )
-                                # id, category, message
-        
-    PeriodicTask.objects.create(
-        crontab= cron_job,
-        name='doctor_notification_{}_{}'.format(receiver_id, cron_time),
-        task='agape_sockets.tasks.appointment_reminder',
-        args= json.dumps((receiver_id, receiver_type, message)),
-        one_off= True
-    )
-    
+
 
 @csrf_exempt
 @api_view(["POST"])

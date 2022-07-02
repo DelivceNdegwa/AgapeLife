@@ -31,6 +31,7 @@ class AgapeUser(User):
     gender = models.IntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
     
+    date_of_birth = models.DateField(null=True, blank=True)
     
     def __get_first_name(self):
         return self.first_name
@@ -277,17 +278,31 @@ class Notification(models.Model):
     DOCTOR = 1
     PATIENT = 2
     
+    APPOINTMENT = 1
+    AGAPE_INFO = 2
+    BIRTHDAY_WISH = 3
+    
     RECIPIENT_TYPE=(
         (DOCTOR, "DOCTOR"),
         (PATIENT, "PATIENT")
     )
     
+    MESSAGE_TYPE = (
+        (APPOINTMENT, "APPOINTMENT"),
+        (AGAPE_INFO, "AGAPE INFO"),
+        (BIRTHDAY_WISH, "BIRTHDAY WISH")
+    )
+    
+    
     recipient_category = models.IntegerField(choices=RECIPIENT_TYPE)
     recipient_id = models.IntegerField()
+    notification_type = models.IntegerField(choices=MESSAGE_TYPE, default=APPOINTMENT)
     message = models.CharField(max_length=300)
+    created_at = models.DateTimeField(auto_now=True, null=True)
+    updated_at = models.DateField(auto_now_add=True, null=True)
     
     def __str__(self):
-        return str(self.recipient_id)
+        return str(self.notification_type)
     
 
 class MedicalReport(models.Model):

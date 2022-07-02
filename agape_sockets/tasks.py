@@ -26,6 +26,24 @@ def appointment_reminder(self, id, category, message):
         return "ERROR: Notification error => {}".format(e)
     
 @shared_task(bind=True)
+def birthday_reminder(self, id, category, name):
+    message = f"Happy birthday {name}🎉🥳🎂"
+    if(category == Notification.DOCTOR):
+        message += " Thank you for being part of the Agape Life doctor family. Looking forward to your success in your new year."
+    else:
+        message += " Agape Life continues to be always with you even in your new year. Looking forward offering better services for you."
+    
+    try:
+        instance =Notification.objects.create(
+            recepient_category = category,
+            recepient_id = id,
+            message = message
+        )
+        return "Birthday notification created successfully"
+    except Exception as e:
+        return f"ERROR: Birthday notification error => {e}"
+    
+@shared_task(bind=True)
 def say_hi(self):
     print("Hiiiii")
     return "Done"
@@ -33,12 +51,24 @@ def say_hi(self):
 @shared_task(bind=True)
 def clean_notification_cronjobs(self):
     current_date = date.today()
-    print("NUMBER_OF_JOBS: ".format(CrontabSchedule.objects.all().count()))
+    print("NUMBER_OF_JOBS: {}".format(CrontabSchedule.objects.all().count()))
+    
     cronjobs = CrontabSchedule.objects.filter(day_of_month=current_date.day, month_of_year=current_date.month)
-    for job in cronjobs:
-        job.delete()
-        print("{} deleted".format(job))
-    print("NUMBER_OF_JOBS: ".format(CrontabSchedule.objects.all().count()))
+    periodic_tasks = PeriodicTask.objects.select_related('crontab').filter(crontab__in=cronjobs)    
+        
+    try:
+        for periodic_task in periodic_tasks:
+            periodic_task.delete()
+            print(f"Deleted task: {periodic_task}")
+            
+        for job in cronjobs:
+            job.delete()
+            print("{} deleted".format(job))
+            
+    except Exception as e:
+        return f"CLEAN NOTIFICATION CRONJOBS ERROR: {e}"
+    
+    print("NUMBER_OF_JOBS: {}".format(CrontabSchedule.objects.all().count()))
     return "Done" 
 
         
