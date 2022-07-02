@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import com.example.agapelife.appointments.VideoCallActivity;
 import com.example.agapelife.authentication.LoginSignUpActivity;
+import com.example.agapelife.doctors.DoctorsFormActivity;
 import com.example.agapelife.doctors.DoctorsSection;
 import com.example.agapelife.utils.AnimationsConfig;
 import com.example.agapelife.utils.GlobalVariables;
@@ -43,8 +44,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Intent intent;
                 if(preferenceStorage.isLoggedIn() == true){
                     if(preferenceStorage.isDoctor() == true){
-                        intent = new Intent(SplashScreenActivity.this, DoctorsSection.class);
-//                        intent = new Intent(SplashScreenActivity.this, VideoCallActivity.class);
+//                        intent = new Intent(SplashScreenActivity.this, DoctorsSection.class);
+                        intent = new Intent(SplashScreenActivity.this, UserRegistrationSectionOneActivity.class);
                         startActivity(intent);
                         finish();
                     }

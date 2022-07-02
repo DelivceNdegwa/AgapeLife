@@ -54,6 +54,7 @@ public class ConsultationsAdapter extends RecyclerView.Adapter<ConsultationsAdap
         Glide.with(context).
                 load(holder.client.getProfilePhoto())
                 .placeholder(R.drawable.agape_life_logo_no_bg)
+                .circleCrop()
                 .into(holder.clientPhoto);
     }
 

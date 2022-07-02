@@ -1,7 +1,6 @@
 package com.example.agapelife.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 public class PreferenceStorage {
 
@@ -16,9 +15,11 @@ public class PreferenceStorage {
     public static final String USER_EMAIL = "com.example.agapelife.USER_EMAIL";
     public static final String USER_NUMBER = "com.example.agapelife.USER_NUMBER";
     public static final String IS_LOGGED_IN = "com.example.agapelife.IS_LOGGED_IN";
+    public static final String IS_APP_ACTIVE = "com.example.agapelife.IS_PAUSED";
     public static final String IS_DOCTOR = "com.example.agapelife.IS_DOCTOR";
     public static final String ID_NUMBER = "com.example.agapelife.ID_NUMBER";
     public static final String IS_AVAILABLE = "com.example.agapelife.IS_AVAILABLE";
+    public static final String DOCTOR_GENDER = "com.example.agapelife.DOCTOR_GENDER";
 
     public PreferenceStorage(Context context) {
         this.context = context;
@@ -42,6 +43,9 @@ public class PreferenceStorage {
     public String getFirstName(){return readStringFromSharedPreferences(FIRST_NAME);}
 
     public String getLastName(){return readStringFromSharedPreferences(LAST_NAME);}
+
+    public int getDoctorGender(){ return myFile.getInt(DOCTOR_GENDER, 0); }
+
 
     public void saveLoginData(String name, String password) {
         SharedPreferences.Editor myEditor = myFile.edit();
@@ -89,6 +93,16 @@ public class PreferenceStorage {
         }
     }
 
+    public boolean isAppActive(){
+        return myFile.getBoolean(IS_APP_ACTIVE, false);
+    }
+
+    public void setAppActiveStatus(boolean status){
+        SharedPreferences.Editor myEditor = myFile.edit();
+        myEditor.putBoolean(IS_APP_ACTIVE, status);
+        myEditor.apply();
+    }
+
     public boolean isAvailableBool(){
         return myFile.getBoolean(IS_AVAILABLE, false);
     }
@@ -110,6 +124,12 @@ public class PreferenceStorage {
 
         SharedPreferences.Editor myEditor = myFile.edit();
         myEditor.putBoolean(IS_DOCTOR, status);
+        myEditor.apply();
+    }
+
+    public void setDoctorGender(int genderChoice){
+        SharedPreferences.Editor myEditor = myFile.edit();
+        myEditor.putInt(DOCTOR_GENDER, genderChoice);
         myEditor.apply();
     }
 

@@ -158,7 +158,10 @@ public interface EndPoints {
             @Field("password2") String password2,
             @Field("email") String email,
             @Field("first_name") String firstName,
-            @Field("last_name") String lastName
+            @Field("last_name") String lastName,
+            @Field("gender") int gender,
+            @Field("age") int age,
+            @Field("date_of_birth") String dateOfBirth
     );
 
     @FormUrlEncoded
@@ -175,14 +178,6 @@ public interface EndPoints {
             @Path("id") long id,
             @Part MultipartBody.Part licenseFile,
             @Part MultipartBody.Part profileImg
-    );
-
-
-    @Multipart
-    @POST("api/partmap-test")
-    Call<ResponseBody> uploadFileWithPartMap(
-            @PartMap() Map<String, RequestBody> partMap
-//            @Part MultipartBody.Part file
     );
 
 }

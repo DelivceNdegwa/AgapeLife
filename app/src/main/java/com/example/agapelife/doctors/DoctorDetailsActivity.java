@@ -10,6 +10,7 @@ import com.example.agapelife.UserMainActivity;
 import com.example.agapelife.databinding.ActivityDoctorDetailsBinding;
 import com.example.agapelife.networking.pojos.DoctorResponse;
 import com.example.agapelife.networking.services.ServiceGenerator;
+import com.example.agapelife.utils.PreferenceStorage;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,6 +37,8 @@ public class DoctorDetailsActivity extends AppCompatActivity {
     Button btnBookAppointment;
     FloatingActionButton fabMessage;
 
+    PreferenceStorage preferenceStorage;
+
     Chip chipHospital;
 
     ImageView drProfileImage;
@@ -48,6 +51,8 @@ public class DoctorDetailsActivity extends AppCompatActivity {
 
         binding = ActivityDoctorDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        preferenceStorage = new PreferenceStorage(this);
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
@@ -93,6 +98,7 @@ public class DoctorDetailsActivity extends AppCompatActivity {
         }
 
     }
+
 
     private void getDoctorDetailsWithId() {
         Call<DoctorResponse> call = ServiceGenerator.getInstance().getApiConnector().getDoctorDetailsWithId(pk);
@@ -180,6 +186,7 @@ public class DoctorDetailsActivity extends AppCompatActivity {
         Glide.with(this).
                 load(profileImage)
                 .placeholder(R.drawable.doctor_img)
+                .circleCrop()
                 .into(drProfileImage);
     }
 

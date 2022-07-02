@@ -1,4 +1,4 @@
-package com.example.agapelife.doctor_ui.notifications;
+package com.example.agapelife.doctor_ui.profile;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

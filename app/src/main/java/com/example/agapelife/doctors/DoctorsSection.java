@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.example.agapelife.R;
 import com.example.agapelife.doctor_ui.dashboard.DashboardFragment;
 import com.example.agapelife.doctor_ui.home.HomeFragment;
-import com.example.agapelife.doctor_ui.notifications.NotificationsFragment;
+import com.example.agapelife.doctor_ui.profile.DoctorProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DoctorsSection extends AppCompatActivity {
@@ -25,6 +25,13 @@ public class DoctorsSection extends AppCompatActivity {
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         openFragment(HomeFragment.newInstance());
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
@@ -43,8 +50,8 @@ public class DoctorsSection extends AppCompatActivity {
                         case R.id.navigation_dashboard:
                             openFragment(new DashboardFragment());
                             return true;
-                        case R.id.navigation_notifications:
-                            openFragment(new NotificationsFragment());
+                        case R.id.navigation_profile:
+                            openFragment(new DoctorProfileFragment());
                             return true;
                     }
                     return false;

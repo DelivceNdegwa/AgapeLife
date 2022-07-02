@@ -112,6 +112,7 @@ public class AppointmentRequestsAdapter extends RecyclerView.Adapter<Appointment
         Glide.with(context).
                 load(consultation)
                 .placeholder(R.drawable.agape_life_logo_no_bg)
+                .circleCrop()
                 .into(holder.clientPhoto);
     }
 

@@ -100,6 +100,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             Glide.with(context).
                     load(appointment.getProfileImage())
                     .placeholder(R.drawable.agape_life_logo_no_bg)
+                    .circleCrop()
                     .into(holder.userPhoto);
 
             if(preferenceStorage.isDoctor()){

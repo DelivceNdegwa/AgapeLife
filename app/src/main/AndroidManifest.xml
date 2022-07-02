@@ -34,15 +34,26 @@
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
         <activity
+            android:name=".UserRegistrationSectionTwoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserRegistrationSectionOneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DoctorProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PasscodeActivity"
+            android:exported="false" />
+        <activity
             android:name=".medical_reports.DoctorReportsActivity"
             android:exported="false"
             android:label="@string/title_activity_doctor_reports"
-            android:theme="@style/Theme.AgapeLife.NoActionBar.NoActionBar" />
-<!--        <activity-->
-<!--            android:name=".DoctorReports"-->
-<!--            android:exported="false"-->
-<!--            android:label="@string/title_activity_doctor_reports"-->
-<!--            android:theme="@style/Theme.AgapeLife.NoActionBar.NoActionBar" />-->
+            android:theme="@style/Theme.AgapeLife.NoActionBar.NoActionBar" /> <!-- <activity -->
+        <!-- android:name=".DoctorReports" -->
+        <!-- android:exported="false" -->
+        <!-- android:label="@string/title_activity_doctor_reports" -->
+        <!-- android:theme="@style/Theme.AgapeLife.NoActionBar.NoActionBar" /> -->
         <activity
             android:name=".medical_reports.DoctorReportDetailsActivity"
             android:exported="false" />
