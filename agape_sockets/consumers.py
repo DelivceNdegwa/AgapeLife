@@ -381,3 +381,29 @@ class DoctorNotificationsConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "notification": notification
         }))
+        
+        
+class AgapeInfoConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.group_name = "agape_info"
+        
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
+        await self.accept()
+        print("AgapeInfoConsumer: Connection established")
+        
+    async def disconnect(self):
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
+    
+    async def doctor_birthday_wish(self, event):
+        new_info = event["notification"]
+        print("AGAPE_INFO_NOTIFICATION: ", new_info)
+        
+        await self.send(text_data=json.dumps({
+            "notification": new_info
+        }))

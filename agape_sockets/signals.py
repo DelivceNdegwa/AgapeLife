@@ -152,40 +152,57 @@ def notification_listener(sender, instance, **kwargs):
         }
         
         channel_layer = get_channel_layer()
-        if instance.recipient_category == Notification.DOCTOR:      
-            group_name = "notify_doctor_{}".format(instance.recipient_id)
-            type_function = "doctor_notification_listener"
-            
-
+        if instance.notification_type == Notification.AGAPE_INFO:
             async_to_sync(channel_layer.group_send)(
-                group_name,
+                "agape_info",
                 {
-                    "type": type_function,
-                    "notification":message
+                    "notification": message,
+                    "type": "agape_info_listener"
                 }
             )
-            print("SIGNAL_INFO: data sent successfully")
-            
-
-            print("SIGNAL_INFO: Data will be sent to "+group_name) 
             
         else:
-            group_name = "notify_patient_{}".format(instance.recipient_id)
-            type_function = "patient_notification_listener"
-        
-            try:
+            if instance.recipient_category == Notification.DOCTOR:      
+                group_name = "notify_doctor_{}".format(instance.recipient_id)
+                
+                if instance.notification_type == Notification.APPOINTMENT:
+                    type_function = "doctor_notification_listener"
+                else:
+                    type_function = "doctor_birthday_wish"
+                
+
                 async_to_sync(channel_layer.group_send)(
                     group_name,
                     {
-                        "notification":message,
-                        "type": type_function
+                        "type": type_function,
+                        "notification":message
                     }
                 )
                 print("SIGNAL_INFO: data sent successfully")
+                
+
+                print("SIGNAL_INFO: Data will be sent to "+group_name) 
+                
+            else:
+                group_name = "notify_patient_{}".format(instance.recipient_id)
+                if instance.notification_type == Notification.APPOINTMENT:
+                    type_function = "patient_notification_listener"
+                else:
+                    type_function = "patient_birthday_wish"
             
-            except Exception as e:
-                print("SIGNAL_ERROR: ", e)
-            print("SIGNAL_INFO: Data will be sent to "+group_name)  
+                try:
+                    async_to_sync(channel_layer.group_send)(
+                        group_name,
+                        {
+                            "notification":message,
+                            "type": type_function
+                        }
+                    )
+                    print("SIGNAL_INFO: data sent successfully")
+                
+                except Exception as e:
+                    print("SIGNAL_ERROR: ", e)
+                print("SIGNAL_INFO: Data will be sent to "+group_name)  
 
 
 def send_notification_to_consumer(channel_layer, group_name, type_function, notification_message):
