@@ -2,7 +2,11 @@ package com.example.agapelife;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +36,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         setContentView(R.layout.activity_splash_screen);
 
+        addNotification("You have an appointment in 10 minutes", 2);
+
         mainLayout = findViewById(R.id.main_layout);
         preferenceStorage = new PreferenceStorage(this);
 
@@ -44,8 +50,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Intent intent;
                 if(preferenceStorage.isLoggedIn() == true){
                     if(preferenceStorage.isDoctor() == true){
-//                        intent = new Intent(SplashScreenActivity.this, DoctorsSection.class);
-                        intent = new Intent(SplashScreenActivity.this, UserRegistrationSectionOneActivity.class);
+                        intent = new Intent(SplashScreenActivity.this, DoctorsSection.class);
+//                        intent = new Intent(SplashScreenActivity.this, UserRegistrationSectionOneActivity.class);
                         startActivity(intent);
                         finish();
                     }
@@ -64,5 +70,31 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         }, SPLASH_SCREEN);
 
+
+
+    }
+
+    public void addNotification(String message, int notificationType){
+        //message="You have an appointment in the next 10 minutes"
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.icon_add)
+                .setContentTitle("Appointment Alert")
+                .setAutoCancel(true)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        Intent notificationIntent = new Intent(this, DoctorsSection.class);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        notificationIntent.putExtra("notification_message", message);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, builder.build());
     }
 }

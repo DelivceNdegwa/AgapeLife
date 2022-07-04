@@ -34,6 +34,12 @@
         android:theme="@style/Theme.AgapeLife.NoActionBar"
         tools:targetApi="r">
         <activity
+            android:name=".CreateAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserRegistrationSectionThreeActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserRegistrationSectionTwoActivity"
             android:exported="false" />
         <activity

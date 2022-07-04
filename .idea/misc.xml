@@ -59,6 +59,7 @@
         <entry key="app/src/main/res/layout/activity_appointment_joining_room.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_appointment_request.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_appointment_request_details.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_create_account.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_create_appointment.xml" value="0.30998248686514884" />
         <entry key="app/src/main/res/layout/activity_doctor_appointments.xml" value="0.12590579710144928" />
         <entry key="app/src/main/res/layout/activity_doctor_details.xml" value="0.22" />
@@ -79,8 +80,9 @@
         <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.24592391304347827" />
         <entry key="app/src/main/res/layout/activity_test_bottom.xml" value="0.2115036231884058" />
         <entry key="app/src/main/res/layout/activity_user_main.xml" value="0.1078125" />
-        <entry key="app/src/main/res/layout/activity_user_registration_section_one.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_user_registration_section_two.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_user_registration_section_one.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_user_registration_section_three.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_user_registration_section_two.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_video_call.xml" value="0.25" />
         <entry key="app/src/main/res/layout/content_doctor_reports.xml" value="0.12310030395136778" />
         <entry key="app/src/main/res/layout/content_scrolling.xml" value="0.22" />

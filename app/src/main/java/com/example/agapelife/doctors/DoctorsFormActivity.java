@@ -268,20 +268,6 @@ public class DoctorsFormActivity extends AppCompatActivity {
         return isPermitted;
     }
 
-    private void pickImageFromGallery() {
-        Intent pickFromGallery = new Intent(Intent.ACTION_PICK);
-        pickFromGallery.setType("image/*");
-        String[] mimeTypes = {
-                "image/jpeg",
-                "image/png",
-                "image/pdf",        };
-
-        try{
-            startActivityForResult(pickFromGallery, GALLERY_REQUEST_CODE);
-        }catch(ActivityNotFoundException e){
-            //
-        }
-    }
 
     public boolean pickDoc(){
         verifyPermissions();

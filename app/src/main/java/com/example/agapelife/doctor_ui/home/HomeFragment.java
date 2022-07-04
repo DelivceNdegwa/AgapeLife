@@ -1,5 +1,9 @@
 package com.example.agapelife.doctor_ui.home;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +30,7 @@ import com.example.agapelife.adapters.AppointmentsAdapter;
 import com.example.agapelife.adapters.ConsultationsAdapter;
 import com.example.agapelife.adapters.PatientsAdapter;
 //import com.example.agapelife.databinding.FragmentHomeBinding;
+import com.example.agapelife.doctors.DoctorsSection;
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.models.AppointmentRequest;
 import com.example.agapelife.networking.pojos.AgapeUserResponse;
@@ -46,6 +52,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,7 +90,7 @@ public class HomeFragment extends Fragment {
             noConsultations=false;
 
     boolean isOnline = false;
-    String status;
+    String status, notificationMessage;
 
     public HomeFragment() {
         // this should remain empty
@@ -156,10 +163,14 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        addNotification("You have an appointment in 10 minutes", 3);
         consultationsAdapter = new ConsultationsAdapter(getActivity(), consultations);
         patientsAdapter = new PatientsAdapter(getActivity(), patients);
         appointmentRequestsAdapter = new AppointmentRequestsAdapter(getActivity(), appointmentRequests);
         appointmentsAdapter = new AppointmentsAdapter(getActivity(), upcomingAppointments, preferenceStorage);
+
+        notificationMessage = requireActivity().getIntent().getStringExtra("notification_message");
 
         String firstName = preferenceStorage.getFirstName();
         String lastName = preferenceStorage.getLastName();
@@ -388,8 +399,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-
     private void parseJsonData(String message) {
         try {
             JSONObject appointmentList = new JSONObject(message);
@@ -487,5 +496,29 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
         }
 
+    }
+
+    public void addNotification(String message, int notificationType){
+        //message="You have an appointment in the next 10 minutes"
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireActivity())
+                                                .setSmallIcon(R.drawable.icon_add)
+                                                .setContentTitle("Appointment Alert")
+                                                .setAutoCancel(true)
+                                                .setContentText(message)
+                                                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        Intent notificationIntent = new Intent(requireActivity(), DoctorsSection.class);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        notificationIntent.putExtra("notification_message", message);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(requireActivity(),
+                                                     0,
+                                                                notificationIntent,
+                                                                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+
+        // Add as notification
+        NotificationManager manager = (NotificationManager) requireActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, builder.build());
     }
 }
