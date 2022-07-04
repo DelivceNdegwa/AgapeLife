@@ -355,6 +355,14 @@ class PatientNotificationsConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "notification": notification
         }))
+        
+    async def patient_birthday_wish(self, event):
+        birthday_wish = event['notification']
+        print("PATIENT_BIRTHDAY_WISH:", birthday_wish)
+        
+        await self.send(text_data=json.dumps({
+            "birthday_wish": birthday_wish
+        }))
       
         
 class DoctorNotificationsConsumer(AsyncWebsocketConsumer):
@@ -369,6 +377,7 @@ class DoctorNotificationsConsumer(AsyncWebsocketConsumer):
         
         await self.accept()
         print("Doctor connection established")
+        
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
             self.group_name,
@@ -380,6 +389,14 @@ class DoctorNotificationsConsumer(AsyncWebsocketConsumer):
         print("DOCTOR_NOTIFICATION: ", notification)
         await self.send(text_data=json.dumps({
             "notification": notification
+        }))
+        
+    async def doctor_birthday_wish(self, event):
+        birthday_wish = event['notification']
+        print("DOC_BIRTHDAY_WISH:", birthday_wish)
+        
+        await self.send(text_data=json.dumps({
+            "birthday_wish": birthday_wish
         }))
         
         
@@ -400,7 +417,7 @@ class AgapeInfoConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
     
-    async def doctor_birthday_wish(self, event):
+    async def agape_info_listener(self, event):
         new_info = event["notification"]
         print("AGAPE_INFO_NOTIFICATION: ", new_info)
         
