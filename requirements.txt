@@ -52,7 +52,9 @@ duplicity==0.8.22
 env==0.1.0
 ewmh==0.1.6
 fasteners==0.17.3
+fcm-django==1.0.12
 filelock==3.4.2
+firebase-admin==5.2.0
 Flask==2.1.2
 FlightRadarAPI==1.1.9
 future==0.18.2
@@ -60,8 +62,15 @@ google-api-core==2.7.2
 google-api-python-client==2.46.0
 google-auth==1.34.0
 google-auth-httplib2==0.1.0
+google-cloud-core==2.3.1
+google-cloud-firestore==2.5.3
+google-cloud-storage==2.4.0
+google-crc32c==1.3.0
+google-resumable-media==2.3.3
 googleapis-common-protos==1.53.0
 gpg==1.17.1
+grpcio==1.47.0
+grpcio-status==1.47.0
 gufw==22.4.0
 hiredis==2.0.0
 html5lib==1.1
@@ -100,6 +109,7 @@ Pillow==9.1.0
 ply==3.11
 progress==1.6
 prompt-toolkit==3.0.29
+proto-plus==1.20.6
 protobuf==3.20.1
 ptyprocess==0.7.0
 pulsectl==22.3.2
@@ -141,6 +151,7 @@ retrying==1.3.3
 rsa==4.8
 service-identity==21.1.0
 setproctitle==1.2.3
+shiboken2==5.15.4
 shiboken6==6.3.0
 six==1.16.0
 soupsieve==2.3.1

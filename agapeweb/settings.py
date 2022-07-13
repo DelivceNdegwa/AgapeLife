@@ -15,6 +15,9 @@ from datetime import timedelta
 
 import os
 
+import firebase_admin
+from firebase_admin import credentials
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_URL = '127.0.0.1'
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'channels',
     'rest_framework',
     'django_filters',
+    'fcm_django',
     
     'django_celery_beat',
     'django_celery_results',
@@ -209,3 +213,8 @@ CELERY_TIMEZONE = 'Africa/Nairobi'
 
 # CELERY BEAT CONFIGURATIONS
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+PROJECT_APP = os.path.basename(BASE_DIR)
+cred = credentials.Certificate(os.path.join(PROJECT_APP, '../google-credentials/agapelifepushnotifications-4a614b517aff.json'))
+firebase_admin.initialize_app(cred)
