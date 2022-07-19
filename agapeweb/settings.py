@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'channels',
     'rest_framework',
     'django_filters',
-    'fcm_django',
+    # 'fcm_django',
     
     'django_celery_beat',
     'django_celery_results',
@@ -218,3 +218,19 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 PROJECT_APP = os.path.basename(BASE_DIR)
 cred = credentials.Certificate(os.path.join(PROJECT_APP, '../google-credentials/agapelifepushnotifications-4a614b517aff.json'))
 firebase_admin.initialize_app(cred)
+
+# FCM_DJANGO_SETTINGS = {
+#      # default: _('FCM Django')
+#     "APP_VERBOSE_NAME": "[string for AppConfig's verbose_name]",
+#      # true if you want to have only one active device per registered user at a time
+#      # default: False
+#     "ONE_DEVICE_PER_USER": False,
+#      # devices to which notifications cannot be sent,
+#      # are deleted upon receiving error response from FCM
+#      # default: False
+#     "DELETE_INACTIVE_DEVICES": False,
+#     # Transform create of an existing Device (based on registration id) into
+#                 # an update. See the section
+#     # "Update of device with duplicate registration ID" for more details.
+#     "UPDATE_ON_DUPLICATE_REG_ID": True/False,
+# }

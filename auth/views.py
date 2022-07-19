@@ -20,12 +20,15 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from rest_framework.parsers import MultiPartParser, FormParser
 
+from pusher_push_notifications import PushNotifications
+
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from universal import periodic_task_functions
+from pusher_notifications.config import AppointmentNotifications
 
 class AgapeUserObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
@@ -149,3 +152,33 @@ def uploadDoctorFiles(request, id):
     
     
     return Response({'success':'Uploaded files for doctor {}'.format(doctor.username)}, status=status.HTTP_201_CREATED)
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes((AllowAny,))
+def getPusherTokenForAuth(request, id, user_type):
+    DOCTOR = 1
+    PATIENT = 2
+    
+    if user_type == DOCTOR:
+        user = Doctor.objects.filter(id=id).first()
+        
+    elif user_type == PATIENT:
+        user = AgapeUser.objects.filter(id=id).first()
+    
+    else:
+        return Response({"user_type_error": "User type was not recognized"}, status=status.HTTP_400_BAD_REQUEST)
+        
+    if user is not None:
+        appointment_notification = AppointmentNotifications()
+        
+        beams_client = PushNotifications(
+            appointment_notification.get_instance_id(),
+            appointment_notification.get_key()
+        )
+        
+        beams_token = beams_client.generate_token(user.id_number)
+        return Response({"beams_token": beams_token}, status=status.HTTP_200_OK)
+        
+        

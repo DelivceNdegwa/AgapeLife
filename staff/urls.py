@@ -21,4 +21,7 @@ urlpatterns = [
     path("medical-tips/upload", uploadMedicalTip, name="upload-tip"),
     path("medical-tips/delete/<id>", deleteMedicalTip, name="delete-tip"),
     
+    # push notification testing
+    path("push-notification", push_notification, name="push-notification")
+    
 ]

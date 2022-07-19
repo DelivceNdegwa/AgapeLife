@@ -4,6 +4,8 @@ from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import ProtectedError
 
+from pusher_notifications.config import AppointmentNotifications
+
 # from django.core.servers.basehttp import FileWrapper #django <=1.8
 from wsgiref.util import FileWrapper 
 import mimetypes
@@ -206,6 +208,14 @@ def deleteMedicalTip(request, id):
     return JsonResponse(data)
         
 
-
-       
+def push_notification(request):
+    appointment_notification = AppointmentNotifications()
+    
+    try:
+        appointment_notification.create_push_notification('Appointment Reminder', 'Your are having an appointment in 10 minutes')
+        return HttpResponse("Notification message created")
+        
+    except Exception as e:
+        print(f"ERROR: {e}")
+        return HttpResponse("Could not create notification message.")
         
