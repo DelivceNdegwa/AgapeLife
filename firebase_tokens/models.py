@@ -14,6 +14,6 @@ class FCMToken(models.Model):
     user_id = models.IntegerField()
     token = models.TextField()
     user_type = models.IntegerField(choices=USER_TYPES)
-    
+
     def __str__(self):
         return self.token

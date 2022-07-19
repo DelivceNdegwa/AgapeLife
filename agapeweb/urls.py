@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/', include('agapeapi.urls')),
     path('auth/', include('auth.urls')),
     path('sockets/', include('agape_sockets.urls')),
+    path('firebase-tokens/', include('firebase_tokens.urls')),
     
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

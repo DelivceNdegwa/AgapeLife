@@ -1,10 +1,14 @@
 from datetime import datetime, date
 from celery import shared_task
+from firebase_tokens.models import FCMToken
+
 from staff.models import AgapeUser, Doctor, Notification
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+
+from fcm_admin import fcm_config as fcm
 
 
 # TODO: Create appointment_reminder for both doctor and patient parameters: receiver
@@ -14,14 +18,21 @@ from channels.layers import get_channel_layer
 @shared_task(bind=True)
 def appointment_reminder(self, id, category, message):
     try:
-        instance= Notification.objects.create(
-                    recipient_category=category, 
-                    recipient_id= id,
-                    message= message
-                )
+        # instance= Notification.objects.create(
+        #             recipient_category=category, 
+        #             recipient_id= id,
+        #             message= message
+        #         )
         
+        fcm_instance = FCMToken.objects.filter(user_id=id, user_type=category).first()
         
-        return "Notification created"
+        fcm.sendPushNotification(
+            "Appointment reminder",
+            message,
+            fcm_instance.token
+        )
+        
+        return "Notification has been sent"
     except Exception as e:
         return "ERROR: Notification error => {}".format(e)
     
