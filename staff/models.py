@@ -314,5 +314,8 @@ class MedicalReport(models.Model):
     
     def __str__(self):
         return "patient_{}_{}_report".format(self.appointment.client.first_name, self.appointment.client.id)
+    
+
+
 
             

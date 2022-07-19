@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'staff.apps.StaffConfig',
     'agapeapi.apps.AgapeapiConfig',
     'agape_sockets.apps.AgapeSocketsConfig',
+    'firebase_tokens.apps.FirebaseTokensConfig'
 ]
 
 WSGI_APPLICATION = "agapeweb.wsgi.application"
