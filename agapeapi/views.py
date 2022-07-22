@@ -367,8 +367,8 @@ def createAppointment(request):
     date_time_obj = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M')
     
     try: 
-        periodic_task_functions.createPeriodicTask(date_time_obj, doctor_id, Notification.DOCTOR, doctor_message)
-        periodic_task_functions.createPeriodicTask(date_time_obj, client_id, Notification.PATIENT, patient_message)   
+        periodic_task_functions.createPeriodicTask(date_time_obj, doctor.id_number, Notification.DOCTOR, doctor_message)
+        periodic_task_functions.createPeriodicTask(date_time_obj, client.id_number, Notification.PATIENT, patient_message)   
         print("CRONTABSCHEDULE_SUCCESS: Created")    
         
     except Exception as e:

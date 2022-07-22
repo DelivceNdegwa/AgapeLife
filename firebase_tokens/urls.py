@@ -3,5 +3,6 @@ from django.urls import path
 from .views import postFCMToken
 
 urlpatterns = [
-    path('create/', postFCMToken)
+    path('create-or-update/', postFCMToken)
+
 ]

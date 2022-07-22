@@ -1,8 +1,11 @@
+import os
+
 import firebase_admin
 from firebase_admin import credentials, messaging
 
-
-firebase_json_conf_path = "../google-credentials/agapelifepushnotifications-firebase-adminsdk-ox8wy-35ceab6006.json"
+current_working_directory = os.getcwd()
+print(current_working_directory)
+firebase_json_conf_path = os.path.join(current_working_directory, "google_credentials", "firebase-adminsdk.json")
 
 cred = credentials.Certificate(firebase_json_conf_path)
 firebase_admin.initialize_app(cred)

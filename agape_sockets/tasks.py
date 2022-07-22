@@ -15,15 +15,12 @@ from fcm_admin import fcm_config as fcm
 
 # Remember: Groups= patient_{id}, doctor_{id}
 
+
+# args= json.dumps((receiver_id, receiver_type, message)),
+
 @shared_task(bind=True)
 def appointment_reminder(self, id, category, message):
     try:
-        # instance= Notification.objects.create(
-        #             recipient_category=category, 
-        #             recipient_id= id,
-        #             message= message
-        #         )
-        
         fcm_instance = FCMToken.objects.filter(user_id=id, user_type=category).first()
         
         fcm.sendPushNotification(

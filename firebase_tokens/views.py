@@ -8,6 +8,8 @@ from rest_framework import status
 
 from firebase_tokens.models import FCMToken
 
+from fcm_admin import fcm_config as fcm
+
 # Create your views here.
 @csrf_exempt
 @api_view(["POST"])
@@ -25,10 +27,10 @@ def postFCMToken(request):
     
         fcm_token_instance.save()
         
-        return Response({"message":"Successfully registered token"}, status=status.HTTP_200_OK)
+        return Response({"success_msg":"Successfully registered token"}, status=status.HTTP_200_OK)
     
     except Exception as e:
-        return Response({"error":str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error_msg":str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     
     

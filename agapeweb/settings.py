@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-r6)6c_d%=&j_aun(aqop@c0%ftg&e(q(b7_7$dam&wf$!fqme-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.100.188','192.168.100.203', '127.0.0.1' ]
+ALLOWED_HOSTS = ['192.168.100.249','192.168.100.203', '127.0.0.1' ]
 
 
 # Application definition
@@ -71,51 +71,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-
-# # JWT Authentication set up
-# REST_FRAMEWORK = {
-#     'DEFAULT_FILTER_BACKENDS': [
-#         'django_filters.rest_framework.DjangoFilterBackend'
-#     ],
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ],
-# }
-
-
-#SIMPLE JWT
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     # 'ROTATE_REFRESH_TOKENS': False,
-#     # 'BLACKLIST_AFTER_ROTATION': False,
-#     # 'UPDATE_LAST_LOGIN': False,
-
-#     # 'ALGORITHM': 'HS256',
-#     # 'SIGNING_KEY': SECRET_KEY,
-#     # 'VERIFYING_KEY': None,
-#     # 'AUDIENCE': None,
-#     # 'ISSUER': None,
-#     # 'JWK_URL': None,
-#     # 'LEEWAY': 0,
-
-#     'AUTH_HEADER_TYPES': ('Bearer',),
-#     # 'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-#     # 'USER_Iperiodic tasks djangoD_FIELD': 'id',
-#     # 'USER_ID_CLAIM': 'user_id',
-#     # 'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-
-#     # 'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-#     # 'TOKEN_TYPE_CLAIM': 'token_type',
-#     # 'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
-
-#     # 'JTI_CLAIM': 'jti',
-
-#     # 'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-#     # 'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-#     # 'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -215,23 +170,3 @@ CELERY_TIMEZONE = 'Africa/Nairobi'
 # CELERY BEAT CONFIGURATIONS
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-
-PROJECT_APP = os.path.basename(BASE_DIR)
-cred = credentials.Certificate(os.path.join(PROJECT_APP, '../google-credentials/agapelifepushnotifications-4a614b517aff.json'))
-firebase_admin.initialize_app(cred)
-
-# FCM_DJANGO_SETTINGS = {
-#      # default: _('FCM Django')
-#     "APP_VERBOSE_NAME": "[string for AppConfig's verbose_name]",
-#      # true if you want to have only one active device per registered user at a time
-#      # default: False
-#     "ONE_DEVICE_PER_USER": False,
-#      # devices to which notifications cannot be sent,
-#      # are deleted upon receiving error response from FCM
-#      # default: False
-#     "DELETE_INACTIVE_DEVICES": False,
-#     # Transform create of an existing Device (based on registration id) into
-#                 # an update. See the section
-#     # "Update of device with duplicate registration ID" for more details.
-#     "UPDATE_ON_DUPLICATE_REG_ID": True/False,
-# }
