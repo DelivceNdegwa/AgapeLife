@@ -94,7 +94,7 @@ class Doctor(User):
     
     get_first_name = property(__get_first_name)
     get_last_name = property(__get_last_name)
-    category_id = property(__get_category_id)
+    get_category_id = property(__get_category_id)
     
     class Meta:
         verbose_name = 'Agape Doctor'
@@ -174,6 +174,9 @@ class Appointment(models.Model):
     ONGOING = 2
     CANCELLED = 3
     PENDING = 4
+    
+    PUBLISHER = 1
+    SUBSCRIBER = 2
     
     APPOINTMENT_STATUS=(
         (PENDING, "Pending"),
@@ -314,6 +317,34 @@ class MedicalReport(models.Model):
     
     def __str__(self):
         return "patient_{}_{}_report".format(self.appointment.client.first_name, self.appointment.client.id)
+    
+    
+
+class DirectInquiryPatient(models.Model):
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    id = models.IntegerField()
+    phone = models.IntegerField()
+    age = models.IntegerField()
+    has_accepted_terms = models.BooleanField()
+    
+    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
+    
+    def __str__(self):
+        return f"{self.firstname} {self.lastname} {self.id}"
+    
+    
+    
+class DirectInquiryMedReport(models.Model):
+    symptoms = models.TextField()
+    suspected_illness = models.CharField(max_length=200)
+    prescription = models.TextField(null=True)
+    recommendation = models.TextField(null=True)
+    patient = models.ForeignKey(DirectInquiryPatient, on_delete=models.PROTECT)
+    
+    def __str__(self):
+        return f"{self.patient} suspected for {self.suspected_illness}"
+    
     
 
 

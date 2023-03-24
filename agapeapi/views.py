@@ -279,7 +279,7 @@ def generateClientTokens(request, pk):
     time_delta = end_time - start_time
     
     try:
-        token_generator = TokenGenerator(uid, channel_name, start_time, int(time_delta.total_seconds()))
+        token_generator = TokenGenerator(uid, channel_name, start_time, int(time_delta.total_seconds()), Appointment.SUBSCRIBER)
         token = token_generator.generate()
         print("CLIENT_TOKEN: ",token)
         print("CHANNEL_NAME: ", channel_name)
@@ -308,7 +308,7 @@ def generateDoctorTokens(request, pk):
     print("DOCTOR_UID:", uid)
     print("CHANNEL_NAME: ", channel_name)
     try:
-        token_generator = TokenGenerator(uid, channel_name, start_time, int(time_delta.total_seconds()))
+        token_generator = TokenGenerator(uid, channel_name, start_time, int(time_delta.total_seconds()), Appointment.PUBLISHER)
         token = token_generator.generate()
         print("DOCTOR_TOKEN: ",token)
         
