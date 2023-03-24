@@ -55,6 +55,8 @@ class Doctor(User):
     is_verified = models.BooleanField(default=False)
     is_available = models.BooleanField(default=False)
     
+    mobile_fingerprint = models.TextField(null=True)
+    
     license_certificate = models.FileField(upload_to='license/', null=True, blank=True)
     profile_image = models.ImageField(upload_to='media/', null=True, blank=True)
     front_id_part = models.ImageField(upload_to='front_id_part/', null=True, blank=True)
