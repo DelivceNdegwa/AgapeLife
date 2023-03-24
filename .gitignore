@@ -2,3 +2,5 @@ media/
 license/
 google_credentials/
 static/
+__pycache__
+migrations/
