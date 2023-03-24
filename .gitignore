@@ -1,6 +1,6 @@
 media/
 license/
 google_credentials/
-static/
+# static/git a
 __pycache__
 migrations/

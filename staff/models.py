@@ -325,7 +325,7 @@ class MedicalReport(models.Model):
 class DirectInquiryPatient(models.Model):
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
-    id = models.IntegerField()
+    national_id = models.IntegerField()
     phone = models.IntegerField()
     age = models.IntegerField()
     has_accepted_terms = models.BooleanField()
