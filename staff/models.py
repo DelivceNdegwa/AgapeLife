@@ -343,6 +343,7 @@ class DirectInquiryMedReport(models.Model):
     prescription = models.TextField(null=True)
     recommendation = models.TextField(null=True)
     patient = models.ForeignKey(DirectInquiryPatient, on_delete=models.PROTECT)
+    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, null=True)
     
     def __str__(self):
         return f"{self.patient} suspected for {self.suspected_illness}"

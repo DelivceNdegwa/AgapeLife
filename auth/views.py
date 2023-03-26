@@ -174,10 +174,22 @@ def registerInstantPatient(request):
                                                     phone = int(phone)
                                                 ).first()
     
-    
-    if not patient_search:
+    national_id_exists = DirectInquiryPatient.objects.filter(national_id = int(national_id)).first()
+    if patient_search or national_id_exists:
+        message = "Patient was previously added into the system"
+        patient_id = patient_search.id
+
         
-        doctor = Doctor.objects.filter(id=doctor_id).first()
+        data = {
+            "message": message,
+            "patient_id": patient_id,
+            "is_created": False
+        }
+    
+        return Response(data, status=status.HTTP_200_OK)
+    
+    else:
+        doctor = Doctor.objects.filter(id_number=doctor_id).first()
         
         patient = DirectInquiryPatient()
         patient.firstname = first_name
@@ -192,20 +204,16 @@ def registerInstantPatient(request):
         message = "Patient created successfully"
         patient_id = patient.id
         
-        return Response({'success': data}, status=status.HTTP_201_CREATED)
-        
-    else:
-        message = "Patient was previously added into the system"
-        patient_id = patient_search.id
-
-        
+                
         data = {
             "message": message,
-            "patient_id": patient_id
+            "patient_id": patient_id,
+            "is_created":True
         }
     
-        return Response({'success': data}, status=status.HTTP_200_OK)
-
+        
+        return Response(data, status=status.HTTP_201_CREATED)
+    
 
 @csrf_exempt
 @api_view(["GET"])

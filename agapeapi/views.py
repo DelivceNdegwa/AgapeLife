@@ -234,6 +234,11 @@ class AppointmentDetailView(RetrieveUpdateAPIView):
     serializer_class = AppointmentSerializer
 
 
+# class DirectInquiryMedReportDetailView(RetrieveAPIView):
+#     queryset = DirectInquiryMedReport.objects.all()
+#     serializer_class =
+
+
 class AppointmentRequestListView(ListAPIView):
     # queryset = AppointmentRequest
     serializer_class = AppointmentRequestSerializer
@@ -468,6 +473,12 @@ def retrieveDoctorMedicalReport(request, id):
     return Response(serialized_report.data, status=status.HTTP_200_OK)
     
 
+
+# DirectInquiryMedReport
+@csrf_exempt
+@api_view(["GET"])
+def retrieveDirectInquiryMedReport(request, patient_id):
+    direct_inquiry_reports = DirectInquiryMedReport.objects.filter()
 
     
     

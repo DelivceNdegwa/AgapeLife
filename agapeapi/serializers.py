@@ -61,6 +61,12 @@ class MedicalReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = MedicalReport
         fields = '__all__'
+        
+        
+class DirectInquiryMedReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DirectInquiryMedReport
+        fields = '__all__'
 
 class CustomMedicalReportSerializer(serializers.Serializer):
     doctor_name = serializers.CharField(max_length=100)
