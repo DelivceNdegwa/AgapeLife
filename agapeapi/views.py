@@ -468,5 +468,6 @@ def retrieveDoctorMedicalReport(request, id):
     return Response(serialized_report.data, status=status.HTTP_200_OK)
     
 
+
     
     

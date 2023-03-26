@@ -4,7 +4,7 @@ import json
 from django.shortcuts import render
 
 from .serializers import AgapeUserTokenObtainPairSerializer, RegisterUserSerializer, RegisterDoctorSerializer
-from staff.models import AgapeUser, Doctor, MedicalCategory, Notification
+from staff.models import AgapeUser, Doctor, MedicalCategory, Notification, DirectInquiryPatient, DirectInquiryMedReport
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -152,6 +152,59 @@ def uploadDoctorFiles(request, id):
     
     
     return Response({'success':'Uploaded files for doctor {}'.format(doctor.username)}, status=status.HTTP_201_CREATED)
+
+
+@csrf_exempt
+@api_view(["POST"])
+def registerInstantPatient(request):
+    registration = request.POST
+    print(f"PATIENT-DETAILS: {request.data}, {registration}")    
+    first_name = registration.get("first_name")
+    last_name = registration.get("last_name")
+    national_id = registration.get("national_id")
+    phone = registration.get("phone")
+    age = registration.get("age")
+    doctor_id = registration.get("doctor_id")
+    
+    patient_search = DirectInquiryPatient.objects.filter(
+                                                    firstname = first_name,
+                                                    lastname = last_name,
+                                                    national_id = int(national_id),
+                                                    age = int(age),
+                                                    phone = int(phone)
+                                                ).first()
+    
+    
+    if not patient_search:
+        
+        doctor = Doctor.objects.filter(id=doctor_id).first()
+        
+        patient = DirectInquiryPatient()
+        patient.firstname = first_name
+        patient.lastname = last_name
+        patient.national_id = national_id
+        patient.age = age
+        patient.phone = phone
+        patient.has_accepted_terms = True
+        patient.doctor = doctor
+        patient.save()
+        
+        message = "Patient created successfully"
+        patient_id = patient.id
+        
+        return Response({'success': data}, status=status.HTTP_201_CREATED)
+        
+    else:
+        message = "Patient was previously added into the system"
+        patient_id = patient_search.id
+
+        
+        data = {
+            "message": message,
+            "patient_id": patient_id
+        }
+    
+        return Response({'success': data}, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
