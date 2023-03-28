@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import com.example.agapelife.adapters.ConsultationsAdapter;
 import com.example.agapelife.adapters.PatientsAdapter;
 //import com.example.agapelife.databinding.FragmentHomeBinding;
 import com.example.agapelife.doctors.DoctorsSection;
+import com.example.agapelife.instant_appointments.RegisterPatientActivity;
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.models.AppointmentRequest;
 import com.example.agapelife.networking.pojos.AgapeUserResponse;
@@ -52,7 +54,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,9 +74,10 @@ public class HomeFragment extends Fragment {
 
     View noConnectionLayout, noPatientsLayout;
 
-    TextView tvConsultations;
+    TextView tvConsultations, tvAppointmentsNumber, tvRequestsNumber;
     Switch onlineStatus;
     TextView doctorGreeting, cardTvFname, tvFirstName, tvOnlineStatus, tvNoConnectionTitle;
+    Button btnRegisterInstantPatient;
 
     private WebSocketClient mWebSocketClient;
 
@@ -129,15 +131,22 @@ public class HomeFragment extends Fragment {
 
         preferenceStorage = new PreferenceStorage(getActivity());
 
+        tvAppointmentsNumber = root.findViewById(R.id.tv_upcoming_value);
+        tvRequestsNumber = root.findViewById(R.id.tv_request_value);
+
+        //       Appointment will be termed to as Bookings
         rvConsultations = root.findViewById(R.id.rv_appointments);
         rvConsultations.setNestedScrollingEnabled(true);
         rvConsultations.setLayoutManager(new LinearLayoutManager(root.getContext(), LinearLayoutManager.HORIZONTAL, false));
 
+        //      AppointmentRequests will be used
         rvAppointmentRequests = root.findViewById(R.id.rv_appointment_requests);
+        btnRegisterInstantPatient = root.findViewById(R.id.btn_register_instant_patient);
         rvAppointmentRequests.setNestedScrollingEnabled(true);
         rvAppointmentRequests.setLayoutManager(new LinearLayoutManager(root.getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         onlineStatus.setChecked(preferenceStorage.isAvailableBool());
+
 
         onlineStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -153,6 +162,17 @@ public class HomeFragment extends Fragment {
                 preferenceStorage.setIsAvailableStatus(isOnline);
                 changeOnlineStatus();
                 Toast.makeText(getActivity(), "You are "+preferenceStorage.isAvailable(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnRegisterInstantPatient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getActivity(), RegisterPatientActivity.class);
+                startActivity(i);
+//                Intent intent = new Intent(getActivity(), RegisterPatientActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -177,11 +197,11 @@ public class HomeFragment extends Fragment {
 
         String firstNameInitial = Character.toString(firstName.charAt(0));
         String lastNameInitial = Character.toString(lastName.charAt(0));
-
+//        preferenceStorage.getFirstName()
         doctorGreeting.setText("Hi "+preferenceStorage.getFirstName());
 
-        tvFirstName.setText("Doctor "+firstName);
-        tvNoConnectionTitle.setText("Hi "+firstName);
+        tvFirstName.setText("Doctor "+preferenceStorage.getFirstName());
+        tvNoConnectionTitle.setText("Hi "+preferenceStorage.getLastName());
 
         if(!firstName.isEmpty()){
             String nameInitials = firstNameInitial + lastNameInitial;
@@ -192,13 +212,13 @@ public class HomeFragment extends Fragment {
         }
 
 //        getConsultations();
-        fetchAppointmentRequests();
+//        fetchAppointmentRequests();
 //        loadPatients();
         getDoctorDetails();
 
 //        rvConsultations.setAdapter(appointmentRequestsAdapter);
         rvConsultations.setAdapter(appointmentsAdapter);
-        rvAppointmentRequests.setAdapter(appointmentRequestsAdapter);
+//        rvAppointmentRequests.setAdapter(appointmentRequestsAdapter);
 
 
 
@@ -423,6 +443,7 @@ public class HomeFragment extends Fragment {
         for(int i=0; i < upcomingAppointmentsArray.length(); i++){
             JSONObject appointment = upcomingAppointmentsArray.getJSONObject(i);
             addUpcomingAppointment(appointment);
+            tvAppointmentsNumber.setText(String.valueOf(i++));
         }
 
     }
@@ -460,6 +481,8 @@ public class HomeFragment extends Fragment {
         for(int i=0; i < appointmentsArray.length(); i++){
             JSONObject appointmentObj = appointmentsArray.getJSONObject(i);
             addAppointmentRequest(appointmentObj);
+            tvRequestsNumber.setText(String.valueOf(i++));
+
         }
 
         consultationLayout.setVisibility(View.VISIBLE);
@@ -488,6 +511,7 @@ public class HomeFragment extends Fragment {
 
             for(AppointmentRequest aptRst : appointmentRequests){
                 Log.d("ITEM_LIST", aptRst.getAbout());
+
             }
 
             appointmentRequestsAdapter.notifyDataSetChanged();

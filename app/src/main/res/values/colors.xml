@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="shade">#323131</color>
     <color name="green_gradient">#9933AA49</color>
     <color name="agape_primary">#2F9F44</color>
     <color name="agape_variant">#CC0D953A</color>

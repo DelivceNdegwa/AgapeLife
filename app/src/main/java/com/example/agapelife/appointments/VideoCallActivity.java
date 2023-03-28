@@ -26,7 +26,7 @@ import io.agora.rtc.video.VideoCanvas;
 
 public class VideoCallActivity extends AppCompatActivity {
     public String channelName="Toothache";
-    public String TOKEN="006f320179c8f6947c29eb4a6e48f2a0cadIAAORo+H/CT3KrY9BgD+Mqs8+phu/OkOCDvB1Oj4uUDHHfNohN0AAAAAEACDxJolnn6zYgEAAQCefrNi";
+    public String TOKEN="006f320179c8f6947c29eb4a6e48f2a0cadIABJIctFeGSb6SD2sPwejAKu/+nt1rt/Yc7w29Po279JJET4OP7j4um9IgB8zQcDGQzgYgQAAQCZyN5iAgCZyN5iAwCZyN5iBACZyN5i";
     public String APP_ID = "f320179c8f6947c29eb4a6e48f2a0cad";
 
     private long appointmentId;

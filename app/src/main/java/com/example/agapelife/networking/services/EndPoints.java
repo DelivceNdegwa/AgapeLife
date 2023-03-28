@@ -2,16 +2,21 @@ package com.example.agapelife.networking.services;
 
 import com.example.agapelife.models.Appointment;
 import com.example.agapelife.models.AppointmentRequest;
+import com.example.agapelife.networking.pojos.CreateSuccessfullyResponse;
+import com.example.agapelife.networking.pojos.FCMUserTokenOperations;
 import com.example.agapelife.networking.pojos.AgapeUserRequest;
 import com.example.agapelife.networking.pojos.AgapeUserResponse;
 import com.example.agapelife.networking.pojos.AgoraTokenGenerator;
 import com.example.agapelife.networking.pojos.AppointmentResponse;
 import com.example.agapelife.networking.pojos.DoctorRequest;
 import com.example.agapelife.networking.pojos.DoctorResponse;
+import com.example.agapelife.networking.pojos.InstantMedicalReport;
+import com.example.agapelife.networking.pojos.InstantPatientRequest;
 import com.example.agapelife.networking.pojos.MedicalCategoryResponse;
 import com.example.agapelife.networking.pojos.MedicalReport;
 import com.example.agapelife.networking.pojos.MedicalReportResponse;
 import com.example.agapelife.networking.pojos.MedicalTipResponse;
+import com.example.agapelife.networking.pojos.PatientRegistrationResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -96,6 +101,9 @@ public interface EndPoints {
     @GET("api/get-medical-report/{id}")
     Call<List<MedicalReportResponse>> getDoctorsNotes(@Path("id") long idNumber);
 
+    @GET("api/patient-medical-reports/{patient_id}")
+    Call<List<InstantMedicalReport>> getPatientMedicalRecords(@Path("patient_id") long patientDbID);
+
     // Patient Request appointment
     @FormUrlEncoded
     @POST("api/book-appointment/")
@@ -178,6 +186,62 @@ public interface EndPoints {
             @Path("id") long id,
             @Part MultipartBody.Part licenseFile,
             @Part MultipartBody.Part profileImg
+    );
+
+//    @FormUrlEncoded
+//    @POST("auth/doctor/form/register/")
+//    Call<DoctorRequest> doctorForm(
+//            @Field("hospital") String hospital,
+//            @Field("category") String category,
+//            @Field("speciality") String speciality,
+//            @Field("username") String username,
+//            @Field("phone_number") String phoneNumber,
+//            @Field("id_number") String idNumber,
+//            @Field("password") String password,
+//            @Field("password2") String password2,
+//            @Field("email") String email,
+//            @Field("first_name") String firstName,
+//            @Field("last_name") String lastName,
+//            @Field("gender") int gender,
+//            @Field("age") int age,
+//            @Field("date_of_birth") String dateOfBirth
+//    );
+//String firstName, String lastName, long nationalID, long age, long phone, long doctorID
+    @FormUrlEncoded
+    @POST("auth/patient/register")
+    Call <PatientRegistrationResponse> patientForm(
+            @Field("first_name") String firstName,
+            @Field("last_name") String lastName,
+            @Field("national_id") long nationalID,
+            @Field("age") long age,
+            @Field("phone") long phone,
+            @Field("doctor_id") long doctorID
+    );
+
+//    {
+//        "symptoms": "cough",
+//            "suspected_illness": "flu",
+//            "prescription": "piriton",
+//            "recommendation": "soup",
+//            "patient": 9,
+//            "doctor":14
+//    }
+    @FormUrlEncoded
+    @POST("api/create-patient-medical-report/")
+    Call <CreateSuccessfullyResponse> medicalReportForm(
+            @Field("symptoms") String symptoms,
+            @Field("suspected_illness") String suspectedIllness,
+            @Field("prescription") String prescription,
+            @Field("recommendation") String recommendation,
+            @Field("patient") int patient,
+            @Field("doctor") String doctor
+    );
+
+    @FormUrlEncoded
+    @POST("firebase-tokens/create-or-update/")
+    Call<FCMUserTokenOperations> createOrUpdateToken(
+      @Field("user_id")  String id,
+      @Field("fcm_token") String fcmToken
     );
 
 }

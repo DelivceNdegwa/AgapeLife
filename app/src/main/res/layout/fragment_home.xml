@@ -159,11 +159,12 @@
                         style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Upcoming consultations"
+                        android:layout_marginTop="8dp"
+                        android:text="Bookings"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@+id/card_upcoming" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_appointments"
@@ -175,6 +176,99 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_consultations" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_upcoming"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        app:cardCornerRadius="5dp"
+                        app:layout_constraintEnd_toStartOf="@+id/card_requests"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layout_upcoming_requests"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/agape_primary">
+
+                            <TextView
+                                android:id="@+id/tv_upcoming_value"
+                                style="@style/TextAppearance.MaterialComponents.Headline4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="30dp"
+                                android:text="0"
+                                android:textColor="@color/agape_layout_text"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tv_upcoming_requests"
+                                style="@style/TextAppearance.AppCompat.Body1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="Appointments"
+                                android:textAlignment="center"
+                                android:textColor="@color/agape_layout_text"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_upcoming_value" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_requests"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="8dp"
+                        app:cardCornerRadius="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/card_upcoming"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layout_appointment_requests"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/agape_primary">
+
+                            <TextView
+                                android:id="@+id/tv_request_value"
+                                style="@style/TextAppearance.MaterialComponents.Headline4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="30dp"
+                                android:text="0"
+                                android:textColor="@color/agape_layout_text"
+                                android:textStyle="bold"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/textView28"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="Bookings"
+                                android:textColor="@color/agape_layout_text"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_request_value" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -199,6 +293,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="30dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -209,7 +304,7 @@
                         style="@style/TextAppearance.AppCompat.Body1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Appointment Requests"
+                        android:text="Appointmentments"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -237,6 +332,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
+                    <Button
+                        android:id="@+id/btn_register_instant_patient"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Register Patient"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <Switch
                         android:id="@+id/switch_status"
                         android:layout_width="wrap_content"
@@ -245,9 +350,11 @@
                         android:textOff="@string/closed"
                         android:textOn="@string/open"
                         android:thumbTint="@color/agape_primary"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0"
                         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
                     <TextView

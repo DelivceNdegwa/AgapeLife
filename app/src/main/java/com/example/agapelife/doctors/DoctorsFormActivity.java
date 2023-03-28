@@ -161,6 +161,8 @@ public class DoctorsFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 validateInputs(genderGroup, inputSpeciality, inputHospital, inputEmail, inputPassword, inputConfirmPassword, inputFirstName, inputLastName, inputIdNumber, inputPhoneNumber, inputAge);
+//                Intent intent = new Intent(DoctorsFormActivity.this, DoctorsSection.class);
+//                startActivity(intent);
             }
         });
 
@@ -207,10 +209,10 @@ public class DoctorsFormActivity extends AppCompatActivity {
         else if(firstNameTxt.trim().isEmpty()){
             firstName.setError("Please input first name");
         }
-//        else if(licenseUri.equals(Uri.EMPTY)){
-//            Toast.makeText(this, "URI"+String.valueOf(licenseUri), Toast.LENGTH_SHORT).show();
-//            Toast.makeText(this, "Please input your medical license", Toast.LENGTH_SHORT).show();
-//        }
+        else if(licenseUri.equals(Uri.EMPTY)){
+            Toast.makeText(this, "URI"+String.valueOf(licenseUri), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please input your medical license", Toast.LENGTH_SHORT).show();
+        }
         else if(lastNameTxt.trim().isEmpty()){
             lastName.setError("Please input your last name");
         }
@@ -322,6 +324,27 @@ public class DoctorsFormActivity extends AppCompatActivity {
         return result;
     }
 
+    public File getFilePath(Uri uri){
+        String filePath = "";
+        if("content".equalsIgnoreCase(uri.getScheme())){
+            String[] projection = { "_data" };
+            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+            if(cursor != null){
+                int column_index = cursor.getColumnIndexOrThrow("_data");
+                if(cursor.moveToFirst()){
+                    filePath = cursor.getString(column_index);
+                }
+                cursor.close();
+            }
+        }
+        else if("file".equalsIgnoreCase(uri.getScheme())){
+            filePath = uri.getPath();
+        }
+        File file = new File(filePath);
+        return file;
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -370,7 +393,9 @@ public class DoctorsFormActivity extends AppCompatActivity {
     }
 
     private MultipartBody.Part prepareFilePart(String partName, Uri fileUri){
-        File fetchedFile = new File(getPathFromURI(fileUri));
+        Log.d("URI::TEST", String.valueOf(fileUri));
+//        File fetchedFile = new File(getPathFromURI(fileUri));
+        File fetchedFile = getFilePath(fileUri);
         RequestBody filePart = RequestBody.create(MediaType.parse(getContentResolver().getType(fileUri)), fetchedFile);
 
         return MultipartBody.Part.createFormData(partName, fetchedFile.getName(), filePart);
@@ -379,8 +404,9 @@ public class DoctorsFormActivity extends AppCompatActivity {
     public void takeFormDetails(){
         progress.show();
 
-        licenseFile = prepareFilePart("license_certificate", licenseUri);
-        profileImage = prepareFilePart("profile_image", selectedImageUri);
+//        licenseFile = prepareFilePart("license_certificate", licenseUri);
+//        profileImage = prepareFilePart("profile_image", selectedImageUri);
+//        Log.d("LICENSE_PROFILE", String.valueOf(licenseFile));
         uploadDoctorDetails();
 
     }
@@ -435,6 +461,7 @@ public class DoctorsFormActivity extends AppCompatActivity {
 
 
     public void uploadDoctorDetails(){
+        Log.d("uploadDocDetails", "Uploading...");
         Call<DoctorRequest> call = ServiceGenerator.getInstance().getApiConnector().doctorForm(
                 hospitalTxt,
                 "3",
@@ -451,17 +478,23 @@ public class DoctorsFormActivity extends AppCompatActivity {
                 ageValue,
                 dateOfBirth
         );
+        Log.d("DOC_CALL_CREATED", "Call about to be enqueued...");
         call.enqueue(new Callback<DoctorRequest>() {
             @Override
             public void onResponse(Call<DoctorRequest> call, Response<DoctorRequest> response) {
                 Log.d("DOC_FORM_CODE:", String.valueOf(response.code()));
 //                Toast.makeText(DoctorsFormActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 if(response.code() == 201){
-                    uploadDoctorFiles();
+//                    uploadDoctorFiles();
+                    Toast.makeText(DoctorsFormActivity.this,
+                                    "Your details have been submitted",
+                                    Toast.LENGTH_LONG).show();
+                    savePreferenceData();
                 }
                 else if(response.code() == 400 && response.body() != null){
                     progress.hide();
                     Log.d("DOC_FORM_ERROR: ", String.valueOf(response.body()));
+//                    Log.d("NEW_DOC_FORM_REC", response.)
                     Toast.makeText(DoctorsFormActivity.this, "Check your credentials and try again", Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -472,7 +505,9 @@ public class DoctorsFormActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<DoctorRequest> call, Throwable t) {
-                Log.d("DOC_FORM_ERROR:", String.valueOf(t.getStackTrace()));
+                progress.hide();
+                Log.d("DOC_FORM_ERROR_:", String.valueOf(t.getMessage()));
+                Toast.makeText(DoctorsFormActivity.this, "Could not register doctor, please try again", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -518,6 +553,9 @@ public class DoctorsFormActivity extends AppCompatActivity {
             preferenceStorage.setUserId(idNumberTxt);
             preferenceStorage.setDoctorGender(genderChoice);
             preferenceStorage.saveLoginData(firstNameTxt, confirmPasswordTxt);
+            uploadDoctorFiles();
+            Intent intent = new Intent(DoctorsFormActivity.this, DoctorsSection.class);
+            startActivity(intent);
         }
         catch (Exception e){
             Log.e("PREFERENCE_ERROR", e.toString());

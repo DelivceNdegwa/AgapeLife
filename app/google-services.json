@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "622775847988",
-    "project_id": "agapelife-9a630",
-    "storage_bucket": "agapelife-9a630.appspot.com"
+    "project_number": "933868725981",
+    "project_id": "agapelifepushnotifications",
+    "storage_bucket": "agapelifepushnotifications.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:622775847988:android:2c42dea4e1562f96084e61",
+        "mobilesdk_app_id": "1:933868725981:android:5750023a6c620c2dd4dd34",
         "android_client_info": {
           "package_name": "com.example.agapelife"
         }
       },
       "oauth_client": [
         {
-          "client_id": "622775847988-4i36bnrk51pngnkbqi1c1d875umjgebo.apps.googleusercontent.com",
+          "client_id": "933868725981-vk3f2csoaj9qv0c5d1of3oavta1s482c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBZb3TBHn55H0o37cRj_L5uUJAxTeX4h5c"
+          "current_key": "AIzaSyB48Ipm_MYd80CnOgv3Wjj9TWYMT2t6EFs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "622775847988-4i36bnrk51pngnkbqi1c1d875umjgebo.apps.googleusercontent.com",
+              "client_id": "933868725981-vk3f2csoaj9qv0c5d1of3oavta1s482c.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

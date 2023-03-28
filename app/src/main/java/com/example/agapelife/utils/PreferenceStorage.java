@@ -20,6 +20,7 @@ public class PreferenceStorage {
     public static final String ID_NUMBER = "com.example.agapelife.ID_NUMBER";
     public static final String IS_AVAILABLE = "com.example.agapelife.IS_AVAILABLE";
     public static final String DOCTOR_GENDER = "com.example.agapelife.DOCTOR_GENDER";
+    public static final String FCM_USER_TOKEN = "com.example.agapelife.FCM_USER_TOKEN";
 
     public PreferenceStorage(Context context) {
         this.context = context;
@@ -43,6 +44,10 @@ public class PreferenceStorage {
     public String getFirstName(){return readStringFromSharedPreferences(FIRST_NAME);}
 
     public String getLastName(){return readStringFromSharedPreferences(LAST_NAME);}
+
+    public String getFcmUserToken(){
+        return readStringFromSharedPreferences(FCM_USER_TOKEN);
+    }
 
     public int getDoctorGender(){ return myFile.getInt(DOCTOR_GENDER, 0); }
 
@@ -74,6 +79,10 @@ public class PreferenceStorage {
 
     public void setLastName(String lastName){
         writeStringToPreferencesEditor(LAST_NAME, lastName);
+    }
+
+    public void setFcmUserToken(String fcmUserToken){
+        writeStringToPreferencesEditor(FCM_USER_TOKEN, fcmUserToken);
     }
 
     public boolean isDoctor(){

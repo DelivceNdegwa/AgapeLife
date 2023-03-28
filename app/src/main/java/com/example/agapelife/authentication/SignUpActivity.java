@@ -16,7 +16,6 @@ import com.example.agapelife.UserMainActivity;
 import com.example.agapelife.networking.pojos.AgapeUserRequest;
 import com.example.agapelife.networking.services.ServiceGenerator;
 import com.example.agapelife.utils.AnimationsConfig;
-import com.example.agapelife.utils.FirebaseConfig;
 import com.example.agapelife.utils.PreferenceStorage;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -36,7 +35,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     final static int DOCUMENT_CODE = 177;
 
-    FirebaseConfig firebaseConfig = new FirebaseConfig(SignUpActivity.this);
     ProgressDialog progress;
 
 

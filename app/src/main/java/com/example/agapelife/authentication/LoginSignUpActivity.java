@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import com.example.agapelife.networking.services.ServiceGenerator;
 import com.example.agapelife.utils.AnimationsConfig;
 import com.example.agapelife.utils.PreferenceStorage;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +28,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
     ConstraintLayout loginLayout;
     AnimationsConfig layoutGradientConfig;
     Button loginButton, btnSignUp;
-    private FirebaseAuth  mAuth = FirebaseAuth.getInstance();
+
     ProgressDialog progress;
     TextInputEditText inputFname, inputPassword;
 
@@ -110,6 +111,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AgapeUserResponse> call, Throwable t) {
+                Log.d("LOGIN_LOG:::::::", t.getMessage());
                 Toast.makeText(LoginSignUpActivity.this, "Check your connection and try again", Toast.LENGTH_LONG).show();
             }
         });

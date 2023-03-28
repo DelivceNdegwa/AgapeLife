@@ -128,4 +128,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+
+    <string name="default_notification_channel_id">com.example.agapelife.APPOINTMENT_REMINDER_NOTIFICATION</string>
+    <string name="default_notification_channel_name">fcm_notifications</string>
 </resources>

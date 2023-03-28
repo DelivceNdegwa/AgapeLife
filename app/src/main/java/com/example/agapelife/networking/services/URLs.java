@@ -1,8 +1,10 @@
 package com.example.agapelife.networking.services;
 
 public class URLs {
-//    private static final String IP_ADDRESS = "192.168.100.188:8000";
-    private static final String IP_ADDRESS = "192.168.100.203:8000";
+    private static final String IP_ADDRESS = "192.168.100.232:8000";
+//    private static final String IP_ADDRESS = "192.168.10.106:8000";
+//    private static final String IP_ADDRESS = "134.209.153.200:8000";
+//    private static final String IP_ADDRESS = "192.168.100.203:8000";
 
 //    API URLS
     public static final String API_URL = "http://"+IP_ADDRESS+"/";
